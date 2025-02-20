@@ -1,81 +1,70 @@
-IT Equipment Asset Management
+# IT Equipment Asset Management
 
-Project Overview
+## Project Overview
+### A lightweight IT equipment asset management system for tracking devices, assignments, and statuses. The system is built using:
 
-A lightweight IT equipment asset management system for tracking devices, assignments, and statuses. The system is built using:
 
-Frontend: React (Vite), TypeScript, and React Router
+# Core Features
 
-Backend: Node.js & Express or Firebase/Supabase
-
-Styling: Tailwind CSS
-
-Core Features
-
-1. Asset Management
+## 1. Asset Management
 
 Add, update, and delete IT equipment (laptops, phones, etc.).
 
 Store asset details (name, serial number, status).
 
-2. Assignment Tracking
+## 2. Assignment Tracking
 
 Assign equipment to employees.
 
-View which employee has which device.
+ View which employee has which device.
 
-3. Status Monitoring
+## 3. Status Monitoring
 
-Track asset status: Available, Assigned, Under Repair.
+ Track asset status: Available, Assigned, Under Repair.
 
-4. Basic Reporting
+## 4. Basic Reporting
 
-Show total assets, assigned assets, and available assets.
+ Show total assets, assigned assets, and available assets.
 
-Tech Stack
+# Tech Stack
 
-Frontend
+## Frontend
 
-React + Vite (for fast and efficient development)
+ React + Vite (for fast and efficient development)
 
-Tailwind CSS (for modern styling)
+ Tailwind CSS (for modern styling)
 
-TypeScript (for maintainability and type safety)
+ TypeScript (for maintainability and type safety)
 
-Backend
+## Backend
 
-Node.js & Express (or Firebase/Supabase as an alternative backend)
+ Node.js & Express (or Firebase/Supabase as an alternative backend)
 
-Firestore or Supabase DB (for cloud storage)
+ Firestore or Supabase DB (for cloud storage)
 
-APIs for Additional Features
+# APIs for Additional Features
 
-Market Price API (fetch asset value)
+ Market Price API (fetch asset value)
 
-Currency API (convert purchase prices)
+ Currency API (convert purchase prices)
 
-Installation & Setup
+# Installation & Setup
 
-1. Clone the Repository
+## 1. Clone the Repository
 
-git clone https://bitbucket.org/your-repo/it-asset-management.git
-cd it-asset-management
+`git clone https://bitbucket.org/your-repo/it-asset-management.git
+cd it-asset-management`
 
-2. Install Dependencies
+## 2. Install Dependencies
 
-npm install
+`npm install`
 
-3. Run the Development Server
+## 3. Run the Development Server
 
-npm run dev
+`npm run dev`
 
-API Endpoints (If using Node.js & Express)
+### API Endpoints (If using Node.js & Express)
 
-Method
-
-Endpoint
-
-Description
 
 | Method | Endpoint          | Description               |
 |--------|-------------------|---------------------------|
@@ -89,11 +78,11 @@ Contributing
 
 Fork the repository
 
-Create a new branch (git checkout -b feature-branch)
+Create a new branch (`git checkout -b feature-branch`)
 
-Commit your changes (git commit -m "Added new feature")
+Commit your changes (`git commit -m "Added new feature"`)
 
-Push to the branch (git push origin feature-branch)
+Push to the branch (`git push origin feature-branch`)
 
 Open a Pull Request
 
@@ -101,5 +90,5 @@ License
 
 This project is licensed under the MIT License.
 
-Developed by [Your Name] | Contact: your@email.com
+Developed by `Paul Miguel Santos` | Contact: toro.paulmiguel.santos@gmail.com
 
