@@ -1,7 +1,7 @@
 # IT Equipment Asset Management
 
 ## Project Overview
-### A lightweight IT equipment asset management system for tracking devices, assignments, and statuses. The system is built using:
+### A lightweight IT equipment asset management system for tracking devices, assignments, and statuses. 
 
 
 # Core Features
