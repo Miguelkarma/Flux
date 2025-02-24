@@ -1,0 +1,30 @@
+// firebase.ts
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth"; // If using Firebase Authentication
+import { getFirestore } from "firebase/firestore"; // If using Firestore
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA5WiwySl8d_aoHa4dm0NGNLtKOmFm862E",
+  authDomain: "assetmanagement-0101.firebaseapp.com",
+  projectId: "assetmanagement-0101",
+  storageBucket: "assetmanagement-0101.firebasestorage.app",
+  messagingSenderId: "1028720964203",
+  appId: "1:1028720964203:web:9f07fce034977d3444772e",
+  measurementId: "G-CQSY791FF5",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Ensure analytics only runs in the browser
+let analytics;
+if (typeof window !== "undefined") {
+  analytics = getAnalytics(app);
+}
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+export { app, analytics, auth, db };
