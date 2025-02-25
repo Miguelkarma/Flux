@@ -1,6 +1,6 @@
 // firebase.ts
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+
 import { getAuth } from "firebase/auth"; // If using Firebase Authentication
 import { getFirestore } from "firebase/firestore"; // If using Firestore
 
@@ -17,14 +17,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Ensure analytics only runs in the browser
-let analytics;
-if (typeof window !== "undefined") {
-  analytics = getAnalytics(app);
-}
+
 
 const auth = getAuth(app);
 
 const db = getFirestore(app);
 
-export { app, analytics, auth, db };
+export { app, auth, db };

@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/login-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import logo from "@/assets/logo1.png";
-import placeholder from "@/Landing/Carousel/slider1.jpg";
+import placeholder from "../Landing/Carousel/slider1.jpg";
 import "../styles/LoginReg.css";
 
 function Login() {
