@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/login-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import logo from "@/assets/logo1.png";
-import placeholder from "../Landing/Carousel/slider1.jpg";
+
 import "../styles/LoginReg.css";
 
 function Login() {
@@ -50,7 +50,7 @@ function Login() {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src={placeholder}
+          src=""
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover"
         />
