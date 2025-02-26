@@ -11,13 +11,12 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: FC<DashboardLayoutProps> = () => {
   const { user, handleLogout } = useAuth();
-
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container h-screen overflow-hidden">
       <SidebarProvider>
         <Sidebar user={user} onLogout={handleLogout} />
         {/* Main Content */}
-        <main className="flex flex-col flex-1 min-w-0 mb-8">
+        <main className="flex flex-col flex-1 min-w-0 mb-8 overflow-auto scrollbar-none">
           <SidebarTrigger />
           <DashboardPage />
         </main>

@@ -6,14 +6,14 @@ import { Card } from "@/components/ui/card";
 
 export default function DashboardPage() {
   return (
-    <Card className=" flex-col flex-1 min-w-0 p-2 md:p-7 2xl:p-2 bg-gradient-to-b from-teal-800/70 via-black to-teal-900/10">
-      <div className="flex flex-col gap-6 p-6">
+    <Card className=" flex-col flex-1 min-w-0 p-2 md:p-7 2xl:p-2 bg-gradient-to-b from-teal-800/70 via-black to-teal-900/10 ">
+      <div className="flex flex-col gap-6 p-2 ">
         <AssetOverview />
         <div className="grid gap-2 md:grid-cols-2">
           <AssetAllocation />
           <RecentActivity />
         </div>
-        <div className="grid gap-2 md:grid-cols-1 h-[2em]">
+        <div className="grid gap-2 md:grid-cols-1 ">
           <AssetTable />
         </div>
       </div>

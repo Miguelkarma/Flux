@@ -52,6 +52,7 @@
 }
 
 .bg-grid {
+  height: 60rem;
   background-size: 100px 100px; /* Grid size */
   background-image: linear-gradient(
       to right,

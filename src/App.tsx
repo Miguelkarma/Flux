@@ -10,16 +10,15 @@ export default function Home() {
   return (
     <div className="hero relative min-h-screen">
       <div className="pointer-events-none fixed inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+        <div className=" inset-0 bg-gradient-to-b from-background via-background to-black" />
       </div>
 
       <div className="relative z-10">
+        <Navbar />
         <MouseMoveEffect />
         <div className="bg-grid">
-          <Navbar />
           <Hero />
         </div>
-
         <Features />
         <CTA />
         <Footer />
