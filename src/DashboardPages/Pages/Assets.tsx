@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import Sidebar from "../Sidebar";
-import { DataTable } from "@/dashboard/table/RenderTable";
+import { DataTable } from "@/DashboardPages/Pages/Assets/RenderTable";
 import ParticlesBackground from "@/Landing/Animation/ParticlesBackground";
 import { useAuth } from "@/hooks/use-auth";
 

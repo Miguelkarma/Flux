@@ -64,8 +64,8 @@ const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
                     className={({ isActive }) =>
                       `flex items-center gap-5 px-2 py-2 rounded-md transition ${
                         isActive
-                          ? "rounded-lg transition transform -translate-y-1  -translate-x-1 shadow-[4px_4px_0_0_#f1f0f1] border border-white"
-                          : "rounded-lg transition hover:-translate-y-1 -translate-x-1 hover:shadow-[4px_4px_0_0_#00DCDC] hover:border hover:border-white"
+                          ? "rounded-lg transition transform -translate-y-1  -translate-x-1 shadow-[4px_4px_0_0_#40E0D0] border border-teal-500"
+                          : "rounded-lg transition hover:-translate-y-1 -translate-x-1 hover:shadow-[4px_4px_0_0_#40E0D0] hover:border hover:border-teal-500"
                       }`
                     }
                   >

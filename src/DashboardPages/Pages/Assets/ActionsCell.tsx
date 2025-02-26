@@ -10,13 +10,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import DeleteAssetDialog from "@/dashboard/table/DeleteAssetDialog";
+import DeleteAssetDialog from "@/DashboardPages/Pages/Assets/DeleteAssetDialog";
 import { toast } from "sonner";
 import { FirestoreData } from "./columns";
 import { db } from "@/firebase/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { EditAssetDrawer } from "@/dashboard/table/EditAssetDrawer";
+import { EditAssetDrawer } from "@/DashboardPages/Pages/Assets/EditAssetDrawer";
 
 interface ActionsCellProps {
   asset: FirestoreData;

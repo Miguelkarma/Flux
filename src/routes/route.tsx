@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Login from "@/authentication/Login.tsx";
+import Login from "../authentication/Login";
 import Registration from "@/authentication/Registration";
 import App from "@/App.tsx";
 import "@/App.css";
-import ExternalAPI from "@/dashboard/Pages/ExternalAPI";
-import Dashboard from "@/dashboard/Pages/DashboardLayout";
-import Assets from "@/dashboard/Pages/Assets";
-import Settings from "@/dashboard/Pages/Settings";
+import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
+import Dashboard from "@/DashboardPages/Pages/DashboardLayout";
+import Assets from "@/DashboardPages/Pages/Assets";
+import Settings from "@/DashboardPages/Pages/Settings";
 
 const AppRouter = () => {
   return (

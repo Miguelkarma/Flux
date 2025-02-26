@@ -7,7 +7,7 @@ import {
   DialogDescription, // Import DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FirestoreData } from "@/dashboard/table/columns";
+import { FirestoreData } from "@/DashboardPages/Pages/Assets/columns";
 
 interface DeleteAssetDialogProps {
   asset: FirestoreData;
