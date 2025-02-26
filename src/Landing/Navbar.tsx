@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const prevScrollPos = useRef(0);
 
@@ -30,7 +30,7 @@ export default function Navbar() {
       } backdrop-blur supports-[backdrop-filter]:bg-background/0`}
     >
       <div className="container flex h-20 max-w-screen-2xl space-x-2 items-center">
-        <img src={logo} className="size-10" alt="Logo" />
+        <img src={logo} className="size-10 " alt="Logo" />
         <a
           href="#"
           onClick={(e) => {
@@ -39,7 +39,7 @@ export default function Navbar() {
           }}
           className="mr-6 flex items-center space-x-2"
         >
-          <span className="font-bold text-2xl">TechTrack</span>
+          <span className="font-bold text-2xl ">TechTrack</span>
         </a>
         <header className="flex flex-1 items-center space-x-6 text-sm font-medium"></header>
         <div className="flex items-center space-x-4">
@@ -53,15 +53,22 @@ export default function Navbar() {
               <span className="sr-only">GitHub</span>
             </Button>
           </a>
+
           <Button
             variant="outline"
-            className="text-sm w-18"
+            className="relative w-auto px-6 py-2  text-white bg-transparent border-white/50 rounded-2xl transition-all hover:bg-black 
+  before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
+  hover:border-teal-500/30 before:rounder-full"
             onClick={() => navigate("/Login")}
           >
             Login
           </Button>
+
           <Button
-            className="text-sm w-20"
+            variant="outline"
+            className="relative w-auto px-6 py-2  text-white bg-transparent border-white/50 rounded-2xl transition-all hover:bg-black 
+  before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
+  hover:border-teal-500/30 before:rounder-full"
             onClick={() => navigate("/Registration")}
           >
             Register

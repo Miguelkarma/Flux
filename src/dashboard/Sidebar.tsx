@@ -47,15 +47,18 @@ const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
       variant="floating"
       className="sidebar group flex flex-col h-full "
     >
-      <SidebarContent className="flex-grow bg-gradient-to-b from-teal-600/30 via-black to-teal-600/30 ">
+      <SidebarContent className="flex-grow bg-gradient-to-b from-teal-400/30 to-black/30  rounded-xlflex-shrink-0  backdrop-blur-md backdrop-opacity-70">
         <SidebarGroup>
-          <SidebarGroupLabel className="transition- group-[.collapsed]:opacity-0 text-lg font-bold text-white gap-2">
-            <img className="size-8" src={logo} /> Techtrack
+          <SidebarGroupLabel className="transition group-[.collapsed]:opacity-0 text-lg font-bold text-white gap-2 ">
+            <img className="size-8 " src={logo} /> Techtrack
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.title} className="py-2">
+                <SidebarMenuItem
+                  key={item.title}
+                  className="py-2 text-[1.2em] font-medium"
+                >
                   <NavLink
                     to={item.url}
                     className={({ isActive }) =>
@@ -78,7 +81,7 @@ const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="bg-gradient-to-t from-black via-teal-800/20 to-teal-600/30 rounded-b-xl flex-shrink-0">
+      <SidebarFooter className="rounded-b-xl flex-shrink-0 bg-black/30 backdrop-blur-md backdrop-opacity-75">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>

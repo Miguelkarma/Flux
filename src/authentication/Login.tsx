@@ -3,6 +3,7 @@ import { LoginForm } from "@/components/login-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import logo from "@/assets/logo1.png";
+import back from "@/assets/log.jpg";
 
 import "../styles/LoginReg.css";
 
@@ -25,7 +26,7 @@ function Login() {
   };
 
   return (
-    <div className="bg grid min-h-svh lg:grid-cols-2 text-white">
+    <div className="back bg grid min-h-svh lg:grid-cols-2 text-white">
       <div className="flex flex-col gap-4 p-6 md:p-10 text-gray-100">
         <div className="flex justify-center gap-2 md:justify-start text-white">
           <a
@@ -43,14 +44,14 @@ function Login() {
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
+          <div className="w-full max-w-xs ">
             <LoginForm onLogin={handleLogin} />
           </div>
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src=""
+          src={back}
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover"
         />

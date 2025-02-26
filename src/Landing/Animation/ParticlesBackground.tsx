@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import type { Engine } from "tsparticles-engine";
+import "@/styles/Particles.css";
 
 const ParticlesBackground = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
@@ -16,7 +17,7 @@ const ParticlesBackground = () => {
         fullScreen: { enable: false }, // Prevents taking over the whole screen
         particles: {
           number: {
-            value: 70,
+            value: 100,
           },
           color: {
             value: "#ffffff",
@@ -28,14 +29,14 @@ const ParticlesBackground = () => {
             value: 0.7,
           },
           size: {
-            value: 0.5,
+            value: 1,
           },
           links: {
             enable: true,
             distance: 160,
             color: "#ffffff",
             opacity: 0.6,
-            width: 0.4,
+            width: 1,
           },
           move: {
             enable: true,
