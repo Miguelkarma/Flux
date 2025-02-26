@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { auth } from "@/firebase/firebase"; // Ensure Firestore is imported
+import { auth } from "@/firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 export function RegistrationForm() {
-  const [username, setUsername] = useState(""); // New state for username
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");

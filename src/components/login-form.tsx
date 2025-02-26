@@ -17,7 +17,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(email, password); // Pass credentials to login function
+    onLogin(email, password);
   };
 
   return (
