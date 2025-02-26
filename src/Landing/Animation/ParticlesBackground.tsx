@@ -3,7 +3,6 @@ import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import type { Engine } from "tsparticles-engine";
 
-
 const ParticlesBackground = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadSlim(engine);
@@ -36,7 +35,7 @@ const ParticlesBackground = () => {
             distance: 160,
             color: "#ffffff",
             opacity: 0.6,
-            width: 0.2,
+            width: 0.4,
           },
           move: {
             enable: true,
@@ -44,7 +43,7 @@ const ParticlesBackground = () => {
           },
         },
       }}
-      className="particles fixed inset-0 w-full h-full z-[-1]"
+      className="particles absolute inset-0 w-full h-full z-[-1]"
     />
   );
 };
