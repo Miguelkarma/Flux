@@ -1,4 +1,3 @@
-// firebase.ts
 import { initializeApp } from "firebase/app";
 
 import { getAuth } from "firebase/auth"; // If using Firebase Authentication
@@ -14,10 +13,7 @@ const firebaseConfig = {
   measurementId: "G-CQSY791FF5",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-
 
 const auth = getAuth(app);
 

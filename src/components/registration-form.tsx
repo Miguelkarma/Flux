@@ -28,12 +28,6 @@ export function RegistrationForm() {
 
       await updateProfile(user, { displayName: username });
 
-      // await setDoc(doc(db, "users", user.uid), {
-      //   username: username,
-      //   email: email,
-      //   createdAt: new Date(),
-      // });
-
       console.log("User registered:", user);
       navigate("/login"); // Redirect after successful registration
     } catch (err: unknown) {
