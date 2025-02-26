@@ -47,9 +47,9 @@ const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
       variant="floating"
       className="sidebar group flex flex-col h-full "
     >
-      <SidebarContent className="flex-grow bg-gradient-to-b from-teal-400/30 to-black/30  rounded-xlflex-shrink-0  backdrop-blur-md backdrop-opacity-70">
+      <SidebarContent className="flex-grow  rounded-xl flex-shrink-0  backdrop-blur-md backdrop-opacity-70">
         <SidebarGroup>
-          <SidebarGroupLabel className="transition group-[.collapsed]:opacity-0 text-lg font-bold text-white gap-2 ">
+          <SidebarGroupLabel className="transition group-[.collapsed]:opacity-0 text-2xl font-bold text-white gap-2 ">
             <img className="size-8 " src={logo} /> Techtrack
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -65,7 +65,7 @@ const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
                       `flex items-center gap-5 px-2 py-2 rounded-md transition ${
                         isActive
                           ? "rounded-lg transition transform -translate-y-1  -translate-x-1 shadow-[4px_4px_0_0_#f1f0f1] border border-white"
-                          : "rounded-lg transition hover:-translate-y-1 -translate-x-1 hover:shadow-[4px_4px_0_0_#f1f0f1] hover:border hover:border-white"
+                          : "rounded-lg transition hover:-translate-y-1 -translate-x-1 hover:shadow-[4px_4px_0_0_#00DCDC] hover:border hover:border-white"
                       }`
                     }
                   >

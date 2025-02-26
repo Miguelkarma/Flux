@@ -8,7 +8,7 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -110,7 +110,7 @@ export function DataTable() {
   });
 
   return (
-    <Card className="flex flex-col flex-1 min-w-0 p-4 md:p-7 2xl:p-10 bg-gradient-to-b from-teal-800/70 via-black to-teal-900/10">
+    <Card className=" flex-col flex-1 min-w-0 p-2 md:p-7 2xl:p-2 bg-gradient-to-b from-teal-800/70 via-black to-teal-900/10">
       <div className="flex flex-col flex-1 w-full ">
         <div className="flex items-center gap-4 py-4">
           <Input
@@ -159,7 +159,7 @@ export function DataTable() {
           />
         </div>
 
-        <div className="flex-1 overflow-auto rounded-md border min-w-0 ">
+        <div className=" overflow-auto rounded-md border min-w-0 h-[]">
           <Table className="w-full ">
             <TableHeader className="bg-gradient-to-t from-black via-black to-teal-600/10 ">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -201,6 +201,28 @@ export function DataTable() {
               )}
             </TableBody>
           </Table>
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="flex items-center justify-between mt-4">
+          <Button
+            variant="outline"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ChevronLeft className="mr-2" /> Previous
+          </Button>
+          <span>
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next <ChevronRight className="ml-2" />
+          </Button>
         </div>
       </div>
     </Card>

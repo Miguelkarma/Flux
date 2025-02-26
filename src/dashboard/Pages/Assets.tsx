@@ -15,9 +15,8 @@ export default function Assets() {
 
         {/* Main content area */}
         <main className="flex flex-col flex-1 min-w-0 mb-8">
-          <SidebarTrigger />
           <ParticlesBackground />
-
+          <SidebarTrigger />
           <div className="flex flex-1 overflow">
             <DataTable />
           </div>
