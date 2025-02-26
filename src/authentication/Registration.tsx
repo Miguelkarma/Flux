@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { RegistrationForm } from "@/components/registration-form";
 import logo from "@/assets/logo1.png";
-import placeholder from "@/Landing/Carousel/slider1.jpg";
+
 import "@/styles/LoginReg.css";
 
 const Registration = () => {
@@ -18,8 +18,8 @@ const Registration = () => {
               navigate("/Home");
             }}
           >
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground text-base">
-              <img className="size-6" src={logo} />
+            <div className="flex h-10 w-10 items-center justify-center rounded-md">
+              <img className="size-10" src={logo} />
             </div>
             TechTrack
           </a>
@@ -32,7 +32,7 @@ const Registration = () => {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src={placeholder}
+          src=""
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import type { Engine } from "tsparticles-engine";
-import "@/styles/particles.css";
+
 
 const ParticlesBackground = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
@@ -29,18 +29,18 @@ const ParticlesBackground = () => {
             value: 0.7,
           },
           size: {
-            value: 2,
+            value: 0.5,
           },
           links: {
             enable: true,
             distance: 160,
             color: "#ffffff",
             opacity: 0.6,
-            width: 1,
+            width: 0.2,
           },
           move: {
             enable: true,
-            speed: 0.5,
+            speed: 0.3,
           },
         },
       }}
