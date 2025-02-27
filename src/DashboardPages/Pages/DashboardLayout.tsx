@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import Sidebar from "../Sidebar";
+import Sidebar from "../../components/Sidebar";
 import ParticlesBackground from "@/Landing/Animation/ParticlesBackground";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import DashboardPage from "@/DashboardPages/Pages/Dashboard/page";
