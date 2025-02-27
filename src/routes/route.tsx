@@ -4,10 +4,10 @@ import Login from "../authentication/Login";
 import Registration from "@/authentication/Registration";
 import App from "@/App.tsx";
 import "@/App.css";
-import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
-import Dashboard from "@/DashboardPages/Pages/DashboardLayout";
-import Assets from "@/DashboardPages/Pages/Assets";
-import Settings from "@/DashboardPages/Pages/Settings";
+import ExternalAPI from "@/DashboardPages/ExternalAPI";
+import Dashboard from "@/DashboardPages/Pages/Dashboard/layout";
+import Assets from "@/DashboardPages/Pages/Assets/renderPageAssets";
+import Settings from "@/DashboardPages/Pages/CurrencyExchange/renderPageCurrency";
 
 const AppRouter = () => {
   return (

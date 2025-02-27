@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
-import Sidebar from "../Sidebar";
+import Sidebar from "../../Sidebar";
 import ParticlesBackground from "@/Landing/Animation/ParticlesBackground";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import DashboardPage from "@/DashboardPages/Pages/Dashboard/page";
+import DashboardPage from "@/DashboardPages/Pages/Dashboard/renderDashboard";
 import { useAuth } from "@/hooks/use-auth";
 
 interface DashboardLayoutProps {

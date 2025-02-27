@@ -8,15 +8,17 @@ import "./App.css";
 
 export default function Home() {
   return (
-    <div className="hero relative min-h-screen">
+    <div className="flex flex-col min-h-screen">
+      {/* Background Effect */}
       <div className="pointer-events-none fixed inset-0">
-        <div className=" inset-0 bg-gradient-to-b from-background via-background to-black" />
+        <div className="inset-0 bg-gradient-to-b from-background via-background to-black" />
       </div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col flex-grow">
         <Navbar />
         <MouseMoveEffect />
-        <div className="bg-grid">
+        {/* Ensure Hero is taking available space */}
+        <div className="flex-grow">
           <Hero />
         </div>
         <Features />
