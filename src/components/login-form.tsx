@@ -41,7 +41,6 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             placeholder="m@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
         </div>
         <div className="grid gap-2">
@@ -51,7 +50,6 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </div>
         <Button
