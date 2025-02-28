@@ -26,8 +26,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
-
-
 interface SidebarProps {
   user: User | null;
   onLogout: () => void;
@@ -50,7 +48,7 @@ const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
       <SidebarContent className="flex-grow  rounded-xl flex-shrink-0  backdrop-blur-md backdrop-opacity-70">
         <SidebarGroup>
           <SidebarGroupLabel className="transition group-[.collapsed]:opacity-0 text-2xl font-bold text-white gap-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent  ">
-             Techtrack
+            Techtrack
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
