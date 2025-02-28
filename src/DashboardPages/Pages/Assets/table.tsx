@@ -8,7 +8,7 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,12 +25,19 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Card } from "@/components/ui/card";
 import { AddAssetDrawer } from "./AddAssetDrawer";
 import { columns } from "./columns";
 import { db } from "@/firebase/firebase";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
+
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Card } from "@/components/ui/card";
 
 export type FirestoreData = {
   id: string;
@@ -44,7 +51,9 @@ export type FirestoreData = {
 };
 
 export function DataTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "dateAdded", desc: false },
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -73,9 +82,12 @@ export function DataTable() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Real-time listener for Firestore changes
   const fetchAssets = React.useCallback((userId: string) => {
-    const q = query(collection(db, "it-assets"), where("userId", "==", userId));
+    const q = query(
+      collection(db, "it-assets"),
+      where("userId", "==", userId),
+      orderBy("dateAdded", "desc")
+    );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       console.log("Snapshot received:", snapshot.docs.length, "documents");
@@ -110,120 +122,117 @@ export function DataTable() {
   });
 
   return (
-    <Card className=" flex-col flex-1 min-w-0 p-2 md:p-7 2xl:p-2 bg-gradient-to-b from-teal-800/70 via-black to-teal-900/10">
-      <div className="flex flex-col flex-1 w-full ">
-        <div className="flex items-center gap-4 py-4">
-          <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
+    <Card className="flex flex-col flex-1 w-full p-2 md:p-7 2xl:p-2">
+      <div className="flex items-center gap-4 py-4">
+        <Input
+          placeholder="Filter emails..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("email")?.setFilterValue(event.target.value)
+          }
+          className="max-w-lg flex-grow"
+        />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <AddAssetDrawer
+          onAssetAdded={() => {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            if (user) {
+              fetchAssets(user.uid);
             }
-            className="max-w-lg flex-grow"
-          />
+          }}
+          userEmail={userEmail}
+        />
+      </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto ">
-                Columns <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+      <div className="overflow-auto rounded-md border min-w-0">
+        <Table className="w-full">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : typeof header.column.columnDef.header === "function"
+                      ? header.column.columnDef.header(header.getContext())
+                      : header.column.columnDef.header}
+                  </TableHead>
                 ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <AddAssetDrawer
-            onAssetAdded={() => {
-              const auth = getAuth();
-              const user = auth.currentUser;
-              if (user) {
-                fetchAssets(user.uid);
-              }
-            }}
-            userEmail={userEmail}
-          />
-        </div>
-
-        <div className=" overflow-auto rounded-md border min-w-0 h-[]">
-          <Table className="w-full ">
-            <TableHeader className="bg-gradient-to-t from-black via-black to-teal-600/10 ">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : typeof header.column.columnDef.header === "function"
-                        ? header.column.columnDef.header(header.getContext())
-                        : header.column.columnDef.header}
-                    </TableHead>
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {typeof cell.column.columnDef.cell === "function"
+                        ? cell.column.columnDef.cell(cell.getContext())
+                        : cell.column.columnDef.cell}
+                    </TableCell>
                   ))}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody className="bg-gradient-to-b from-black via-black to-teal-600/10  text-center font-medium ">
-              {table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {typeof cell.column.columnDef.cell === "function"
-                          ? cell.column.columnDef.cell(cell.getContext())
-                          : cell.column.columnDef.cell}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Pagination Controls */}
-        <div className="flex items-center justify-between mt-4">
-          <Button
-            variant="outline"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronLeft className="mr-2" /> Previous
-          </Button>
-          <span>
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-between px-2 py-4">
+        <Button
+          variant="outline"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <span>
+          Page{" "}
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
-          </span>
-          <Button
-            variant="outline"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next <ChevronRight className="ml-2" />
-          </Button>
-        </div>
+          </strong>
+        </span>
+        <Button
+          variant="outline"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
       </div>
     </Card>
   );

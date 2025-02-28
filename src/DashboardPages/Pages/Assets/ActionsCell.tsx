@@ -59,12 +59,12 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
     }
   };
 
-  const handleCopySerial = async () => {
+  const handleCopyEmail = async () => {
     try {
-      await navigator.clipboard.writeText(asset.serialNo || "N/A");
-      toast.success("Serial number copied to clipboard");
+      await navigator.clipboard.writeText(asset.email || "N/A");
+      toast.success("Email copied to clipboard");
     } catch (error) {
-      toast.error("Failed to copy serial number");
+      toast.error("Failed to copy Email");
     }
   };
 
@@ -104,13 +104,13 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
 
           <DropdownMenuSeparator />
 
-          {/* Copy Serial Number */}
+          {/* Copy Emails */}
           <DropdownMenuItem
-            onClick={handleCopySerial}
+            onClick={handleCopyEmail}
             className="flex items-center gap-2"
           >
             <Copy className="h-4 w-4" />
-            <span>Copy Serial No.</span>
+            <span>Copy Email</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

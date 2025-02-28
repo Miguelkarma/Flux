@@ -60,7 +60,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
     accessorKey: "email",
     header: ({ column }) => (
       <Button
-        className="font-extrabold "
+        className="font-extrabold"
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
@@ -84,19 +84,25 @@ export const columns: ColumnDef<FirestoreData>[] = [
     accessorKey: "dateAdded",
     header: ({ column }) => (
       <Button
-        className="font-extrabold "
+        className="font-extrabold"
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        onClick={() => column.toggleSorting()}
       >
         Date Added <ArrowUpDown />
       </Button>
     ),
     cell: ({ row }) => {
       const dateValue = row.getValue<string>("dateAdded");
-      const date = dateValue ? new Date(dateValue).toLocaleDateString() : "N/A";
-      return <div className="text-center">{date}</div>;
+      const formattedDate = dateValue
+        ? new Date(dateValue).toLocaleDateString()
+        : "N/A";
+      return <div className="text-center">{formattedDate}</div>;
     },
-    sortingFn: "datetime",
+    sortingFn: (rowA, rowB, columnId) => {
+      const dateA = new Date(rowA.getValue(columnId)).getTime();
+      const dateB = new Date(rowB.getValue(columnId)).getTime();
+      return dateB - dateA;
+    },
   },
   {
     accessorKey: "status",
@@ -104,16 +110,16 @@ export const columns: ColumnDef<FirestoreData>[] = [
     cell: ({ row }) => {
       const status = row.getValue<string>("status") || "Unknown";
 
-      let badgeClass = "bg-gray-500 text-white ";
-      if (status === "Assigned")
-        badgeClass =
-          "text-white bg-gradient-to-b from-black via-red-700 to-red-900 border-0 text-sm font-semibold";
-      if (status === "Available")
-        badgeClass =
-          "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-semibold";
-      if (status === "Under Repair")
-        badgeClass =
-          "text-white bg-gradient-to-b from-black/80 via-yellow-700 to-yellow-900 border-0 text-sm font-semibold";
+      const statusColors: Record<string, string> = {
+        Assigned:
+          "text-white bg-gradient-to-b from-black via-red-700 to-red-900 border-0 text-sm font-medium",
+        Available:
+          "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
+        "Under Repair":
+          "text-white bg-gradient-to-b from-black/80 via-yellow-700 to-yellow-900 border-0 text-sm font-medium",
+      };
+
+      const badgeClass = statusColors[status] || "bg-gray-500 text-white";
 
       return (
         <Badge

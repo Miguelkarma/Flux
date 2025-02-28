@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { auth } from "@/firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +16,11 @@ export function RegistrationForm() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (!username.trim()) {
+      setError("Username is required.");
+      return;
+    }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -57,7 +61,6 @@ export function RegistrationForm() {
             placeholder="Your username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
           />
         </div>
         {/* Email Field */}
@@ -69,7 +72,6 @@ export function RegistrationForm() {
             placeholder="m@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
         </div>
         {/* Password Field */}
@@ -81,16 +83,15 @@ export function RegistrationForm() {
             placeholder="********"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button
           variant="outline"
           type="submit"
-          className="relative w-auto px-6 py-2  text-white bg-black border-white/50 rounded-2xl transition-all hover:bg-black 
+          className="relative w-auto px-6 py-2 text-white bg-black border-white/50 rounded-2xl transition-all hover:bg-black 
           before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
-          hover:border-teal-400 before:rounder-xl"
+          hover:border-teal-400 before:rounded-xl"
         >
           Sign Up
         </Button>

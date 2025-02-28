@@ -14,13 +14,17 @@ export default function Home() {
         <div className="inset-0 bg-gradient-to-b from-background via-background to-black" />
       </div>
 
+      {/* Content Wrapper */}
       <div className="relative z-10 flex flex-col flex-grow">
         <Navbar />
         <MouseMoveEffect />
-        {/* Ensure Hero is taking available space */}
-        <div className="flex-grow">
+
+        {/* Ensure Hero section takes full available height */}
+        <div className="flex flex-col flex-grow items-center justify-center bg-grid">
           <Hero />
         </div>
+
+        {/* Additional Sections */}
         <Features />
         <CTA />
         <Footer />

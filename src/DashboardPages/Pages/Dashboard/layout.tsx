@@ -1,26 +1,21 @@
-import { FC, ReactNode } from "react";
-import Sidebar from "../../Sidebar";
-import ParticlesBackground from "@/Landing/Animation/ParticlesBackground";
+import Sidebar from "../../../components/Sidebar";
+
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import DashboardPage from "@/DashboardPages/Pages/Dashboard/renderDashboard";
 import { useAuth } from "@/hooks/use-auth";
 
-interface DashboardLayoutProps {
-  children?: ReactNode;
-}
-
-const DashboardLayout: FC<DashboardLayoutProps> = () => {
+const DashboardLayout = () => {
   const { user, handleLogout } = useAuth();
+
   return (
-    <div className="dashboard-container h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden flex">
       <SidebarProvider>
         <Sidebar user={user} onLogout={handleLogout} />
-        {/* Main Content */}
-        <main className="flex flex-col flex-1 min-w-0 mb-8 overflow-auto scrollbar-none">
+
+        <main className="flex flex-col flex-grow min-w-0 p-4 transition">
           <SidebarTrigger />
           <DashboardPage />
         </main>
-        <ParticlesBackground />
       </SidebarProvider>
     </div>
   );

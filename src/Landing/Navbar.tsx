@@ -54,7 +54,7 @@ export default function Navbar() {
                   <span
                     key={item.name}
                     onClick={() => navigate(item.href)}
-                    className="text-sm text-gray-300 hover:text-white cursor-pointer"
+                    className="text-sm text-gray-300 hover:text-white cursor-pointer font-medium"
                   >
                     {item.name}
                   </span>
