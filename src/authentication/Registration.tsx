@@ -7,7 +7,7 @@ import "@/styles/LoginReg.css";
 const Registration = () => {
   const navigate = useNavigate();
   return (
-    <div className=" back bg grid min-h-svh lg:grid-cols-2 text-white">
+    <div className=" back grid min-h-svh lg:grid-cols-2 text-white">
       <div className="flex flex-col gap-4 p-6 md:p-10 text-gray-100">
         <div className="flex justify-center gap-2 md:justify-start text-white">
           <a

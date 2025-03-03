@@ -79,14 +79,14 @@ export default function Navbar() {
                 <Button
                   variant="ghost"
                   className="relative w-auto px-6 py-2 p-4 text-white bg-black border border-white/50 rounded-full transition-all hover:bg-black 
-                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-500/30 before:rounded-full"
+                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-200 before:rounded-full"
                   onClick={() => navigate("/login")}
                 >
                   Login
                 </Button>
                 <Button
                   className="relative w-auto px-6 py-2 p-4 text-white bg-black border border-white/50 rounded-full transition-all hover:bg-black 
-                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-500/30 before:rounded-full"
+                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-200 before:rounded-full"
                   onClick={() => navigate("/registration")}
                 >
                   Register

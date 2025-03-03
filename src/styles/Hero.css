@@ -1,18 +1,72 @@
 .hero h1 {
-  font-family: sans-serif;
-  font-weight: 700;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 200;
   height: auto;
   background: linear-gradient(
-    to right,
+    to top,
     rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0.5)
+    rgba(255, 255, 255, 0.6)
   );
   -webkit-background-clip: text;
 }
 .hero p {
-  font-family: "Inter", sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-weight: 300;
   max-width: 700px;
   margin: 0 auto;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.bg {
+  position: absolute;
+  top: 39.8%;
+  left: 50%;
+  width: 115rem;
+  height: 100rem;
+  background-image: url("../assets/bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  transform: translate(-50%, -50%) rotate(180deg);
+  filter: hue-rotate(175deg);
+}
+
+/* 🌟 For Laptops (1024px - 1440px) */
+@media (max-width: 1440px) {
+  .bg {
+    width: 66rem;
+    height: 60rem;
+    top: 33%;
+  }
+}
+
+/* 📱 For Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .bg {
+    width: 40rem;
+    height: 40rem;
+    top: 27.8%;
+  }
+}
+
+/* 📱 For Mobile Phones (Up to 768px) */
+@media (max-width: 768px) {
+  .bg {
+    width: 80%;
+    height: 50rem;
+    top: 40%;
+    transform: translate(-50%, -50%) rotate(180deg);
+    background-size: contain;
+  }
+}
+
+/* 📱 Extra Small Devices (Up to 480px) */
+@media (max-width: 480px) {
+  .bg {
+    width: 100%;
+    height: 40rem;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(180deg);
+    background-size: cover;
+  }
 }

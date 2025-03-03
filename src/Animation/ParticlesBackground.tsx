@@ -16,7 +16,7 @@ const ParticlesBackground = () => {
         fullScreen: { enable: false },
         particles: {
           number: {
-            value: 100,
+            value: 120,
           },
           color: {
             value: "#ffffff",
@@ -32,7 +32,7 @@ const ParticlesBackground = () => {
           },
           links: {
             enable: true,
-            distance: 160,
+            distance: 50,
             color: "#ffffff",
             opacity: 0.6,
             width: 1,
@@ -43,7 +43,7 @@ const ParticlesBackground = () => {
           },
         },
       }}
-      className="particles absolute inset-0 w-full h-full z-[-1]"
+      className="particles absolute inset-0 w-full h-full z-[-1] "
     />
   );
 };
