@@ -44,7 +44,6 @@ import {
 
 >>>>>>> 8ae576e (Integrated Test, UI responsiveness, integrated API, Improve the file structure, added components)
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Card } from "@/components/ui/card";
 
 export type FirestoreData = {
   id: string;
