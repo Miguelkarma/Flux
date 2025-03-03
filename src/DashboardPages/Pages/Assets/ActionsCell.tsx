@@ -82,7 +82,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className=" h-[1px] bg-teal-300/60" />
 
           {/* Open Edit Drawer */}
           <DropdownMenuItem

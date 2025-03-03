@@ -37,7 +37,6 @@ import {
 } from "firebase/firestore";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Card } from "@/components/ui/card";
 
 export type FirestoreData = {
   id: string;
@@ -122,7 +121,7 @@ export function DataTable() {
   });
 
   return (
-    <Card className="flex flex-col flex-1 w-full p-2 md:p-7 2xl:p-2">
+    <>
       <div className="flex items-center gap-4 py-4">
         <Input
           placeholder="Filter emails..."
@@ -234,6 +233,6 @@ export function DataTable() {
           Next
         </Button>
       </div>
-    </Card>
+    </>
   );
 }

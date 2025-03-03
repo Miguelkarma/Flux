@@ -3,14 +3,14 @@ import Hero from "@/Landing/Hero";
 import Features from "@/Landing/Features";
 import CTA from "@/Landing/CTA";
 import Footer from "@/Landing/Footer";
-import MouseMoveEffect from "./Landing/Animation/MouseMoveEffect";
+import MouseMoveEffect from "./Animation/MouseMoveEffect";
 import "./App.css";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Background Effect */}
-      <div className="pointer-events-none fixed inset-0">
+      <div className="pointer-events-none fixed inset-0 ">
         <div className="inset-0 bg-gradient-to-b from-background via-background to-black" />
       </div>
 
@@ -20,7 +20,7 @@ export default function Home() {
         <MouseMoveEffect />
 
         {/* Ensure Hero section takes full available height */}
-        <div className="flex flex-col flex-grow items-center justify-center bg-grid">
+        <div className=" flex flex-col flex-grow items-center justify-center bg-grid">
           <Hero />
         </div>
 

@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { RegistrationForm } from "@/components/registration-form";
 import logo from "@/assets/logo1.png";
 import back from "@/assets/log.jpg";
-
 import "@/styles/LoginReg.css";
 
 const Registration = () => {
@@ -13,7 +12,7 @@ const Registration = () => {
         <div className="flex justify-center gap-2 md:justify-start text-white">
           <a
             href="#"
-            className="flex items-center gap-2 font-medium"
+            className="flex items-center gap-2 font-medium text-xl"
             onClick={(e) => {
               e.preventDefault();
               navigate("/Home");

@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import Sidebar from "../../../components/Sidebar";
 import { useAuth } from "@/hooks/use-auth";
 import CurrencyConverter from "@/DashboardPages/Pages/CurrencyExchange/currency-converter";
-import ParticlesBackground from "@/Landing/Animation/ParticlesBackground";
+import ParticlesBackground from "@/Animation/ParticlesBackground";
 import ExchangeRateTable from "./ExchangeRateTable";
 
 export default function Exchange() {
