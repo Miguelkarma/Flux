@@ -82,7 +82,7 @@ export default function DashboardParticles() {
       }
 
       for (let i = 0; i < particleCount; i++) {
-        particles.push(new ParticleClass(canvas, ctx)); // ✅ Fix: Pass both canvas and ctx
+        particles.push(new ParticleClass(canvas, ctx)); 
       }
 
       const animate = () => {

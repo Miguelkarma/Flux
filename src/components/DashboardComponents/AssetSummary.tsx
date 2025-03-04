@@ -29,7 +29,9 @@ function MetricCard({
   const getColor = () => {
     switch (color) {
       case "cyan":
-        return "from-cyan-500 to-blue-500 border-cyan-500/30";
+        return "from-red-600 to-red-800 border-cyan-500/30";
+      case "teal":
+        return "from-teal-600 to-teal-800 border-teal-500/30"; 
       case "green":
         return "from-green-500 to-emerald-500 border-green-500/30";
       case "blue":
@@ -60,7 +62,7 @@ function MetricCard({
     >
       <div className="flex items-center justify-between mb-2">
         <div className="text-sm text-slate-400">{title}</div>
-        <Icon className={`h-5 w-5 text-${color}-500`} />
+        <Icon className={`h-5 w-5 text-${color}-500`} /> 
       </div>
       <div className="text-2xl font-bold mb-1 bg-gradient-to-r bg-clip-text text-transparent from-slate-100 to-slate-300">
         {value}
@@ -83,7 +85,7 @@ export default function AssetSummary() {
         value={248}
         icon={Computer}
         trend="up"
-        color="cyan"
+        color="teal"
         detail="12 added this month"
       />
       <MetricCard

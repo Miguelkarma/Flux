@@ -1,130 +1,91 @@
-import { User } from "firebase/auth";
-import { FC } from "react";
 import { NavLink } from "react-router-dom";
-import {
-  Home,
-  LaptopMinimal,
-  ChevronUp,
-  ExternalLink,
-  Banknote,
-} from "lucide-react";
-import {
-  Sidebar as UISidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-} from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { Separator } from "@radix-ui/react-separator";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Command, Laptop, Users, Banknote, ExternalLink } from "lucide-react";
 
-interface SidebarProps {
-  user: User | null;
-  onLogout: () => void;
+
+interface StatusItemProps {
+  label: string;
+  value: number;
+  color: string;
 }
 
+function StatusItem({ label, value, color }: StatusItemProps) {
+  const getColor = () => {
+    switch (color) {
+      case "cyan":
+        return "from-cyan-500 to-blue-500";
+      case "green":
+        return "from-green-500 to-emerald-500";
+      case "blue":
+        return "from-blue-500 to-indigo-500";
+      case "purple":
+        return "from-purple-500 to-pink-500";
+      case "amber":
+        return "from-amber-500 to-yellow-500";
+      case "red":
+        return "from-red-500 to-rose-500";
+      default:
+        return "from-cyan-500 to-blue-500";
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <div className="text-xs text-slate-400">{label}</div>
+        <div className="text-xs text-slate-400">{value}%</div>
+      </div>
+      <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+        <div
+          className={`h-full bg-gradient-to-r ${getColor()} rounded-full`}
+          style={{ width: `${value}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+}
+
+// Navigation items
 const items = [
-  { title: "Dashboard", url: "/Dashboard", icon: Home },
-  { title: "Assets", url: "/Assets", icon: LaptopMinimal },
+  { title: "Dashboard", url: "/Dashboard", icon: Command },
+  { title: "Assets", url: "/Assets", icon: Laptop },
+  { title: "Employee", url: "/Employee", icon: Users },
   { title: "Exchange", url: "/Exchange", icon: Banknote },
   { title: "Coming Soon", url: "/ExternalAPI", icon: ExternalLink },
 ];
 
-const Sidebar: FC<SidebarProps> = ({ user, onLogout }) => {
+export default function Sidebar() {
   return (
-    <UISidebar
-      collapsible="icon"
-      variant="floating"
-      className="sidebar group flex flex-col h-screen transition-all duration-300 overflow-hidden"
-    >
-      <SidebarContent className="flex-grow rounded-xl flex-shrink-0 backdrop-blur-md backdrop-opacity-70">
-        <SidebarGroup>
-          {/* Sidebar Logo */}
-          <SidebarGroupLabel className="transition-opacity group-[.collapsed]:opacity-0 text-2xl font-bold gap-2 bg-gradient-to-r from-primary to-muted bg-clip-text text-transparent mt-2 ">
-            Techtrack
-          </SidebarGroupLabel>
-          <Separator className="my-4 h-[1px] w-full bg-teal-300/60" />
-
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem
-                  key={item.title}
-                  className=" py-2 text-[1.1em] font-medium "
-                >
-                  <NavLink
-                    to={item.url}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2 p-1 w-full 
-                        transition-colors duration-200 ease-in-out bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
-                        ${
-                          isActive
-                            ? "text-[hsl(177,70%,70%)] bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent "
-                            : "text-[hsl(177,70%,90%)] hover:text-teal-500"
-                        }
-                        before:absolute before:bottom-[-2px] before:left-0 before:w-0 before:h-[2px] before:bg-gradient-to-r before:from-teal-500  before:via-teal-500 before:to-transparent before:transition-all before:duration-300 hover:before:w-full before:rounded-full `
-                    }
-                  >
-                    <item.icon
-                      strokeWidth={2}
-                      className="min-w-4 transition-colors"
-                    />
-                    <span className="transition-all  overflow-hidden whitespace-nowrap max-w-[200px] group-[.collapsed]:max-w-0 group-[.collapsed]:opacity-0">
-                      {item.title}
-                    </span>
-                  </NavLink>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-
-      {/* Sidebar Footer */}
-      <SidebarFooter className="rounded-b-md flex-shrink-0 bg-transparent backdrop-blur-md backdrop-opacity-75 hover:bg-accent">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2  w-full text-left">
-                  <Avatar className="w-8 h-8 border-2 -translate-x-1 ">
-                    <AvatarImage src={user?.photoURL || ""} alt="User Avatar" />
-                    <AvatarFallback>
-                      {user?.displayName?.charAt(0) || "User"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="transition-opacity group-[.collapsed]:opacity-0 whitespace-nowrap justify-start text-sm  flex  font-medium">
-                    {user?.displayName || "User"}
-                  </span>
-                  <ChevronUp className="ml-auto transition-opacity group-[.collapsed]:opacity-0 text-[hsl(177,70%,90%)]" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={onLogout}>
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </UISidebar>
+    <div className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm h-full rounded-lg border p-4">
+      <nav className="space-y-2">
+        {items.map((item) => (
+          <NavLink
+            key={item.title}
+            to={item.url}
+            className={({ isActive }) =>
+              `flex items-center gap-2 p-2 rounded-lg transition-colors duration-200 
+              ${
+                isActive
+                  ? "bg-slate-800/70 text-teal-400"
+                  : "text-slate-400 hover:text-slate-100"
+              }`
+            }
+          >
+            <item.icon className="h-5 w-5" />
+            {item.title}
+          </NavLink>
+        ))}
+      </nav>
+      <div className="mt-8 pt-6 border-t border-slate-700/50">
+        <div className="text-xs text-slate-500 mb-2 font-mono">
+          ASSET STATUS
+        </div>
+        <div className="space-y-3">
+          <StatusItem label="Active Assets" value={92} color="green" />
+          <StatusItem label="Maintenance" value={7} color="amber" />
+          <StatusItem label="Retired" value={1} color="red" />
+        </div>
+      </div>
+    </div>
   );
-};
+}
 
-export default Sidebar;

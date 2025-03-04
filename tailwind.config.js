@@ -1,5 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+    safelist: [
+    "from-teal-200",
+    "to-teal-800",
+    "border-teal-500/50",
+    "text-teal-500"
+  ],
+
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",

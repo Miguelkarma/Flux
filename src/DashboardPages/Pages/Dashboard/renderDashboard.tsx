@@ -2,18 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-
 import DashboardParticles from "@/Animation/DashboardParticles";
 import Header from "@/components/DashboardComponents/Header";
-import Sidebar from "@/components/DashboardComponents/Sidebar";
-import AssetTable from "@/components/DashboardComponents/AssetTable";
+import Sidebar from "@/components/Sidebar";
 import SystemTime from "@/components/DashboardComponents/SystemTime";
 import QuickActions from "@/components/DashboardComponents/QuickActions";
 import AssetSummary from "@/components/DashboardComponents/AssetSummary";
-// import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
-// import { Progress } from "@/components/ui/progress";
-// import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Dashboard() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -65,31 +59,24 @@ export default function Dashboard() {
         {/* Main content */}
         <div className="grid grid-cols-12 gap-6">
           {/* Sidebar */}
-          <div className="col-span-12 md:col-span-3 lg:col-span-2">
+          <div className="col-span-12 md:col-span-3 lg:col-span-3">
             <Sidebar />
           </div>
 
           {/* Main dashboard */}
-          <div className="col-span-12 md:col-span-9 lg:col-span-7">
+          <div className="col-span-12 md:col-span-9 lg:col-span-9">
             <div className="grid gap-6">
               {/* Asset Summary */}
               <AssetSummary />
-
-              {/* Asset Table */}
-              <AssetTable />
+                 <SystemTime />
+                  <QuickActions />
             </div>
           </div>
 
           {/* Right sidebar */}
-          <div className="col-span-12 lg:col-span-3">
-            <div className="grid gap-6">
-              {/* System time */}
-              <SystemTime />
-
-              {/* Quick actions */}
-              <QuickActions />
-            </div>
-          </div>
+         
+        
+          
         </div>
       </div>
     </div>
