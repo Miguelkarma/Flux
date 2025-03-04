@@ -5,8 +5,8 @@ import Registration from "@/authentication/Registration";
 import App from "@/App.tsx";
 import "@/App.css";
 import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
-import Dashboard from "@/DashboardPages/Pages/DashboardLayout";
-import Assets from "@/DashboardPages/Pages/Assets";
+import Dashboard from "@/DashboardPages/Pages/Dashboard/DashboardLayout";
+import Assets from "@/DashboardPages/Pages/Assets/Assets";
 import Settings from "@/DashboardPages/Pages/Settings";
 
 const AppRouter = () => {
