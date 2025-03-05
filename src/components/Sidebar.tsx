@@ -27,8 +27,8 @@ function StatusItem({ label, value, color }: StatusItemProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <div className="text-xs text-muted-foreground">{label}</div>
-        <div className="text-xs text-muted-foreground">{value}%</div>
+        <div className="text-xs text-secondary-foreground">{label}</div>
+        <div className="text-xs text-secondary-foreground">{value}%</div>
       </div>
       <div className="h-1.5 bg-muted rounded-full overflow-hidden">
         <div
@@ -74,7 +74,7 @@ export default function Sidebar() {
 
       {/* ASSET STATUS SECTION */}
       <div className="mt-8 pt-6 border-t border-sidebar-border">
-        <div className="text-xs text-muted-foreground mb-2 font-mono">
+        <div className="text-xs text-accent-foreground mb-2 font-semibold">
           ASSET STATUS
         </div>
         <div className="space-y-3">
