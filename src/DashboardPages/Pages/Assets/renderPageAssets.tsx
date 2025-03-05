@@ -1,32 +1,54 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import Sidebar from "@/DashboardPages/Sidebar";
-import { DataTable } from "@/DashboardPages/Pages/Assets/table";
-import ParticlesBackground from "@/Animation/ParticlesBackground";
-import { useAuth } from "@/hooks/use-auth";
+"use client";
 
-export default function Assets() {
-  const { user, handleLogout } = useAuth();
+import { useEffect, useState } from "react";
+import DashboardParticles from "@/Animation/DashboardParticles";
+import { DataTable } from "./table";
+import Header from "@/components/DashboardComponents/Header";
+import Sidebar from "@/components/Sidebar";
+import { Card } from "@/components/ui/card";
+import Loader from "@/Animation/SmallLoader";
+export default function Dashboard() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-screen">
-        {/* Sidebar */}
-        <aside className="hidden md:flex">
-          <Sidebar user={user} onLogout={handleLogout} />
-        </aside>
+    <div
+      className={`${theme} min-h-screen bg-gradient-to-br from-black to-slate-900 text-slate-100 relative overflow-hidden`}
+    >
+      <DashboardParticles />
 
-        {/* Main Content */}
-        <main className="flex flex-col flex-1 min-w-0 p-4 overflow-auto">
-          <ParticlesBackground />
-          <SidebarTrigger />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Asset Management Section */}
-            <div className="lg:col-span-2 p-4 bg-muted rounded-xl shadow">
-              <DataTable />
-            </div>
+      {/* Display the loader if loading */}
+      {isLoading && <Loader />}
+
+      <div className="container mx-auto p-4 relative z-10">
+        <Header theme={theme} toggleTheme={toggleTheme} />
+
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 md:col-span-3 lg:col-span-3">
+            <Sidebar />
           </div>
-        </main>
+
+          <Card className="col-span-12 md:col-span-9 lg:col-span-9 p-3">
+            <div>
+              <div className="grid gap-6">
+                <DataTable />
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
-    </SidebarProvider>
+    </div>
   );
 }
