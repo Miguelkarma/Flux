@@ -1,110 +1,127 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { RegistrationForm } from "@/components/registration-form";
-import { MemoryRouter } from "react-router-dom";
+import RegistrationForm from "@/components/registration-form";
+import { auth } from "@/firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-// Mock Firebase functions for testing
+// Mock Firebase and React Router
+jest.mock("@/firebase/firebase", () => ({
+  auth: {
+    currentUser: { uid: "123" },
+  },
+}));
+
 jest.mock("firebase/auth", () => ({
-  getAuth: jest.fn(() => ({ currentUser: null })),
   createUserWithEmailAndPassword: jest.fn(),
   updateProfile: jest.fn(),
 }));
 
-const mockNavigate = jest.fn(); // Mock navigation function
-
-// Mock useNavigate to return the mocked function
 jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockNavigate,
+  useNavigate: jest.fn(),
+}));
+
+
+jest.mock("sonner", () => ({
+  Toaster: () => <div>Toaster Mock</div>,
+  toast: {
+    error: jest.fn(),
+    success: jest.fn(),
+
+  },
 }));
 
 describe("RegistrationForm", () => {
+  const mockNavigate = jest.fn();
+  const mockCreateUserWithEmailAndPassword =
+    createUserWithEmailAndPassword as jest.Mock;
+  const mockUpdateProfile = updateProfile as jest.Mock;
+  const mockToastError = toast.error as jest.Mock;
+
   beforeEach(() => {
-    jest.clearAllMocks(); // Clear mocks before each test
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
+    mockCreateUserWithEmailAndPassword.mockResolvedValue({
+      user: { uid: "123" },
+    });
+    mockUpdateProfile.mockResolvedValue({});
+    mockToastError.mockImplementation(() => {}); 
   });
 
-  // Test successful registration
-  test("handles successful registration", async () => {
-    (createUserWithEmailAndPassword as jest.Mock).mockResolvedValueOnce({
-      user: { uid: "1234" },
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    render(
-      <MemoryRouter>
-        <RegistrationForm />
-      </MemoryRouter>
-    );
+  test("renders the registration form", () => {
+    render(<RegistrationForm />);
+    expect(screen.getByText("Create an Account")).toBeInTheDocument();
+    expect(screen.getByTestId("username-input")).toBeInTheDocument();
+    expect(screen.getByTestId("email-input")).toBeInTheDocument();
+    expect(screen.getByTestId("password-input")).toBeInTheDocument();
+    expect(screen.getByTestId("submit-button")).toBeInTheDocument();
+  });
 
-    // Simulate user input
-    fireEvent.change(screen.getByLabelText(/username/i), {
-      target: { value: "TestUser" },
+  test("validates form inputs", async () => {
+    render(<RegistrationForm />);
+
+    fireEvent.click(screen.getByTestId("submit-button"));
+
+    await waitFor(() => {
+      expect(mockToastError).toHaveBeenCalledWith("Username is required.");
+      expect(mockToastError).toHaveBeenCalledWith("Email is required.");
+      expect(mockToastError).toHaveBeenCalledWith("Password is required.");
     });
-    fireEvent.change(screen.getByLabelText(/email/i), {
+  });
+
+  test("submits the form with valid inputs", async () => {
+    render(<RegistrationForm />);
+
+    fireEvent.change(screen.getByTestId("username-input"), {
+      target: { value: "testuser" },
+    });
+    fireEvent.change(screen.getByTestId("email-input"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/password/i), {
+    fireEvent.change(screen.getByTestId("password-input"), {
       target: { value: "password123" },
     });
-    fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
 
-    // Check if functions were called and navigation occurred
+    fireEvent.click(screen.getByTestId("submit-button"));
+
     await waitFor(() => {
-      expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
-      expect(updateProfile).toHaveBeenCalledTimes(1);
+      expect(mockCreateUserWithEmailAndPassword).toHaveBeenCalledWith(
+        auth,
+        "test@example.com",
+        "password123"
+      );
+      expect(mockUpdateProfile).toHaveBeenCalledWith(
+        { uid: "123" },
+        { displayName: "testuser" }
+      );
       expect(mockNavigate).toHaveBeenCalledWith("/login");
     });
   });
 
-  // Test registration failure
-  test("displays error message on registration failure", async () => {
-    (createUserWithEmailAndPassword as jest.Mock).mockRejectedValueOnce(
+  test("handles registration error", async () => {
+    mockCreateUserWithEmailAndPassword.mockRejectedValueOnce(
       new Error("Registration failed")
     );
 
-    render(
-      <MemoryRouter>
-        <RegistrationForm />
-      </MemoryRouter>
-    );
+    render(<RegistrationForm />);
 
-    // Simulate user input
-    fireEvent.change(screen.getByLabelText(/username/i), {
-      target: { value: "TestUser" },
+    fireEvent.change(screen.getByTestId("username-input"), {
+      target: { value: "testuser" },
     });
-    fireEvent.change(screen.getByLabelText(/email/i), {
+    fireEvent.change(screen.getByTestId("email-input"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/password/i), {
+    fireEvent.change(screen.getByTestId("password-input"), {
       target: { value: "password123" },
     });
-    fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
 
-    // Check for error message
+    fireEvent.click(screen.getByTestId("submit-button"));
+
     await waitFor(() => {
-      expect(screen.getByText(/registration failed/i)).toBeInTheDocument();
-    });
-  });
-
-  // Test missing username error
-  test("displays an error when username is missing", async () => {
-    render(
-      <MemoryRouter>
-        <RegistrationForm />
-      </MemoryRouter>
-    );
-
-    // Simulate user input for email and password only
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: "test@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: "password123" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
-
-    // Check for missing username error message
-    await waitFor(() => {
-      expect(screen.getByText(/username is required/i)).toBeInTheDocument();
+      expect(screen.getByText("Registration failed")).toBeInTheDocument();
     });
   });
 });
