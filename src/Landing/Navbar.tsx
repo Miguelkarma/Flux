@@ -68,16 +68,15 @@ export default function Navbar() {
                 href="https://github.com/miguelkarma"
                 target="_blank"
                 rel="noreferrer"
-                className="hidden md:block"
+                className="hidden md:block "
               >
-                <Button variant="ghost">
-                  <Github className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
+                <Button className="bg-slate-800">
+                  <Github className="h-5 w-5 text-white " />
+                  <span className="sr-only text-white">GitHub</span>
                 </Button>
               </a>
               <div className="hidden md:block space-x-4">
                 <Button
-                  variant="ghost"
                   className="relative w-auto px-6 py-2 p-4 text-white bg-black border border-white/50 rounded-full transition-all hover:bg-black 
                 before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-200 before:rounded-full"
                   onClick={() => navigate("/login")}
