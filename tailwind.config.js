@@ -1,10 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    safelist: [
+  safelist: [
     "from-teal-200",
     "to-teal-800",
     "border-teal-500/50",
-    "text-teal-500"
+    "text-teal-500",
+    "from-purple-200",
+    "to-purple-800",
+    "border-purple-500/50",
+    "text-purple-500",
   ],
 
   darkMode: ["class"],
@@ -90,8 +94,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),require("flowbite/plugin")],
+  plugins: [require("tailwindcss-animate"), require("flowbite/plugin")],
 };
-
- 
-

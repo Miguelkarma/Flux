@@ -30,7 +30,7 @@ function Login() {
       console.log("User Logged In:", userCredential.user);
       sessionStorage.setItem("toastMessage", "Login successful! Welcome back.");
 
-      navigate("/Dashboard"); // Redirect to Dashboard on success
+      navigate("/Dashboard"); //
     } catch (error) {
       console.error("Login Error:", error);
       alert("Invalid email or password.");

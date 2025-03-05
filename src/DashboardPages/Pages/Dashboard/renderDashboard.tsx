@@ -68,18 +68,14 @@ export default function Dashboard() {
             <div className="grid gap-6">
               {/* Asset Summary */}
               <AssetSummary />
-                 <SystemTime />
-                  <QuickActions />
+              <SystemTime />
+              <QuickActions />
             </div>
           </div>
 
           {/* Right sidebar */}
-         
-        
-          
         </div>
       </div>
     </div>
   );
 }
-

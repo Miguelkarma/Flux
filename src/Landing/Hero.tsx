@@ -28,7 +28,7 @@ export default function Hero() {
           <h1 className="bg-gradient-to-t from-foreground from-30%  to-foreground/70 bg-clip-text  tracking-tight text-transparent text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
             Track Assets Faster with
             <br />
-            <span className="bg-gradient-to-t from-primary   to-accent bg-clip-text ">
+            <span className="bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-700 bg-clip-text ">
               Tech Track
             </span>
           </h1>

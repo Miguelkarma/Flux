@@ -1,4 +1,4 @@
-import { Waypoints, Moon, Search, Sun } from "lucide-react";
+import { Waypoints, Moon, Search, Sun, CirclePower } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -7,6 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAuth } from "@/hooks/use-auth";
 
 interface HeaderProps {
   theme: "dark" | "light";
@@ -14,10 +15,11 @@ interface HeaderProps {
 }
 
 export default function Header({ theme, toggleTheme }: HeaderProps) {
+  const { user, handleLogout } = useAuth();
   return (
     <header className="flex items-center justify-between py-4 border-b border-slate-700/50 mb-6">
       <div className="flex items-center space-x-2">
-       <Waypoints className="h-8 w-8 text-teal-300" />
+        <Waypoints className="h-8 w-8 text-teal-300" />
         <span className="text-xl font-bold bg-gradient-to-r from-teal-200 to-teal-600 bg-clip-text text-transparent">
           Flux
         </span>
@@ -34,7 +36,6 @@ export default function Header({ theme, toggleTheme }: HeaderProps) {
         </div>
 
         <div className="flex items-center space-x-3">
-          
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -60,9 +61,16 @@ export default function Header({ theme, toggleTheme }: HeaderProps) {
           <Avatar>
             <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
             <AvatarFallback className="bg-slate-700 text-cyan-500">
-              CM
+              {user?.displayName?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
+
+          <button
+            onClick={handleLogout}
+            className="text-sm text-red-500 hover:underline"
+          >
+            <CirclePower />
+          </button>
         </div>
       </div>
     </header>
