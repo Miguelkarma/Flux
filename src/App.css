@@ -42,6 +42,9 @@
     --sidebar-accent-foreground: 60 40% 20%;
     --sidebar-border: 180 20% 82%;
     --sidebar-ring: 180 60% 47%;
+
+    --landing-background: 220 40% 10%;
+    --landing-foreground: 210 12% 70%;
   }
 
   .dark {
@@ -101,4 +104,14 @@
   .inactive-state {
     @apply text-slate-400 hover:text-slate-100 dark:text-slate-500 dark:hover:text-white;
   }
+}
+
+.bg-mask {
+  height: 60rem;
+
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }

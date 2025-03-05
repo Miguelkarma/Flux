@@ -36,7 +36,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -99,11 +99,12 @@ export default function Navbar() {
                   variant="ghost"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   aria-label="Toggle menu"
+                  className="focus:bg-transparent"
                 >
                   {mobileMenuOpen ? (
-                    <X className="h-6 w-6" />
+                    <X className="h-6 w-6 text-white" />
                   ) : (
-                    <Menu className="h-6 w-6" />
+                    <Menu className="h-6 w-6 text-white " />
                   )}
                 </Button>
               </div>
@@ -113,7 +114,7 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden px-4 py-4 bg-background/95 backdrop-blur-md border-b border-white/10">
+          <div className="md:hidden px-4 py-4 bg-black/80 backdrop-blur-md border-b border-white/10">
             <div className="flex flex-col space-y-4">
               {navigation.map((item) => (
                 <span

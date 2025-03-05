@@ -29,6 +29,8 @@ module.exports = {
     },
     extend: {
       colors: {
+        "landing-background": "hsl(var(--landing-background))",
+        "landing-foreground": "hsl(var(--landing-foreground))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

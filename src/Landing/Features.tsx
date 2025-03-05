@@ -39,10 +39,10 @@ export default function Features() {
         viewport={{ once: true, amount: 0.2 }}
         className="mx-auto max-w-[58rem] text-center"
       >
-        <h2 className="font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl">
+        <h2 className="font-DM Sans, sans-serif; font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl bg-gradient-to-b from-gray-200 via-gray-400 to-gray-800 bg-clip-text text-transparent ">
           Smarter IT Asset Management
         </h2>
-        <p className="mt-4 text-muted-foreground sm:text-lg">
+        <p className="mt-4 text-landing-foreground sm:text-lg">
           Optimize asset utilization, enhance security, and gain real-time
           insights with our advanced IT asset management solutions.
         </p>
@@ -57,13 +57,15 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.2 }}
             viewport={{ once: true, amount: 0.2 }}
-            className="relative overflow-hidden rounded-lg border bg-background p-8"
+            className="relative overflow-hidden rounded-lg border border-gray-300 bg-transparent p-8 text-gray-200"
           >
             <div className="flex items-center gap-4">
               <feature.icon className="h-8 w-8" />
               <h3 className="font-bold">{feature.name}</h3>
             </div>
-            <p className="mt-2 text-muted-foreground">{feature.description}</p>
+            <p className="mt-2 text-landing-foreground">
+              {feature.description}
+            </p>
           </motion.div>
         ))}
       </div>
