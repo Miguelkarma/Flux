@@ -5,7 +5,7 @@ import DashboardParticles from "@/Animation/DashboardParticles";
 import { DataTable } from "./table";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
-import { Card } from "@/components/ui/card";
+
 import Loader from "@/Animation/SmallLoader";
 export default function Dashboard() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -40,13 +40,11 @@ export default function Dashboard() {
             <Sidebar />
           </div>
 
-          <Card className="col-span-12 md:col-span-9 lg:col-span-9 p-3">
-            <div>
-              <div className="grid gap-6">
-                <DataTable />
-              </div>
+          <div className="col-span-12 md:col-span-9 lg:col-span-9 p-3">
+            <div className="grid gap-6">
+              <DataTable />
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>
