@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import DashboardParticles from "@/Animation/DashboardParticles";
-
+import { useTheme } from "@/Animation/ThemeProvider";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import Loader from "@/Animation/SmallLoader";
 import CurrencyConverter from "@/components/ExchangeComponents/currency-converter";
-
 import ExchangeRateTable from "../../../components/ExchangeComponents/ExchangeRateTable";
+
 export default function Exchange() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const { theme } = useTheme(); 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,13 +22,9 @@ export default function Exchange() {
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   return (
     <div
-      className={`${theme} min-h-screen bg-gradient-to-br from-black to-slate-900 text-slate-100 relative overflow-hidden`}
+      className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
     >
       <DashboardParticles />
 
@@ -36,7 +32,7 @@ export default function Exchange() {
       {isLoading && <Loader />}
 
       <div className="container mx-auto p-4 relative z-10">
-        <Header theme={theme} toggleTheme={toggleTheme} />
+        <Header />
 
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-3 lg:col-span-3">

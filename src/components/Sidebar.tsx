@@ -37,7 +37,7 @@ const items = [
 
 export default function Sidebar() {
   return (
-    <div className="bg-sidebar-background border-sidebar-border backdrop-blur-sm h-full rounded-lg border p-4">
+    <div className="bg-[var(--sidebar-background)] border-sidebar-border backdrop-blur-sm h-full rounded-lg border p-4">
       <nav className="space-y-2">
         {items.map((item) => (
           <NavLink

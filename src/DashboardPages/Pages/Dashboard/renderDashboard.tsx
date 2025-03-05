@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { useTheme } from "@/Animation/ThemeProvider";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
@@ -11,7 +11,8 @@ import AssetSummary from "@/components/DashboardComponents/AssetSummary";
 import { toast, Toaster } from "sonner";
 
 export default function Dashboard() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const { theme } = useTheme();
+
   const [isLoading, setIsLoading] = useState(true);
 
   // Simulate data loading
@@ -23,11 +24,7 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Toggle theme
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-  //toast
+  // Toast message
   useEffect(() => {
     const toastMessage = sessionStorage.getItem("toastMessage");
     if (toastMessage) {
@@ -38,7 +35,7 @@ export default function Dashboard() {
 
   return (
     <div
-      className={`${theme} min-h-screen bg-gradient-to-br from-black to-slate-900 text-slate-100 relative overflow-hidden`}
+      className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
     >
       <Toaster
         position="top-right"
@@ -72,7 +69,7 @@ export default function Dashboard() {
 
       <div className="container mx-auto p-4 relative z-10">
         {/* Header */}
-        <Header theme={theme} toggleTheme={toggleTheme} />
+        <Header />
 
         {/* Main content */}
         <div className="grid grid-cols-12 gap-6">

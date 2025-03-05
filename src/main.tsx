@@ -4,9 +4,12 @@ import { createRoot } from "react-dom/client";
 import "flowbite";
 import "@fontsource/dm-sans/500.css";
 import "@fontsource/dm-sans/700.css";
+import { ThemeProvider } from "./Animation/ThemeProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppRouter />
+    <ThemeProvider>
+      <AppRouter />
+    </ThemeProvider>
   </StrictMode>
 );

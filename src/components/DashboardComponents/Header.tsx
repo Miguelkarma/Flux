@@ -8,14 +8,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
+import { useTheme } from "@/Animation/ThemeProvider";
 
-interface HeaderProps {
-  theme: "dark" | "light";
-  toggleTheme: () => void;
-}
-
-export default function Header({ theme, toggleTheme }: HeaderProps) {
+export default function Header() {
+  const { theme, toggleTheme } = useTheme();
   const { user, handleLogout } = useAuth();
+
   return (
     <header className="flex items-center justify-between py-4 border-b border-slate-700/50 mb-6">
       <div className="flex items-center space-x-2">
