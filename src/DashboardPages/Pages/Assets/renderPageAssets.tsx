@@ -5,8 +5,8 @@ import DashboardParticles from "@/Animation/DashboardParticles";
 import { DataTable } from "./table";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
-
 import Loader from "@/Animation/SmallLoader";
+
 export default function Dashboard() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +14,7 @@ export default function Dashboard() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
