@@ -1,39 +1,58 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import Sidebar from "../../Sidebar";
-import { useAuth } from "@/hooks/use-auth";
-import CurrencyConverter from "@/DashboardPages/Pages/CurrencyExchange/currency-converter";
-import ParticlesBackground from "@/Animation/ParticlesBackground";
-import ExchangeRateTable from "./ExchangeRateTable";
+"use client";
 
+import { useEffect, useState } from "react";
+import DashboardParticles from "@/Animation/DashboardParticles";
+
+import Header from "@/components/DashboardComponents/Header";
+import Sidebar from "@/components/Sidebar";
+import { Card } from "@/components/ui/card";
+import Loader from "@/Animation/SmallLoader";
+import CurrencyConverter from "@/DashboardPages/Pages/CurrencyExchange/currency-converter";
+
+import ExchangeRateTable from "./ExchangeRateTable";
 export default function Exchange() {
-  const { user, handleLogout } = useAuth();
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-screen">
-        {/* Sidebar - Hidden on small screens */}
-        <aside className="hidden md:flex">
-          <Sidebar user={user} onLogout={handleLogout} />
-        </aside>
+    <div
+      className={`${theme} min-h-screen bg-gradient-to-br from-black to-slate-900 text-slate-100 relative overflow-hidden`}
+    >
+      <DashboardParticles />
 
-        {/* Main Content */}
-        <main className="flex flex-col flex-1 min-w-0 p-4 overflow-auto w-full">
-          <SidebarTrigger />
-          <ParticlesBackground />
+      {/* Display the loader if loading */}
+      {isLoading && <Loader />}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-5 w-full">
-            {/* Currency Converter */}
-            <div className="col-span-1 md:col-span-2 lg:col-span-2 w-full md:p-3 p-6 bg-transparent ">
-              <CurrencyConverter />
-            </div>
+      <div className="container mx-auto p-4 relative z-10">
+        <Header theme={theme} toggleTheme={toggleTheme} />
 
-            {/* Exchange Rate Table  */}
-            <div className="col-span-1 md:col-span-2 lg:col-span-2 w-full max-md:p-3 p-6 bg-transparent ">
-              <ExchangeRateTable />
-            </div>
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 md:col-span-3 lg:col-span-3">
+            <Sidebar />
           </div>
-        </main>
+
+          <Card className="col-span-12 md:col-span-9 lg:col-span-9 p-3">
+            <div>
+              <div className="grid gap-6">
+                <CurrencyConverter />
+                <ExchangeRateTable />
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
-    </SidebarProvider>
+    </div>
   );
 }
