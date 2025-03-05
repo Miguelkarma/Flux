@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardParticles from "@/Animation/DashboardParticles";
-import { DataTable } from "./table";
+import { DataTable } from "../../../components/AssetsComponents/table";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import Loader from "@/Animation/SmallLoader";

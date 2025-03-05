@@ -7,9 +7,9 @@ import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import Loader from "@/Animation/SmallLoader";
-import CurrencyConverter from "@/DashboardPages/Pages/CurrencyExchange/currency-converter";
+import CurrencyConverter from "@/components/ExchangeComponents/currency-converter";
 
-import ExchangeRateTable from "./ExchangeRateTable";
+import ExchangeRateTable from "../../../components/ExchangeComponents/ExchangeRateTable";
 export default function Exchange() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [isLoading, setIsLoading] = useState(true);
