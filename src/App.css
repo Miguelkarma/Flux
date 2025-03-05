@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 97%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -33,6 +33,15 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --sidebar-background: 180 20% 100%;
+    --sidebar-foreground: 180 30% 31%;
+    --sidebar-primary: 180 60% 38%;
+    --sidebar-primary-foreground: 180 90% 100%;
+    --sidebar-accent: 180 15% 85%;
+    --sidebar-accent-foreground: 60 40% 20%;
+    --sidebar-border: 180 20% 82%;
+    --sidebar-ring: 180 60% 47%;
   }
 
   .dark {
@@ -63,6 +72,15 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    --sidebar-background: 180 20% 2%;
+    --sidebar-foreground: 180 60% 38%;
+    --sidebar-primary: 180 60% 25%;
+    --sidebar-primary-foreground: 180 90% 98%;
+    --sidebar-accent: 180 20% 12%;
+    --sidebar-accent-foreground: 180 60% 85%;
+    --sidebar-border: 180 20% 22%;
+    --sidebar-ring: 180 60% 42%;
   }
 }
 
@@ -72,5 +90,15 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .active-state {
+    @apply bg-slate-800/70 text-teal-400 dark:bg-slate-200/70 dark:text-teal-600;
+  }
+
+  .inactive-state {
+    @apply text-slate-400 hover:text-slate-100 dark:text-slate-500 dark:hover:text-white;
   }
 }

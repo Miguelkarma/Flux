@@ -8,7 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import Loader from "@/Animation/SmallLoader";
 
 export default function Dashboard() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme] = useState<"dark" | "light">("dark");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -19,13 +19,9 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
   return (
     <div
-      className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20  to-black text-slate-100 relative overflow-hidden`}
+      className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
     >
       <DashboardParticles />
 
@@ -33,7 +29,7 @@ export default function Dashboard() {
       {isLoading && <Loader />}
 
       <div className="container mx-auto p-4 relative z-10">
-        <Header theme={theme} toggleTheme={toggleTheme} />
+        <Header />
 
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-3 lg:col-span-3">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import DashboardParticles from "@/Animation/DashboardParticles";
-import { useTheme } from "@/Animation/ThemeProvider";
+import { useTheme } from "@/hooks/ThemeProvider";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import CurrencyConverter from "@/components/ExchangeComponents/currency-converte
 import ExchangeRateTable from "../../../components/ExchangeComponents/ExchangeRateTable";
 
 export default function Exchange() {
-  const { theme } = useTheme(); 
+  const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTheme } from "@/Animation/ThemeProvider";
+import { useTheme } from "@/hooks/ThemeProvider";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";

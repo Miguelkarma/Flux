@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
-import { useTheme } from "@/Animation/ThemeProvider";
+import { useTheme } from "@/hooks/ThemeProvider";
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
