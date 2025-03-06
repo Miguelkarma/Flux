@@ -7,6 +7,8 @@ import {
   getFilteredRowModel,
   ColumnFiltersState,
   SortingState,
+  VisibilityState,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -56,8 +58,9 @@ export function DataTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] = React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [firebaseData, setFirebaseData] = React.useState<FirestoreData[]>([]);
   const [userEmail, setUserEmail] = React.useState<string | null>(null);
 
