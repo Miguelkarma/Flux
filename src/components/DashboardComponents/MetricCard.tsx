@@ -47,7 +47,7 @@ export default function MetricCard({
 
   return (
     <div
-      className={`bg-slate-800/50 rounded-lg border ${getColor()} p-4 relative overflow-hidden`}
+      className={`bg-[hsl(var(--secondary))] rounded-lg border ${getColor()} p-4 relative overflow-hidden`}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="text-sm text-slate-400">{title}</div>
