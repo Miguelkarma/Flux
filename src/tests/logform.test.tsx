@@ -1,19 +1,24 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { LoginForm } from "@/components/login-form";
 import { MemoryRouter } from "react-router-dom";
 
 describe("LoginForm", () => {
-  const mockOnLogin = jest.fn(); // Mock function for login
+  const mockOnLogin = jest.fn();
 
-  beforeEach(() => {
+  const setup = () => {
     render(
       <MemoryRouter>
         <LoginForm onLogin={mockOnLogin} />
       </MemoryRouter>
     );
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    setup();
   });
 
-  // Test if the login form renders correctly
   test("renders the login form correctly", () => {
     expect(screen.getByText(/login to your account/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
@@ -21,30 +26,26 @@ describe("LoginForm", () => {
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
 
-  // Test if email and password inputs update correctly
-  test("updates email and password inputs correctly", () => {
+  test("updates email and password inputs correctly", async () => {
+    const user = userEvent.setup();
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
 
-    fireEvent.change(emailInput, { target: { value: "test@example.com" } });
-    fireEvent.change(passwordInput, { target: { value: "password123" } });
+    await user.type(emailInput, "test@example.com");
+    await user.type(passwordInput, "password123");
 
     expect(emailInput).toHaveValue("test@example.com");
     expect(passwordInput).toHaveValue("password123");
   });
 
-  // Test if onLogin is called with the correct values on form submission
-  test("calls onLogin with email and password when form is submitted", () => {
+  test("calls onLogin with email and password when form is submitted", async () => {
+    const user = userEvent.setup();
     const email = "test@example.com";
     const password = "password123";
 
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: email },
-    });
-    fireEvent.change(screen.getByLabelText(/password/i), {
-      target: { value: password },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    await user.type(screen.getByLabelText(/email/i), email);
+    await user.type(screen.getByLabelText(/password/i), password);
+    await user.click(screen.getByRole("button", { name: /login/i }));
 
     expect(mockOnLogin).toHaveBeenCalledWith(email, password);
     expect(mockOnLogin).toHaveBeenCalledTimes(1);

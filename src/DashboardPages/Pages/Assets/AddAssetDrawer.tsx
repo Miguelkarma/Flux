@@ -99,7 +99,7 @@ export function AddAssetDrawer({
       await addDoc(collection(db, "it-assets"), {
         ...formData,
         userId: user.uid,
-        dateAdded: new Date().toISOString(), // Store the date added
+        dateAdded: new Date().toISOString(),
       });
 
       toast.success("Asset added successfully!");
@@ -111,7 +111,7 @@ export function AddAssetDrawer({
         assignedEmployee: "",
         email: "",
         status: "Available",
-        dateAdded: new Date().toISOString(), // Reset with the current date
+        dateAdded: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Error adding asset:", error);
