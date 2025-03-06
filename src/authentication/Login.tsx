@@ -12,6 +12,13 @@ import { Waypoints } from "lucide-react";
 
 function Login() {
   const navigate = useNavigate();
+  useEffect(() => {
+    const toastMessage = sessionStorage.getItem("toastMessage");
+    if (toastMessage) {
+      toast.success(toastMessage);
+      sessionStorage.removeItem("toastMessage");
+    }
+  }, []);
 
   useEffect(() => {
     const toastMessage = sessionStorage.getItem("toastMessage");
@@ -34,7 +41,7 @@ function Login() {
       navigate("/Dashboard"); // Redirect to Dashboard on success
     } catch (error) {
       console.error("Login Error:", error);
-      alert("Invalid email or password.");
+      toast.error("Login failed! Please check your email and password.");
     }
   };
 
