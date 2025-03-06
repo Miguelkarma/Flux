@@ -8,7 +8,7 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,7 +35,6 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export type FirestoreData = {
