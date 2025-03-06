@@ -5,8 +5,8 @@ import { RecentActivity } from "./Recent-activity";
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-1 min-w-0 p-4 overflow-auto ml-2">
-      <div className="flex flex-col gap-6 p-2 w-full">
+    <div className="flex flex-grow min-w-0 p-4 transition-all ">
+      <div className="flex flex-col gap-3 p-2 w-full">
         <AssetOverview />
         <div className="grid gap-6 md:grid-cols-2">
           <AssetAllocation />

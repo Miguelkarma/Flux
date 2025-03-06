@@ -35,17 +35,13 @@ export default function CurrencyConverter() {
   }, [fromCurrency, toCurrency, setFromCurrency, setToCurrency]);
 
   return (
-    <Card className="w-full max-w-md mx-auto text-white">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
-          Currency Converter
-        </CardTitle>
-        <CardDescription className="text-center">
-          Convert between 200+ world currencies
-        </CardDescription>
+    <Card className="w-full max-w-screen-lg mx-auto text-white p-6">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-2xl font-bold">Currency Converter</CardTitle>
+        <CardDescription>Convert between 200+ world currencies</CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         {/* Amount Input */}
         <div className="space-y-2">
           <label htmlFor="amount">Amount</label>
@@ -61,7 +57,7 @@ export default function CurrencyConverter() {
         </div>
 
         {/* Currency Selection */}
-        <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2">
+        <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-4">
           <CurrencyInput
             label="From"
             value={fromCurrency}
@@ -75,7 +71,7 @@ export default function CurrencyConverter() {
             onClick={handleSwapCurrencies}
             title="Swap currencies"
           >
-            <ArrowRightLeft className="h-4 w-4" />
+            <ArrowRightLeft className="h-5 w-5" />
           </Button>
           <CurrencyInput
             label="To"
@@ -90,7 +86,10 @@ export default function CurrencyConverter() {
 
         {/* Conversion Result */}
         {convertedAmount !== null && (
-          <div className="p-4 bg-muted rounded-md" aria-live="polite">
+          <div
+            className="p-4 bg-muted rounded-md text-center"
+            aria-live="polite"
+          >
             <p className="text-sm text-muted-foreground">Result:</p>
             <p className="text-xl font-bold">
               {amount} {fromCurrency.toUpperCase()} ={" "}

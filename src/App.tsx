@@ -36,6 +36,8 @@ export default function Home() {
         <div className="flex flex-col flex-grow items-center justify-center bg-grid">
           <Hero />
         </div>
+
+        {/* Additional Sections */}
         <Features />
         <CTA />
         <Footer />

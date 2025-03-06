@@ -8,7 +8,11 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
+<<<<<<< HEAD
 import { ChevronDown} from "lucide-react";
+=======
+import { ChevronDown } from "lucide-react";
+>>>>>>> 8ae576e (Integrated Test, UI responsiveness, integrated API, Improve the file structure, added components)
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,7 +39,12 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8ae576e (Integrated Test, UI responsiveness, integrated API, Improve the file structure, added components)
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Card } from "@/components/ui/card";
 
 export type FirestoreData = {
   id: string;
@@ -208,6 +217,32 @@ export function DataTable() {
             )}
           </TableBody>
         </Table>
+<<<<<<< HEAD
+=======
+      </div>
+      <div className="flex items-center justify-between px-2 py-4">
+        <Button
+          variant="outline"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <span>
+          Page{" "}
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </strong>
+        </span>
+        <Button
+          variant="outline"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+>>>>>>> 8ae576e (Integrated Test, UI responsiveness, integrated API, Improve the file structure, added components)
       </div>
       <div className="flex items-center justify-between px-2 py-4">
         <Button
