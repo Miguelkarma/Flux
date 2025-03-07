@@ -20,6 +20,7 @@ import { EditAssetDrawer } from "@/components/AssetsComponents/EditAssetDrawer";
 
 interface ActionsCellProps {
   asset: FirestoreData;
+
   onAssetUpdated: () => void;
 }
 
