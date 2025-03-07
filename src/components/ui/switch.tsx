@@ -27,7 +27,6 @@ const Switch = () => {
   const { theme, toggleTheme } = useTheme();
   const [isChecked, setIsChecked] = useState(theme === "light");
 
-  // Update checkbox state when theme changes externally
   useEffect(() => {
     setIsChecked(theme === "light");
   }, [theme]);
@@ -103,7 +102,7 @@ const StyledWrapper = styled.div`
     z-index: 10;
 
     width: fit-content;
-    height: 50px;
+    height: 20px;
 
     border-radius: 9999px;
   }
@@ -114,14 +113,14 @@ const StyledWrapper = styled.div`
 
   .toggle-cont .toggle-label {
     --gap: 5px;
-    --width: 50px;
+    --width: 20px;
 
     cursor: pointer;
 
     position: relative;
     display: inline-block;
 
-    padding: 0.5rem;
+    padding: 0.1rem;
     width: calc((var(--width) + var(--gap)) * 2);
     height: 100%;
     background-color: var(--dark);
@@ -142,8 +141,8 @@ const StyledWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
 
-    width: calc(100% + 1.5rem);
-    height: calc(100% + 1.5rem);
+    width: calc(100% + 0.5rem);
+    height: calc(100% + 0.5rem);
     background-color: var(--gray);
 
     border: 1px solid #777777;
@@ -180,8 +179,8 @@ const StyledWrapper = styled.div`
     align-items: center;
 
     position: relative;
-    width: var(--width);
-    height: 50px;
+    width: 17px;
+    height: 17px;
     background-image: radial-gradient(
       circle at 50% 0%,
       #666666 0%,
