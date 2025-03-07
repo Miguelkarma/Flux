@@ -15,7 +15,6 @@ export default function Dashboard() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate data loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);

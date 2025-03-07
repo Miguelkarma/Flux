@@ -56,14 +56,15 @@ export default function Sidebar() {
       className={`${theme} bg-sidebar-background border-sidebar-border text-sidebar-foreground
       backdrop-blur-sm h-full rounded-lg border p-4`}
     >
-      <nav className="space-y-2">
+      <nav className="space-y-2 bg-sidebar-background">
         {items.map((item) => (
           <NavLink
             key={item.title}
             to={item.url}
             className={({ isActive }) =>
-              `flex items-center gap-2 p-2 rounded-lg transition-colors duration-200 
-              ${isActive ? "active-state" : "inactive-state"}`
+              `relative flex items-center gap-2 p-2 rounded-full transition-all hover-active-state-alt ${
+                isActive ? "active-state-alt" : "inactive-state "
+              }`
             }
           >
             <item.icon className="h-5 w-5" />
