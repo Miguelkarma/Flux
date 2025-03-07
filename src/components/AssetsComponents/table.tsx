@@ -37,6 +37,8 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Card } from "../ui/card";
+import TableLoader from "@/Animation/TableLoader";
+import { BulkDeleteComponent } from "./BulkDeleteDialog";
 
 export type FirestoreData = {
   id: string;
@@ -64,6 +66,7 @@ export function DataTable() {
     pageSize: 8,
     pageIndex: 0,
   });
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const auth = getAuth();
@@ -86,6 +89,7 @@ export function DataTable() {
   }, []);
 
   const fetchAssets = React.useCallback((userId: string) => {
+    setLoading(true); // Start loading
     const q = query(
       collection(db, "it-assets"),
       where("userId", "==", userId),
@@ -100,6 +104,7 @@ export function DataTable() {
       })) as FirestoreData[];
       console.log("Fetched data:", data);
       setFirebaseData(data);
+      setLoading(false); // Stop loading after data fetch
     });
 
     return unsubscribe;
@@ -116,67 +121,86 @@ export function DataTable() {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination, // Ensure pagination updates
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination, // Pass the pagination state
+      pagination,
     },
   });
 
+  const selectedRowIds = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original.id);
   return (
     <>
-      <div className="flex items-center gap-4 py-4">
-        <Card className="max-w-lg flex-grow p-2">
-          <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
-            className="border-teal-700"
-          />
-        </Card>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <AddAssetDrawer
-          onAssetAdded={() => {
-            const auth = getAuth();
-            const user = auth.currentUser;
-            if (user) {
-              fetchAssets(user.uid);
-            }
-          }}
-          userEmail={userEmail}
+      <div className="flex items-center justify-between ">
+        <Input
+          placeholder="Filter emails..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("email")?.setFilterValue(event.target.value)
+          }
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
         />
+        {/* columns dropdown */}
+        <div className="flex items-center space-x-2 max-sm:space-x-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
+              >
+                <span className="max-sm:hidden "> Columns </span>
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {/*Add Asset Drawer */}
+          <AddAssetDrawer
+            onAssetAdded={() => {
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (user) {
+                fetchAssets(user.uid);
+              }
+            }}
+            userEmail={userEmail}
+          />
+
+          {/* Bulk Delete */}
+          {selectedRowIds.length > 0 && (
+            <div>
+              <BulkDeleteComponent
+                selectedRowIds={selectedRowIds}
+                clearSelection={() => setRowSelection({})}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="overflow-auto rounded-md border min-w-0">
-        <Table className="w-full">
+      <Card className=" bg-card p-3  border-0 shadow-popover-foreground  overflow-x-auto rounded-md border-b  ">
+        <Table className="w-full shadow-popover-foreground ">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -193,7 +217,18 @@ export function DataTable() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex justify-center items-center h-full">
+                    <TableLoader />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : firebaseData.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
@@ -217,37 +252,38 @@ export function DataTable() {
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-between px-2 py-4">
-        <Button
-          variant="outline"
-          onClick={() =>
-            setPagination((prev) => ({
-              ...prev,
-              pageIndex: Math.max(prev.pageIndex - 1, 0),
-            }))
-          }
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <span>
-          Page <strong>{pagination.pageIndex + 1}</strong> of{" "}
-          <strong>{table.getPageCount()}</strong>
-        </span>
-        <Button
-          variant="outline"
-          onClick={() =>
-            setPagination((prev) => ({
-              ...prev,
-              pageIndex: prev.pageIndex + 1,
-            }))
-          }
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
+
+        <div className="flex items-center justify-between px-2 py-2">
+          <Button
+            variant="outline"
+            onClick={() =>
+              setPagination((prev) => ({
+                ...prev,
+                pageIndex: Math.max(prev.pageIndex - 1, 0),
+              }))
+            }
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <span>
+            Page <strong>{pagination.pageIndex + 1}</strong> of{" "}
+            <strong>{table.getPageCount()}</strong>
+          </span>
+          <Button
+            variant="outline"
+            onClick={() =>
+              setPagination((prev) => ({
+                ...prev,
+                pageIndex: prev.pageIndex + 1,
+              }))
+            }
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </Card>
     </>
   );
 }
