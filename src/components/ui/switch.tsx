@@ -260,7 +260,7 @@ const StyledWrapper = styled.div`
       border: 1px solid var(--primary);
       border-bottom: 0;
 
-      transform: translateX(calc((var(--gap) * 2) + 100%)) rotate(-225deg);
+      transform: translateX(calc((var(--gap) * 3.2) + 100%)) rotate(-225deg);
     }
 
     .toggle-cont .toggle-label .cont-icon .sparkle {
