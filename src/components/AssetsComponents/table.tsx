@@ -37,8 +37,8 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Card } from "../ui/card";
-
 import TableLoader from "@/Animation/TableLoader";
+import { BulkDeleteComponent } from "./BulkDeleteDialog";
 
 export type FirestoreData = {
   id: string;
@@ -66,6 +66,7 @@ export function DataTable() {
     pageSize: 8,
     pageIndex: 0,
   });
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const auth = getAuth();
@@ -86,8 +87,6 @@ export function DataTable() {
     return () => unsubscribeAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const [loading, setLoading] = React.useState(true);
 
   const fetchAssets = React.useCallback((userId: string) => {
     setLoading(true); // Start loading
@@ -132,6 +131,9 @@ export function DataTable() {
     },
   });
 
+  const selectedRowIds = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original.id);
   return (
     <>
       <div className="flex items-center justify-between ">
@@ -143,6 +145,7 @@ export function DataTable() {
           }
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
         />
+        {/* columns dropdown */}
         <div className="flex items-center space-x-2 max-sm:space-x-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -172,7 +175,7 @@ export function DataTable() {
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
-
+          {/*Add Asset Drawer */}
           <AddAssetDrawer
             onAssetAdded={() => {
               const auth = getAuth();
@@ -183,10 +186,21 @@ export function DataTable() {
             }}
             userEmail={userEmail}
           />
+
+          {/* Bulk Delete */}
+          {selectedRowIds.length > 0 && (
+            <div>
+              <BulkDeleteComponent
+                selectedRowIds={selectedRowIds}
+                clearSelection={() => setRowSelection({})}
+              />
+            </div>
+          )}
         </div>
       </div>
+
       <Card className=" bg-card p-3  border-0 shadow-popover-foreground  overflow-x-auto rounded-md border-b  ">
-        <Table className="w-full shadow-popover-foreground hover">
+        <Table className="w-full shadow-popover-foreground ">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
