@@ -55,9 +55,9 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
         <Button
           variant="outline"
           type="submit"
-          className="relative w-auto px-6 py-2  text-white bg-black border-white/50 rounded-2xl transition-all hover:bg-black 
-          before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
-          hover:border-teal-400 before:rounder-xl"
+          className="relative w-auto px-6 py-2 text-white bg-black border-white/50 rounded-2xl transition-all hover:bg-black 
+            before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
+            hover:border-teal-400 before:rounded-xl"
         >
           Login
         </Button>

@@ -3,7 +3,7 @@ import Hero from "@/Landing/Hero";
 import Features from "@/Landing/Features";
 import CTA from "@/Landing/CTA";
 import Footer from "@/Landing/Footer";
-import MouseMoveEffect from "./Landing/Animation/MouseMoveEffect";
+import MouseMoveEffect from "./Animation/MouseMoveEffect";
 import "./App.css";
 
 export default function Home() {
