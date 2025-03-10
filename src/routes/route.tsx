@@ -7,7 +7,7 @@ import "@/App.css";
 import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
 import Dashboard from "@/DashboardPages/Pages/Dashboard/DashboardLayout";
 import Assets from "@/DashboardPages/Pages/Assets/Assets";
-import Settings from "@/DashboardPages/Pages/Settings";
+import Exchange from "@/DashboardPages/Pages/CurrencyExchange/renderPageCurrency";
 
 const AppRouter = () => {
   return (
@@ -20,7 +20,7 @@ const AppRouter = () => {
         <Route path="/ExternalAPI" element={<ExternalAPI />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Assets" element={<Assets />} />
-        <Route path="/Settings" element={<Settings />} />
+        <Route path="/Exchange" element={<Exchange />} />
       </Routes>
     </Router>
   );
