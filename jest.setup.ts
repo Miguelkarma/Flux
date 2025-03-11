@@ -17,3 +17,18 @@ globalThis.matchMedia =
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   }));
+  class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+Object.defineProperty(globalThis, "ResizeObserver", {
+  writable: true,
+  configurable: true,
+  value: MockResizeObserver,
+});
+
+jest.mock("lucide-react", () => ({
+  Check: () => "MockedCheckIcon",
+}));
