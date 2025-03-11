@@ -95,5 +95,6 @@ export const useCurrencyConverter = () => {
     setFromCurrency,
     setToCurrency,
     handleAmountChange,
+    exchangeRate,
   };
 };
