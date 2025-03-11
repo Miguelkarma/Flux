@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import ParticlesBackground from "@/Animation/ParticlesBackground";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -13,7 +13,7 @@ export default function ExternalAPI() {
         <Sidebar user={user} onLogout={handleLogout} />
 
         {/* Main content area */}
-        <main className="flex flex-col flex-1 min-w-0 mb-8">
+        <main className="flex flex-col flex-2 min-w-0 mb-8">
           <SidebarTrigger />
           <ParticlesBackground />
 

@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "../../../components/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import DashboardPage from "@/DashboardPages/Pages/Dashboard/renderDashboard";
 import { useAuth } from "@/hooks/use-auth";

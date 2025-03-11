@@ -13,10 +13,10 @@ import {
 } from "recharts";
 
 const data = [
-  { name: "Equipment", value: 45 },
-  { name: "Vehicles", value: 25 },
-  { name: "Real Estate", value: 20 },
-  { name: "Other", value: 10 },
+  { name: "Laptop", value: 45 },
+  { name: "Computer", value: 25 },
+  { name: "Mouse", value: 20 },
+  { name: "Keyboard", value: 10 },
 ];
 
 export function AssetAllocation() {
@@ -35,9 +35,16 @@ export function AssetAllocation() {
                   <stop offset="95%" stopColor="#66B2B2" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="0" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <CartesianGrid stroke="#ddd" strokeDasharray="0" opacity={1} />
+
+              <XAxis
+                dataKey="name"
+                tick={{ fill: "#fff", fontSize: 15, fontWeight: "medium" }}
+              />
+
+              <YAxis
+                tick={{ fill: "#fff", fontSize: 15, fontWeight: "medium" }}
+              />
               <Tooltip />
               <Legend />
               <Area
