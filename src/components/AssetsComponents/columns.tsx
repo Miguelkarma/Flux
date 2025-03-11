@@ -9,6 +9,8 @@ export type FirestoreData = {
   id: string;
   serialNo: string;
   assetName: string;
+  type: string; 
+  location: string; 
   email: string;
   assignedEmployee: string;
   status: string;
@@ -53,6 +55,24 @@ export const columns: ColumnDef<FirestoreData>[] = [
     cell: ({ row }) => (
       <div className="capitalize text-center text-secondary-foreground">
         {row.getValue<string>("assetName") || "N/A"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => (
+      <div className="capitalize text-center text-secondary-foreground">
+        {row.getValue<string>("type") || "N/A"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
+    cell: ({ row }) => (
+      <div className="capitalize text-center text-secondary-foreground">
+        {row.getValue<string>("location") || "N/A"}
       </div>
     ),
   },
@@ -118,25 +138,22 @@ export const columns: ColumnDef<FirestoreData>[] = [
 
       const statusColors: Record<string, string> = {
         Active:
-          "text-white bg-gradient-to-b from-black via-red-700 to-red-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-teal-500 rounded-lg",
         Maintenance:
-          "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
         Retired:
-          "text-white bg-gradient-to-b from-black/80 via-yellow-700 to-yellow-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-gray-400 rounded-lg",
         Available:
-          "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
         "Lost/Stolen":
-        "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
       };
 
       const badgeClass =
-        statusColors[status] || "bg-gray-500 text-secondary-foreground";
+        statusColors[status] || "bg-gray-500 text-secondary-foreground ";
 
       return (
-        <Badge
-          variant="outline"
-          className={`capitalize text-center ${badgeClass}`}
-        >
+        <Badge className={`capitalize text-center ${badgeClass}`}>
           {status}
         </Badge>
       );

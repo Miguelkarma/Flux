@@ -44,6 +44,8 @@ export type FirestoreData = {
   id: string;
   serialNo: string;
   assetName: string;
+  type: string;
+  location: string;
   email: string;
   assignedEmployee: string;
   status: string;

@@ -26,6 +26,15 @@ import { Toaster, toast } from "sonner";
 
 import { getAuth } from "firebase/auth";
 import { Card } from "../ui/card";
+import {
+  Laptop,
+  Server,
+  Monitor,
+  Keyboard,
+  Mouse,
+  Printer,
+  Computer,
+} from "lucide-react";
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -45,6 +54,9 @@ export function AddAssetDrawer({
     assignedEmployee: "",
     email: "",
     status: "Available",
+    type: "",
+    customType: "",
+    location: "",
     dateAdded: new Date().toISOString(),
   });
 
@@ -56,6 +68,20 @@ export function AddAssetDrawer({
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+  const handleTypeChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      type: value,
+      customType: value === "Other" ? "" : prev.customType,
+    }));
+  };
+
+  const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      customType: e.target.value,
     }));
   };
 
@@ -99,6 +125,7 @@ export function AddAssetDrawer({
 
       await addDoc(collection(db, "it-assets"), {
         ...formData,
+        type: formData.type === "Other" ? formData.customType : formData.type,
         userId: user.uid,
         dateAdded: new Date().toISOString(),
       });
@@ -112,6 +139,9 @@ export function AddAssetDrawer({
         assignedEmployee: "",
         email: "",
         status: "Available",
+        type: "",
+        customType: "",
+        location: "",
         dateAdded: new Date().toISOString(),
       });
     } catch (error) {
@@ -139,7 +169,7 @@ export function AddAssetDrawer({
           <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-12 bg-transparent border-0">
             <Button
               variant="outline"
-              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground t rounded-lg"
+              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg"
             >
               <span className="max-sm:hidden"> Add</span>{" "}
               <Plus className=" h-4 w-4" />
@@ -149,11 +179,13 @@ export function AddAssetDrawer({
 
         <SheetContent
           side="bottom"
-          className=" w-full  bg-gradient-to-tr from-black/100 to-cyan-800/40 text-foreground"
+          className=" w-full  bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
           <SheetHeader>
-            <SheetTitle>Add New Asset</SheetTitle>
-            <SheetDescription>
+            <SheetTitle className="text-popover-foreground">
+              Add New Asset
+            </SheetTitle>
+            <SheetDescription className="text-primary">
               Fill in the details below to add a new asset.
             </SheetDescription>
           </SheetHeader>
@@ -177,6 +209,66 @@ export function AddAssetDrawer({
                 value={formData.assetName}
                 onChange={handleInputChange}
                 placeholder="Enter asset name"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="type">Asset Type</Label>
+              <Select value={formData.type} onValueChange={handleTypeChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select asset type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Laptop">
+                    <Laptop className="inline-block w-4 h-4 mr-2" /> Laptop
+                  </SelectItem>
+                  <SelectItem value="Computer">
+                    <Computer className="inline-block w-4 h-4 mr-2" /> Computer
+                  </SelectItem>
+                  <SelectItem value="Server">
+                    <Server className="inline-block w-4 h-4 mr-2" /> Server
+                  </SelectItem>
+                  <SelectItem value="Monitor">
+                    <Monitor className="inline-block w-4 h-4 mr-2" /> Monitor
+                  </SelectItem>
+                  <SelectItem value="Keyboard">
+                    <Keyboard className="inline-block w-4 h-4 mr-2" /> Keyboard
+                  </SelectItem>
+                  <SelectItem value="Mouse">
+                    <Mouse className="inline-block w-4 h-4 mr-2" /> Mouse
+                  </SelectItem>
+                  <SelectItem value="Printer">
+                    <Printer className="inline-block w-4 h-4 mr-2" /> Printer
+                  </SelectItem>
+                  <SelectItem value="Other">
+                    <Laptop className="inline-block w-4 h-4 mr-2" /> Other
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {formData.type === "Other" && (
+              <div className="grid gap-2">
+                <Label htmlFor="customType">Other Asset</Label>
+                <Input
+                  id="customType"
+                  name="customType"
+                  value={formData.customType}
+                  onChange={handleCustomTypeChange}
+                  placeholder="Enter custom asset type"
+                  required
+                />
+              </div>
+            )}
+
+            <div className="grid gap-2">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="Enter location (e.g., IT Department, Accounting)"
                 required
               />
             </div>
@@ -217,6 +309,7 @@ export function AddAssetDrawer({
                   <SelectItem value="Available">Available</SelectItem>
                   <SelectItem value="Maintenance">Maintenance</SelectItem>
                   <SelectItem value="Retired">Retired</SelectItem>
+                  <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
                 </SelectContent>
               </Select>
             </div>
