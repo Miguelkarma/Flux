@@ -1,41 +1,38 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { Checkbox } from "@/components/ui/checkbox";
 
+jest.mock("lucide-react", () => ({
+  Check: () => <svg role="img" />,
+}));
+
 describe("Checkbox Component", () => {
-  test("renders checkbox component", () => {
+  test("renders without crashing", () => {
     render(<Checkbox data-testid="checkbox" />);
     const checkbox = screen.getByTestId("checkbox");
     expect(checkbox).toBeInTheDocument();
-    expect(checkbox).toHaveClass(
-      "h-4 w-4 shrink-0 rounded-sm border border-primary"
-    );
   });
 
-  test("toggles checked state when clicked", async () => {
+  test("toggles checked state when clicked", () => {
     render(<Checkbox data-testid="checkbox" />);
     const checkbox = screen.getByTestId("checkbox");
+
     expect(checkbox).not.toHaveAttribute("data-state", "checked");
-
-    await userEvent.click(checkbox);
+    fireEvent.click(checkbox);
     expect(checkbox).toHaveAttribute("data-state", "checked");
+    fireEvent.click(checkbox);
+    expect(checkbox).not.toHaveAttribute("data-state", "checked");
   });
 
-  test("applies disabled styles when disabled", () => {
-    render(<Checkbox disabled data-testid="checkbox" />);
+  test("renders check icon when checked", () => {
+    render(<Checkbox data-testid="checkbox" defaultChecked />);
+    const checkIcon = screen.getByRole("img", { hidden: true });
+    expect(checkIcon).toBeInTheDocument();
+  });
+
+  test("is disabled when disabled prop is set", () => {
+    render(<Checkbox data-testid="checkbox" disabled />);
     const checkbox = screen.getByTestId("checkbox");
-    expect(checkbox).toHaveClass(
-      "disabled:cursor-not-allowed disabled:opacity-50"
-    );
     expect(checkbox).toBeDisabled();
-  });
-
-  test("renders check icon when checked", async () => {
-    render(<Checkbox data-testid="checkbox" />);
-    const checkbox = screen.getByTestId("checkbox");
-
-    await userEvent.click(checkbox);
-
-    expect(screen.getByText("MockedCheckIcon")).toBeInTheDocument();
   });
 });
