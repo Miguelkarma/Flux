@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from "sonner";
 
-export function RegistrationForm() {
+export default function RegistrationForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,20 +18,24 @@ export function RegistrationForm() {
     e.preventDefault();
     setError("");
 
+    let isValid = true;
+
     if (!username.trim()) {
       toast.error("Username is required.");
-      return;
+      isValid = false;
     }
 
     if (!email.trim()) {
-      toast.error("Email is required");
-      return;
+      toast.error("Email is required.");
+      isValid = false;
     }
 
     if (!password.trim()) {
-      toast.error("Password is required");
-      return;
+      toast.error("Password is required.");
+      isValid = false;
     }
+
+    if (!isValid) return;
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -45,8 +49,6 @@ export function RegistrationForm() {
 
       navigate("/login");
       sessionStorage.setItem("toastMessage", "Registered Successfully");
-
-      // Redirect after successful registration
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message); // Show error if registration fails
@@ -84,6 +86,7 @@ export function RegistrationForm() {
               placeholder="Your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              data-testid="username-input"
             />
           </div>
           {/* Email Field */}
@@ -95,6 +98,7 @@ export function RegistrationForm() {
               placeholder="m@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              data-testid="email-input"
             />
           </div>
           {/* Password Field */}
@@ -106,14 +110,20 @@ export function RegistrationForm() {
               placeholder="********"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              data-testid="password-input"
             />
           </div>
-          {error && <span className="text-red-500 text-sm">{error}</span>}
+          {error && (
+            <span className="text-red-500 text-sm" data-testid="error-message">
+              {error}
+            </span>
+          )}
           <Button
             type="submit"
             className="relative w-auto px-6 py-2 text-white bg-black border-white/50 rounded-2xl transition-all hover:bg-black 
           before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
           hover:border-teal-400 before:rounded-xl"
+            data-testid="submit-button"
           >
             Sign Up
           </Button>
@@ -127,6 +137,7 @@ export function RegistrationForm() {
               e.preventDefault();
               navigate("/login");
             }}
+            data-testid="login-link"
           >
             Log in
           </a>

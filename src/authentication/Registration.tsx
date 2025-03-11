@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { RegistrationForm } from "@/components/registration-form";
+import RegistrationForm from "@/components/registration-form";
 import logo from "@/assets/logo1.png";
 import back from "@/assets/log.jpg";
 import "@/styles/LoginReg.css";
