@@ -23,7 +23,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
     try {
       await onLogin(email, password);
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(true), 9000);
     }
   };
 
