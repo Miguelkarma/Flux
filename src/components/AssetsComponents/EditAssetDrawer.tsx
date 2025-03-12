@@ -31,6 +31,8 @@ interface EditAssetDrawerProps {
     email: string;
     status: string;
     dateAdded: string;
+    type: string;
+    location: string;
   };
   isOpen: boolean;
   onClose: () => void;
@@ -51,8 +53,25 @@ export function EditAssetDrawer({
     assignedEmployee: asset.assignedEmployee ?? "",
     email: asset.email ?? "",
     status: asset.status ?? "Available",
+    type: asset.type ?? "",
+    location: asset.location ?? "",
     dateAdded: asset.dateAdded ?? new Date().toISOString(),
   });
+
+  // Update state when asset changes
+  React.useEffect(() => {
+    setFormData({
+      id: asset.id,
+      serialNo: asset.serialNo ?? "",
+      assetName: asset.assetName ?? "",
+      assignedEmployee: asset.assignedEmployee ?? "",
+      email: asset.email ?? "",
+      status: asset.status ?? "Available",
+      type: asset.type ?? "",
+      location: asset.location ?? "",
+      dateAdded: asset.dateAdded ?? new Date().toISOString(),
+    });
+  }, [asset]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -77,7 +96,9 @@ export function EditAssetDrawer({
       !formData.serialNo ||
       !formData.assetName ||
       !formData.assignedEmployee ||
-      !formData.email
+      !formData.email ||
+      !formData.type ||
+      !formData.location
     ) {
       toast.error("All fields are required!");
       setIsSubmitting(false);
@@ -104,95 +125,121 @@ export function EditAssetDrawer({
   };
 
   return (
-    <>
-      <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent
-          side="bottom"
-          className="w-full  bg-gradient-to-tr from-black/100 to-cyan-800/40 text-foreground"
-        >
-          <SheetHeader>
-            <SheetTitle>Edit Asset</SheetTitle>
-            <SheetDescription>Update the asset details below.</SheetDescription>
-          </SheetHeader>
-          <form onSubmit={handleSubmit} className="grid gap-6 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="serialNo">Serial Number</Label>
-              <Input
-                id="serialNo"
-                name="serialNo"
-                value={formData.serialNo}
-                onChange={handleInputChange}
-                placeholder="Enter serial number"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="assetName">Asset Name</Label>
-              <Input
-                id="assetName"
-                name="assetName"
-                value={formData.assetName}
-                onChange={handleInputChange}
-                placeholder="Enter asset name"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="assignedEmployee">Assigned Employee</Label>
-              <Input
-                id="assignedEmployee"
-                name="assignedEmployee"
-                value={formData.assignedEmployee}
-                onChange={handleInputChange}
-                placeholder="Enter employee name"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Employee Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter employee email"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="status">Status</Label>
-              <Select
-                value={formData.status}
-                onValueChange={handleStatusChange}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Available">Available</SelectItem>
-                  <SelectItem value="In Use">In Use</SelectItem>
-                  <SelectItem value="Under Repair">Under Repair</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <SheetFooter>
-              <SheetClose asChild>
-                <Button type="button" variant="outline" className="bg-teal-950">
-                  Cancel
-                </Button>
-              </SheetClose>
-              <Button
-                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Updating..." : "Update Asset"}
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent
+        side="bottom"
+        className=" w-full  bg-gradient-to-tr from-accent to-card text-popover-foreground"
+      >
+        <SheetHeader>
+          <SheetTitle>Edit Asset</SheetTitle>
+          <SheetDescription>Update the asset details below.</SheetDescription>
+        </SheetHeader>
+        <form onSubmit={handleSubmit} className="grid gap-6 py-4">
+          {/* Serial Number */}
+          <div className="grid gap-2">
+            <Label htmlFor="serialNo">Serial Number</Label>
+            <Input
+              id="serialNo"
+              name="serialNo"
+              value={formData.serialNo}
+              onChange={handleInputChange}
+              placeholder="Enter serial number"
+              required
+            />
+          </div>
+          {/* Asset Name */}
+          <div className="grid gap-2">
+            <Label htmlFor="assetName">Asset Name</Label>
+            <Input
+              id="assetName"
+              name="assetName"
+              value={formData.assetName}
+              onChange={handleInputChange}
+              placeholder="Enter asset name"
+              required
+            />
+          </div>
+          {/* Assigned Employee */}
+          <div className="grid gap-2">
+            <Label htmlFor="assignedEmployee">Assigned Employee</Label>
+            <Input
+              id="assignedEmployee"
+              name="assignedEmployee"
+              value={formData.assignedEmployee}
+              onChange={handleInputChange}
+              placeholder="Enter employee name"
+              required
+            />
+          </div>
+          {/* Email */}
+          <div className="grid gap-2">
+            <Label htmlFor="email">Employee Email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter employee email"
+              required
+            />
+          </div>
+          {/* Type */}
+          <div className="grid gap-2">
+            <Label htmlFor="type">Asset Type</Label>
+            <Input
+              id="type"
+              name="type"
+              value={formData.type}
+              onChange={handleInputChange}
+              placeholder="Enter asset type"
+              required
+            />
+          </div>
+          {/* Location */}
+          <div className="grid gap-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              placeholder="Enter asset location"
+              required
+            />
+          </div>
+          {/* Status */}
+          <div className="grid gap-2">
+            <Label htmlFor="status">Status</Label>
+            <Select value={formData.status} onValueChange={handleStatusChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Active">Active</SelectItem>
+                <SelectItem value="Available">Available</SelectItem>
+                <SelectItem value="Maintenance">Maintenance</SelectItem>
+                <SelectItem value="Retired">Retired</SelectItem>
+                <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button type="button" variant="outline" className="bg-teal-950">
+                Cancel
               </Button>
-            </SheetFooter>
-          </form>
-        </SheetContent>
-      </Sheet>
-    </>
+            </SheetClose>
+            <Button
+              className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Updating..." : "Update Asset"}
+            </Button>
+          </SheetFooter>
+        </form>
+      </SheetContent>
+    </Sheet>
   );
 }

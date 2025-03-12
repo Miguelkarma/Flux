@@ -6,10 +6,9 @@ import { DataTable } from "../../../components/AssetsComponents/table";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import Loader from "@/Animation/SmallLoader";
-import { useTheme } from "@/hooks/ThemeProvider";
 
 export default function Dashboard() {
-  const { theme } = useTheme();
+  const [theme] = useState<"dark" | "light">("dark");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

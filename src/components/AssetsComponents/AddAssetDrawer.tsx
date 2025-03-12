@@ -179,7 +179,7 @@ export function AddAssetDrawer({
 
         <SheetContent
           side="bottom"
-          className=" w-full  bg-gradient-to-tr from-accent to-card text-popover-foreground"
+          className=" w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
           <SheetHeader>
             <SheetTitle className="text-popover-foreground">
