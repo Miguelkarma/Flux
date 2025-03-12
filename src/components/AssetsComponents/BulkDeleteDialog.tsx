@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-// I assume DeleteButton is a custom component you've created
 import DeleteButton from "@/components/ui/deleteButton";
+import { toast } from "sonner";
 
 interface BulkDeleteComponentProps {
   selectedRowIds: string[];
@@ -34,9 +34,11 @@ export function BulkDeleteComponent({
       await Promise.all(
         selectedRowIds.map((id) => deleteDoc(doc(db, "it-assets", id)))
       );
+      toast.success(`${selectedRowIds.length} asset(s) deleted successfully.`);
       clearSelection();
     } catch (error) {
       console.error("Error deleting assets:", error);
+      toast.error("Failed to delete assets. Please try again.");
     } finally {
       setIsDeleting(false);
       setIsOpen(false);
