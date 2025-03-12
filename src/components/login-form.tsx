@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import SmallLoader from "@/Animation/SmallLoader";
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -22,7 +23,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
     try {
       await onLogin(email, password);
     } finally {
-      setTimeout(() => setLoading(true), 9000);
+      setLoading(false);
     }
   };
 
@@ -30,7 +31,9 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
     <div className="relative">
       {/* Loader Overlay */}
       {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"></div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <SmallLoader />
+        </div>
       )}
 
       <form
