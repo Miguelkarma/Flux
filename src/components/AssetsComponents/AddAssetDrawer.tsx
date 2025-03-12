@@ -315,7 +315,7 @@ export function AddAssetDrawer({
             </div>
             <SheetFooter>
               <SheetClose asChild>
-                <Button type="button" variant="outline" className="bg-teal-950">
+                <Button type="button" className="bg-teal-950 text-foreground">
                   Cancel
                 </Button>
               </SheetClose>
