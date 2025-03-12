@@ -4,7 +4,7 @@ import Login from "../authentication/Login";
 import Registration from "@/authentication/Registration";
 import App from "@/App.tsx";
 import "@/App.css";
-import ExternalAPI from "@/DashboardPages/ExternalAPI";
+import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
 import Dashboard from "@/DashboardPages/Pages/Dashboard/renderDashboard";
 import Assets from "@/DashboardPages/Pages/Assets/renderPageAssets";
 import Exchange from "@/DashboardPages/Pages/CurrencyExchange/renderPageCurrency";
