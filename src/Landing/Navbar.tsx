@@ -45,9 +45,9 @@ export default function Navbar() {
             <div className="flex items-center">
               <div
                 onClick={() => navigate("/")}
-                className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent cursor-pointer"
+                className="text-2xl font-bold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent cursor-pointer"
               >
-                Flux
+                techtrack
               </div>
               <div className="hidden md:block ml-10 mt-1">
                 <div className="flex-col items-center space-x-8 ">
