@@ -206,7 +206,7 @@ export function DataTable() {
       </div>
 
       <Card className=" bg-card p-3  border-0 shadow-popover-foreground  overflow-x-auto rounded-md border-b  ">
-        <ScrollArea className=" rounded-md">
+        <ScrollArea className=" rounded-md transition">
           <Table className="w-full shadow-popover-foreground ">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -261,7 +261,7 @@ export function DataTable() {
           </Table>
           <ScrollBar
             orientation="horizontal"
-            className="scrollbar scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-red-500"
+            className="scrollbar border-1 bg-gradient-to-r from-slate-600 via-current to-slate-600 "
           />
         </ScrollArea>
         <div className="flex items-center justify-between px-2 py-2">
