@@ -47,11 +47,11 @@ export type FirestoreData = {
   serialNo: string;
   assetName: string;
   type: string;
+  customType?: string;
   location: string;
   email: string;
   assignedEmployee: string;
   status: string;
-  userId: string;
   dateAdded: string;
 };
 

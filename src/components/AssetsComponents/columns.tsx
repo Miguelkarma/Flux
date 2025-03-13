@@ -28,10 +28,12 @@ export type FirestoreData = {
   dateAdded: string;
 };
 
-export const columns: ColumnDef<FirestoreData>[] = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const columns: ColumnDef<FirestoreData,any>[] = [
   {
     id: "select",
 
+    accessorFn: (row) => row.id,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -105,7 +107,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
         ) : null;
 
       return (
-        <div className="flex  items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <div
             className={`p-2 bg-primary-foreground rounded-lg shadow-md ${typeStyles[type]}`}
           >
@@ -137,7 +139,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className=" text-secondary-foreground">
+      <div className="text-secondary-foreground">
         {row.getValue<string>("email") || "N/A"}
       </div>
     ),
@@ -155,7 +157,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
     accessorKey: "dateAdded",
     header: ({ column }) => (
       <Button
-        className="font-extrabold "
+        className="font-extrabold"
         variant="ghost"
         onClick={() => column.toggleSorting()}
       >
@@ -199,7 +201,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
       };
 
       const badgeClass =
-        statusColors[status] || "bg-gray-500 text-secondary-foreground ";
+        statusColors[status] || "bg-gray-500 text-secondary-foreground";
 
       return (
         <Badge className={`capitalize text-center ${badgeClass}`}>
@@ -210,12 +212,15 @@ export const columns: ColumnDef<FirestoreData>[] = [
   },
   {
     id: "actions",
-    enableHiding: false,
+
+    accessorFn: (row) => row.id,
+    header: "Actions",
     cell: ({ row }) => (
       <ActionsCell
         asset={row.original}
         onAssetUpdated={() => console.log("Asset updated!")}
       />
     ),
+    enableHiding: false,
   },
 ];
