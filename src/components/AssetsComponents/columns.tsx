@@ -28,7 +28,7 @@ export type FirestoreData = {
   dateAdded: string;
 };
 
-export const columns: ColumnDef<FirestoreData, unknown>[] = [
+export const columns: ColumnDef<FirestoreData>[] = [
   {
     id: "select",
 
@@ -51,7 +51,7 @@ export const columns: ColumnDef<FirestoreData, unknown>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  } as ColumnDef<FirestoreData, unknown>,
+  },
   {
     accessorKey: "serialNo",
     header: "Serial No.",
