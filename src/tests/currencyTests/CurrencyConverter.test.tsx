@@ -48,14 +48,14 @@ describe("CurrencyConverter Component", () => {
   test("renders correctly", () => {
     render(<CurrencyConverter />);
 
-    // Now renders actual components instead of mocked ones
+    //  renders actual components instead of mocked ones
     expect(screen.getByText("Currency Converter")).toBeInTheDocument();
   });
 
   test("swaps currencies when swap button is clicked", () => {
     render(<CurrencyConverter />);
 
-    //Swap button now references the actual UI component instead of a mock
+    // references the actual UI component instead of a mock
     const swapButton = screen.getByText("Swap");
     fireEvent.click(swapButton);
 
