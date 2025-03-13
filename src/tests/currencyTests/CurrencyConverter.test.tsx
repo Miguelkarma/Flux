@@ -4,137 +4,18 @@ import "@testing-library/jest-dom";
 import CurrencyConverter from "@/DashboardPages/Pages/CurrencyExchange/currency-converter";
 import { useCurrencyConverter } from "@/hooks/converterHook";
 
-// Mock the hook
+// Mock the hook to control its return values in tests
 jest.mock("@/hooks/converterHook", () => ({
   useCurrencyConverter: jest.fn(),
 }));
 
-// Mock the UI components with proper TypeScript typing
-jest.mock("@/components/ui/button", () => ({
-  Button: ({
-    children,
-    onClick,
-    disabled,
-    className,
-    variant,
-    size,
-    title,
-  }: {
-    children: React.ReactNode;
-    onClick?: () => void;
-    disabled?: boolean;
-    className?: string;
-    variant?: string;
-    size?: string;
-    title?: string;
-  }) => (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={className}
-      data-variant={variant}
-      data-size={size}
-      title={title}
-    >
-      {children}
-    </button>
-  ),
-}));
-
-jest.mock("@/components/ui/input", () => ({
-  Input: ({
-    id,
-    type,
-    min,
-    step,
-    defaultValue,
-    onChange,
-    placeholder,
-  }: {
-    id?: string;
-    type?: string;
-    min?: string;
-    step?: string;
-    defaultValue?: number;
-    onChange?: (e: { target: { value: string } }) => void;
-    placeholder?: string;
-  }) => (
-    <input
-      id={id}
-      type={type}
-      min={min}
-      step={step}
-      defaultValue={defaultValue}
-      onChange={onChange}
-      placeholder={placeholder}
-    />
-  ),
-}));
-
+// Mock only the icon components since they don't affect the UI logic
 jest.mock("lucide-react", () => ({
   ArrowRightLeft: ({ className }: { className?: string }) => (
     <div className={className}>Swap</div>
   ),
   RefreshCw: ({ className }: { className?: string }) => (
     <div className={className}>Loading Icon</div>
-  ),
-}));
-
-// Mock the CurrencyInput component with proper typing
-jest.mock("@/DashboardPages/Pages/CurrencyExchange/CurrencyInput", () => ({
-  __esModule: true,
-  default: ({
-    label,
-    value,
-    onChange
-  }: {
-    label: string;
-    value: string;
-    onChange: (value: string) => void;
-    currencies: Array<{ code: string; name: string }>;
-  }) => (
-    <div data-testid={`mock-currency-input-${label}`}>
-      Mocked CurrencyInput: {label} - {value}
-      <button onClick={() => onChange("TEST")}>Change</button>
-    </div>
-  ),
-}));
-
-// Mock for shadcn Card components
-jest.mock("@/components/ui/card", () => ({
-  Card: ({
-    children,
-    className,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div className={className}>{children}</div>,
-  CardHeader: ({
-    children,
-    className,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div className={className}>{children}</div>,
-  CardTitle: ({
-    children,
-    className,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div className={className}>{children}</div>,
-  CardDescription: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-  CardContent: ({
-    children,
-    className,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div className={className}>{children}</div>,
-  CardFooter: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
   ),
 }));
 
@@ -166,14 +47,15 @@ describe("CurrencyConverter Component", () => {
 
   test("renders correctly", () => {
     render(<CurrencyConverter />);
+
+    // Now renders actual components instead of mocked ones
     expect(screen.getByText("Currency Converter")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-currency-input-From")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-currency-input-To")).toBeInTheDocument();
   });
 
   test("swaps currencies when swap button is clicked", () => {
     render(<CurrencyConverter />);
-    // Find the swap button by the Swap text (which is from our mocked ArrowRightLeft component)
+
+    //Swap button now references the actual UI component instead of a mock
     const swapButton = screen.getByText("Swap");
     fireEvent.click(swapButton);
 
@@ -189,19 +71,21 @@ describe("CurrencyConverter Component", () => {
 
     render(<CurrencyConverter />);
 
-    const convertButton = screen.getByText("Loading...");
-
+    // actual button instead of a mocked one
+    const convertButton = screen.getByRole("button", { name: /loading/i });
 
     expect(convertButton).toBeDisabled();
   });
 
-  test("display an error message when there is an error", () => {
+  test("displays an error message when there is an error", () => {
     (useCurrencyConverter as jest.Mock).mockReturnValueOnce({
       ...mockHook,
       error: "Invalid currency selection",
     });
 
     render(<CurrencyConverter />);
+
+    // Verifying actual error message rendering
     expect(screen.getByText("Invalid currency selection")).toBeInTheDocument();
   });
 });
