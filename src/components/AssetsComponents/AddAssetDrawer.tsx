@@ -35,6 +35,14 @@ import {
   Printer,
   Computer,
 } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -62,7 +70,14 @@ export function AddAssetDrawer({
 
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   [];
-
+  const handleDateChange = (selectedDate: Date | undefined) => {
+    setFormData((prev) => ({
+      ...prev,
+      dateAdded: selectedDate
+        ? selectedDate.toISOString()
+        : new Date().toISOString(),
+    }));
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -102,13 +117,14 @@ export function AddAssetDrawer({
       return;
     }
 
-    if (
-      !formData.serialNo ||
-      !formData.assetName ||
-      !formData.assignedEmployee ||
-      !formData.email
-    ) {
-      toast.error("All fields are required!");
+    if (!formData.serialNo || !formData.type) {
+      toast.error("Serial number and asset type are required!");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.type === "Other" && !formData.customType) {
+      toast.error("Custom type is required when 'Other' is selected!");
       setIsSubmitting(false);
       return;
     }
@@ -143,7 +159,7 @@ export function AddAssetDrawer({
         customType: "",
         location: "",
         dateAdded: new Date().toISOString(),
-      });
+      });    
     } catch (error) {
       console.error("Error adding asset:", error);
       toast.error("Failed to add asset");
@@ -155,15 +171,15 @@ export function AddAssetDrawer({
   return (
     <>
       <Toaster
-        position="bottom-right"
+        position="top-right"
         duration={3000}
         richColors={true}
         theme="system"
         closeButton={true}
         expand={true}
         visibleToasts={3}
+        style={{ zIndex: 9999 }}
       />
-
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-12 bg-transparent border-0">
@@ -181,24 +197,34 @@ export function AddAssetDrawer({
           side="bottom"
           className=" w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
+          <Toaster
+            position="top-right"
+            duration={3000}
+            richColors={true}
+            theme="system"
+            closeButton={true}
+            expand={true}
+            visibleToasts={3}
+            style={{ zIndex: 9999 }}
+          />
           <SheetHeader>
             <SheetTitle className="text-popover-foreground">
               Add New Asset
             </SheetTitle>
             <SheetDescription className="text-primary">
-              Fill in the details below to add a new asset.
+              Fill in the details below to add a new asset. Only Serial Number
+              is required.
             </SheetDescription>
           </SheetHeader>
           <form onSubmit={handleSubmit} className="grid gap-6 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="serialNo">Serial Number</Label>
+              <Label htmlFor="serialNo">Serial Number *</Label>
               <Input
                 id="serialNo"
                 name="serialNo"
                 value={formData.serialNo}
                 onChange={handleInputChange}
                 placeholder="Enter serial number"
-                required
               />
             </div>
             <div className="grid gap-2">
@@ -209,12 +235,15 @@ export function AddAssetDrawer({
                 value={formData.assetName}
                 onChange={handleInputChange}
                 placeholder="Enter asset name"
-                required
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="type">Asset Type</Label>
-              <Select value={formData.type} onValueChange={handleTypeChange}>
+              <Select
+                value={formData.type}
+                onValueChange={handleTypeChange}
+                required
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select asset type" />
                 </SelectTrigger>
@@ -249,7 +278,7 @@ export function AddAssetDrawer({
 
             {formData.type === "Other" && (
               <div className="grid gap-2">
-                <Label htmlFor="customType">Other Asset</Label>
+                <Label htmlFor="customType">Other Asset *</Label>
                 <Input
                   id="customType"
                   name="customType"
@@ -269,7 +298,6 @@ export function AddAssetDrawer({
                 value={formData.location}
                 onChange={handleInputChange}
                 placeholder="Enter location (e.g., IT Department, Accounting)"
-                required
               />
             </div>
             <div className="grid gap-2">
@@ -280,7 +308,6 @@ export function AddAssetDrawer({
                 value={formData.assignedEmployee}
                 onChange={handleInputChange}
                 placeholder="Enter employee name"
-                required
               />
             </div>
             <div className="grid gap-2">
@@ -292,9 +319,33 @@ export function AddAssetDrawer({
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter employee email"
-                required
               />
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="dateAdded">Date Added</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between text-left"
+                  >
+                    {formData.dateAdded
+                      ? format(new Date(formData.dateAdded), "PPP")
+                      : "Select a date"}
+                    <CalendarIcon className="w-4 h-4 opacity-70" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-full p-2">
+                  <Calendar
+                    mode="single"
+                    selected={new Date(formData.dateAdded)}
+                    onSelect={handleDateChange}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>
               <Select

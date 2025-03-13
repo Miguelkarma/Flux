@@ -1,4 +1,5 @@
 import * as React from "react";
+import { getAuth } from "firebase/auth";
 import {
   Sheet,
   SheetClose,
@@ -20,7 +21,20 @@ import {
 } from "@/components/ui/select";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
+import {
+  Laptop2,
+  Monitor,
+  Mouse,
+  Keyboard,
+  Printer,
+  Server,
+  CalendarIcon,
+  Computer,
+} from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
+import { format } from "date-fns";
 
 interface EditAssetDrawerProps {
   asset: {
@@ -32,6 +46,7 @@ interface EditAssetDrawerProps {
     status: string;
     dateAdded: string;
     type: string;
+    customType?: string;
     location: string;
   };
   isOpen: boolean;
@@ -54,6 +69,7 @@ export function EditAssetDrawer({
     email: asset.email ?? "",
     status: asset.status ?? "Available",
     type: asset.type ?? "",
+    customType: asset.customType ?? "",
     location: asset.location ?? "",
     dateAdded: asset.dateAdded ?? new Date().toISOString(),
   });
@@ -68,6 +84,7 @@ export function EditAssetDrawer({
       email: asset.email ?? "",
       status: asset.status ?? "Available",
       type: asset.type ?? "",
+      customType: asset.customType ?? "",
       location: asset.location ?? "",
       dateAdded: asset.dateAdded ?? new Date().toISOString(),
     });
@@ -78,6 +95,28 @@ export function EditAssetDrawer({
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleTypeChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      type: value,
+    }));
+  };
+
+  const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      customType: e.target.value,
+    }));
+  };
+
+  // Add the missing handleDateChange function
+  const handleDateChange = (date: Date | undefined) => {
+    setFormData((prev) => ({
+      ...prev,
+      dateAdded: date ? date.toISOString() : new Date().toISOString(),
     }));
   };
 
@@ -92,25 +131,34 @@ export function EditAssetDrawer({
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (
-      !formData.serialNo ||
-      !formData.assetName ||
-      !formData.assignedEmployee ||
-      !formData.email ||
-      !formData.type ||
-      !formData.location
-    ) {
-      toast.error("All fields are required!");
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const userEmail = user?.email; // Get logged-in user's email
+
+    if (!userEmail) {
+      toast.error("You must be logged in to update an asset!");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!formData.serialNo || !formData.type) {
+      toast.error("Serial number and asset type are required!");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.type === "Other" && !formData.customType) {
+      toast.error("Custom type is required when 'Other' is selected!");
       setIsSubmitting(false);
       return;
     }
 
     try {
       const assetRef = doc(db, "it-assets", asset.id);
-
       await updateDoc(assetRef, {
         ...formData,
         dateUpdated: new Date().toISOString(),
+        updatedBy: userEmail, // Track who updated the asset
       });
 
       toast.success("Asset updated successfully!");
@@ -128,8 +176,18 @@ export function EditAssetDrawer({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent
         side="bottom"
-        className=" w-full  bg-gradient-to-tr from-accent to-card text-popover-foreground"
+        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
       >
+        <Toaster
+          position="top-right"
+          duration={3000}
+          richColors={true}
+          theme="system"
+          closeButton={true}
+          expand={true}
+          visibleToasts={3}
+          style={{ zIndex: 9999 }}
+        />
         <SheetHeader>
           <SheetTitle>Edit Asset</SheetTitle>
           <SheetDescription>Update the asset details below.</SheetDescription>
@@ -144,7 +202,6 @@ export function EditAssetDrawer({
               value={formData.serialNo}
               onChange={handleInputChange}
               placeholder="Enter serial number"
-              required
             />
           </div>
           {/* Asset Name */}
@@ -159,6 +216,67 @@ export function EditAssetDrawer({
               required
             />
           </div>
+          {/* Type */}
+          <div className="grid gap-2">
+            <Label htmlFor="type">Asset Type</Label>
+            <Select
+              value={formData.type}
+              onValueChange={handleTypeChange}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select asset type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Laptop">
+                  <Laptop2 className="inline-block w-4 h-4 mr-2" /> Laptop
+                </SelectItem>
+                <SelectItem value="Computer">
+                  <Computer className="inline-block w-4 h-4 mr-2" /> Computer
+                </SelectItem>
+                <SelectItem value="Server">
+                  <Server className="inline-block w-4 h-4 mr-2" /> Server
+                </SelectItem>
+                <SelectItem value="Monitor">
+                  <Monitor className="inline-block w-4 h-4 mr-2" /> Monitor
+                </SelectItem>
+                <SelectItem value="Keyboard">
+                  <Keyboard className="inline-block w-4 h-4 mr-2" /> Keyboard
+                </SelectItem>
+                <SelectItem value="Mouse">
+                  <Mouse className="inline-block w-4 h-4 mr-2" /> Mouse
+                </SelectItem>
+                <SelectItem value="Printer">
+                  <Printer className="inline-block w-4 h-4 mr-2" /> Printer
+                </SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {formData.type === "Other" && (
+            <div className="grid gap-2">
+              <Label htmlFor="customType">Other Asset *</Label>
+              <Input
+                id="customType"
+                name="customType"
+                value={formData.customType}
+                onChange={handleCustomTypeChange}
+                placeholder="Enter custom asset type"
+                required
+              />
+            </div>
+          )}
+          {/* Location */}
+          <div className="grid gap-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              placeholder="Enter asset location"
+            />
+          </div>
           {/* Assigned Employee */}
           <div className="grid gap-2">
             <Label htmlFor="assignedEmployee">Assigned Employee</Label>
@@ -168,7 +286,6 @@ export function EditAssetDrawer({
               value={formData.assignedEmployee}
               onChange={handleInputChange}
               placeholder="Enter employee name"
-              required
             />
           </div>
           {/* Email */}
@@ -181,33 +298,34 @@ export function EditAssetDrawer({
               value={formData.email}
               onChange={handleInputChange}
               placeholder="Enter employee email"
-              required
             />
           </div>
-          {/* Type */}
+          {/* Date Added */}
           <div className="grid gap-2">
-            <Label htmlFor="type">Asset Type</Label>
-            <Input
-              id="type"
-              name="type"
-              value={formData.type}
-              onChange={handleInputChange}
-              placeholder="Enter asset type"
-              required
-            />
+            <Label htmlFor="dateAdded">Date Added</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-between text-left"
+                >
+                  {formData.dateAdded
+                    ? format(new Date(formData.dateAdded), "PPP")
+                    : "Select a date"}
+                  <CalendarIcon className="w-4 h-4 opacity-70" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-full p-2">
+                <Calendar
+                  mode="single"
+                  selected={new Date(formData.dateAdded)}
+                  onSelect={handleDateChange}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
-          {/* Location */}
-          <div className="grid gap-2">
-            <Label htmlFor="location">Location</Label>
-            <Input
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              placeholder="Enter asset location"
-              required
-            />
-          </div>
+
           {/* Status */}
           <div className="grid gap-2">
             <Label htmlFor="status">Status</Label>
@@ -224,6 +342,7 @@ export function EditAssetDrawer({
               </SelectContent>
             </Select>
           </div>
+
           <SheetFooter>
             <SheetClose asChild>
               <Button type="button" variant="outline" className="bg-teal-950">
@@ -231,9 +350,9 @@ export function EditAssetDrawer({
               </Button>
             </SheetClose>
             <Button
-              className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
               type="submit"
               disabled={isSubmitting}
+              className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
             >
               {isSubmitting ? "Updating..." : "Update Asset"}
             </Button>

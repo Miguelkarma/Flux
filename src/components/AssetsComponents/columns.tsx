@@ -1,7 +1,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+
+import {
+  ArrowUpDown,
+  Laptop,
+  Server,
+  Monitor,
+  Keyboard,
+  Mouse,
+  Printer,
+  Computer,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ActionsCell from "./ActionsCell";
 
@@ -9,8 +19,9 @@ export type FirestoreData = {
   id: string;
   serialNo: string;
   assetName: string;
-  type: string; 
-  location: string; 
+  type: string;
+  customType?: string;
+  location: string;
   email: string;
   assignedEmployee: string;
   status: string;
@@ -61,11 +72,48 @@ export const columns: ColumnDef<FirestoreData>[] = [
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row }) => (
-      <div className="capitalize text-center text-secondary-foreground">
-        {row.getValue<string>("type") || "N/A"}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const type = row.getValue<string>("type") || "N/A";
+
+      const typeStyles: Record<string, string> = {
+        Laptop: "shadow-teal-500",
+        Computer: "shadow-blue-500",
+        Server: "shadow-green-500",
+        Monitor: "shadow-purple-500",
+        Keyboard: "shadow-orange-500",
+        Mouse: "shadow-yellow-500",
+        Printer: "shadow-pink-500",
+        Other: "shadow-gray-500",
+      };
+
+      const icon =
+        type === "Laptop" ? (
+          <Laptop size={18} />
+        ) : type === "Computer" ? (
+          <Computer size={18} />
+        ) : type === "Server" ? (
+          <Server size={18} />
+        ) : type === "Monitor" ? (
+          <Monitor size={18} />
+        ) : type === "Keyboard" ? (
+          <Keyboard size={18} />
+        ) : type === "Mouse" ? (
+          <Mouse size={18} />
+        ) : type === "Printer" ? (
+          <Printer size={18} />
+        ) : null;
+
+      return (
+        <div className="flex  items-center space-x-2">
+          <div
+            className={`p-2 bg-primary-foreground rounded-lg shadow-md ${typeStyles[type]}`}
+          >
+            {icon}
+          </div>
+          <span className={`font-medium ${typeStyles[type]}`}>{type}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "location",
@@ -88,7 +136,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="lowercase text-secondary-foreground">
+      <div className=" text-secondary-foreground">
         {row.getValue<string>("email") || "N/A"}
       </div>
     ),
