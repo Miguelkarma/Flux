@@ -28,9 +28,10 @@ export type FirestoreData = {
   dateAdded: string;
 };
 
-export const columns: ColumnDef<FirestoreData>[] = [
+export const columns: ColumnDef<FirestoreData, unknown>[] = [
   {
     id: "select",
+
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -50,7 +51,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
+  } as ColumnDef<FirestoreData, unknown>,
   {
     accessorKey: "serialNo",
     header: "Serial No.",
@@ -190,7 +191,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
         Maintenance:
           "text-secondary-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
         Retired:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-gray-400 rounded-lg",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-gray-500 rounded-lg",
         Available:
           "text-secondary-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
         "Lost/Stolen":

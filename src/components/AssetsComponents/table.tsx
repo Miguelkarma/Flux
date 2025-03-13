@@ -259,10 +259,7 @@ export function DataTable() {
               )}
             </TableBody>
           </Table>
-          <ScrollBar
-            orientation="horizontal"
-            className="scrollbar border-1 bg-gradient-to-r from-slate-600 via-current to-slate-600 "
-          />
+          <ScrollBar orientation="horizontal" className="scrollbar  " />
         </ScrollArea>
         <div className="flex items-center justify-between px-2 py-2">
           <Button
