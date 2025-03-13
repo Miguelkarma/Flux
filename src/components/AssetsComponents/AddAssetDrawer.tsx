@@ -43,7 +43,6 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { query, where, getDocs } from "firebase/firestore";
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -69,13 +68,16 @@ export function AddAssetDrawer({
     dateAdded: new Date().toISOString(),
   });
 
-  const handleDateChange = (selectedDate?: Date) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  [];
+  const handleDateChange = (selectedDate: Date | undefined) => {
     setFormData((prev) => ({
       ...prev,
-      dateAdded: selectedDate?.toISOString() ?? prev.dateAdded,
+      dateAdded: selectedDate
+        ? selectedDate.toISOString()
+        : new Date().toISOString(),
     }));
   };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -133,21 +135,6 @@ export function AddAssetDrawer({
 
       if (!user) {
         toast.error("User not authenticated!");
-        setIsSubmitting(false);
-        return;
-      }
-      const assetsRef = collection(db, "it-assets");
-      const q = query(
-        assetsRef,
-        where("serialNo", "==", formData.serialNo),
-        where("assetName", "==", formData.assetName)
-      );
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        toast.error(
-          "Asset with this Serial Number or Asset Name already exists!"
-        );
         setIsSubmitting(false);
         return;
       }
@@ -373,7 +360,7 @@ export function AddAssetDrawer({
                   <SelectItem value="Available">Available</SelectItem>
                   <SelectItem value="Maintenance">Maintenance</SelectItem>
                   <SelectItem value="Retired">Retired</SelectItem>
-                  <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
+                  <SelectItem value="Lost">Lost</SelectItem>
                 </SelectContent>
               </Select>
             </div>

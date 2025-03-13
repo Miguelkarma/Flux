@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { Command, Laptop, Users, Banknote, ExternalLink } from "lucide-react";
 import { useTheme } from "@/hooks/ThemeProvider";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/firebase/firebase";
+import { useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 
 interface StatusItemProps {
   label: string;
@@ -28,7 +32,9 @@ function StatusItem({ label, value, color }: StatusItemProps) {
     <div>
       <div className="flex items-center justify-between mb-1">
         <div className="text-xs text-secondary-foreground">{label}</div>
-        <div className="text-xs text-secondary-foreground">{value}%</div>
+        <div className="text-xs text-secondary-foreground font-bold">
+          {value}
+        </div>
       </div>
       <div className="h-1.5 bg-muted rounded-full overflow-hidden">
         <div
@@ -50,7 +56,96 @@ const items = [
 
 export default function Sidebar() {
   const { theme } = useTheme();
+  const [statusCounts, setStatusCounts] = useState({
+    active: 0,
+    maintenance: 0,
+    retired: 0,
+    available: 0,
+    lost: 0,
+    total: 0,
+  });
+  const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        await fetchAssetStatus(currentUser.uid);
+      } else {
+        setUser(null);
+        console.log("User is not authenticated");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fetchAssetStatus = async (uid: string) => {
+    try {
+      console.log("Fetching asset status for UID:", uid);
+
+      const assetsQuery = query(
+        collection(db, "it-assets"),
+        where("userId", "==", uid)
+      );
+
+      const querySnapshot = await getDocs(assetsQuery);
+
+      if (querySnapshot.empty) {
+        console.warn("No assets found for this user. Check Firestore data.");
+      } else {
+        console.log("Number of assets found:", querySnapshot.size);
+      }
+
+      let active = 0,
+        maintenance = 0,
+        retired = 0,
+        available = 0,
+        lost = 0,
+        total = 0;
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        console.log("Fetched asset data:", data);
+
+        total++;
+
+        switch (data.status) {
+          case "Active":
+            active++;
+            break;
+          case "Maintenance":
+            maintenance++;
+            break;
+          case "Retired":
+            retired++;
+            break;
+          case "Available":
+            available++;
+            break;
+          case "Lost/Stolen":
+            lost++;
+            break;
+
+          default:
+            break;
+        }
+      });
+
+      setStatusCounts({
+        active,
+        maintenance,
+        retired,
+        available,
+        lost,
+        total,
+      });
+    } catch (error) {
+      console.error("Error fetching asset status:", error);
+    }
+  };
   return (
     <div
       className={`${theme} bg-sidebar-background border-sidebar-border text-sidebar-foreground
@@ -63,7 +158,7 @@ export default function Sidebar() {
             to={item.url}
             className={({ isActive }) =>
               `relative flex items-center gap-2 p-2 rounded-full transition-all hover-active-state-alt ${
-                isActive ? "active-state-alt" : "inactive-state "
+                isActive ? "active-state-alt" : "inactive-state"
               }`
             }
           >
@@ -74,16 +169,44 @@ export default function Sidebar() {
       </nav>
 
       {/* ASSET STATUS SECTION */}
-      <div className="mt-8 pt-6 border-t border-sidebar-border">
-        <div className="text-xs text-accent-foreground mb-2 font-semibold">
-          ASSET STATUS
+      {user ? (
+        <div className="mt-8 pt-6 border-t border-sidebar-border">
+          <div className="text-xs text-accent-foreground mb-2 font-semibold">
+            ASSET STATUS
+          </div>
+          <div className="space-y-3">
+            <StatusItem
+              label="Active Assets"
+              value={statusCounts.active}
+              color="teal"
+            />
+            <StatusItem
+              label="Maintenance"
+              value={statusCounts.maintenance}
+              color="amber"
+            />
+            <StatusItem
+              label="Retired"
+              value={statusCounts.retired}
+              color="red"
+            />
+            <StatusItem
+              label="Available"
+              value={statusCounts.available}
+              color="red"
+            />
+            <StatusItem
+              label="Lost/Stolen"
+              value={statusCounts.lost}
+              color="red"
+            />
+          </div>
         </div>
-        <div className="space-y-3">
-          <StatusItem label="Active Assets" value={68} color="teal" />
-          <StatusItem label="Maintenance" value={79} color="amber" />
-          <StatusItem label="Retired" value={50} color="red" />
+      ) : (
+        <div className="mt-8 pt-6 border-t border-sidebar-border text-xs text-red-500">
+          Please log in to view asset status.
         </div>
-      </div>
+      )}
     </div>
   );
 }
