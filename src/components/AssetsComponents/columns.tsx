@@ -29,7 +29,7 @@ export type FirestoreData = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const columns: ColumnDef<FirestoreData,any>[] = [
+export const columns: ColumnDef<FirestoreData, any>[] = [
   {
     id: "select",
 

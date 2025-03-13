@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { query, where, getDocs } from "firebase/firestore";
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -68,16 +69,13 @@ export function AddAssetDrawer({
     dateAdded: new Date().toISOString(),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  [];
-  const handleDateChange = (selectedDate: Date | undefined) => {
+  const handleDateChange = (selectedDate?: Date) => {
     setFormData((prev) => ({
       ...prev,
-      dateAdded: selectedDate
-        ? selectedDate.toISOString()
-        : new Date().toISOString(),
+      dateAdded: selectedDate?.toISOString() ?? prev.dateAdded,
     }));
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -138,6 +136,21 @@ export function AddAssetDrawer({
         setIsSubmitting(false);
         return;
       }
+      const assetsRef = collection(db, "it-assets");
+      const q = query(
+        assetsRef,
+        where("serialNo", "==", formData.serialNo),
+        where("assetName", "==", formData.assetName)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        toast.error(
+          "Asset with this Serial Number or Asset Name already exists!"
+        );
+        setIsSubmitting(false);
+        return;
+      }
 
       await addDoc(collection(db, "it-assets"), {
         ...formData,
@@ -159,7 +172,7 @@ export function AddAssetDrawer({
         customType: "",
         location: "",
         dateAdded: new Date().toISOString(),
-      });    
+      });
     } catch (error) {
       console.error("Error adding asset:", error);
       toast.error("Failed to add asset");
