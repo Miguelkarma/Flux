@@ -41,11 +41,12 @@ import { Card } from "../ui/card";
 import TableLoader from "@/Animation/TableLoader";
 import { BulkDeleteComponent } from "./BulkDeleteDialog";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { UploadFile } from "./UploadFile";
 
-export type FirestoreData = {
+type NewType = {
   id: string;
   serialNo: string;
-  assetName: string;
+  assetTag: string;
   type: string;
   customType?: string;
   location: string;
@@ -54,6 +55,8 @@ export type FirestoreData = {
   status: string;
   dateAdded: string;
 };
+
+export type FirestoreData = NewType;
 
 export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -142,12 +145,12 @@ export function DataTable() {
     <>
       <div className="flex items-center justify-between ">
         <Input
-          placeholder="Filter Asset Name..."
+          placeholder="Filter Asset Tag..."
           value={
-            (table.getColumn("assetName")?.getFilterValue() as string) ?? ""
+            (table.getColumn("assetTag")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("assetName")?.setFilterValue(event.target.value)
+            table.getColumn("assetTag")?.setFilterValue(event.target.value)
           }
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
         />
@@ -191,6 +194,15 @@ export function DataTable() {
               }
             }}
             userEmail={userEmail}
+          />
+          <UploadFile
+            onAssetsAdded={() => {
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (user) {
+                fetchAssets(user.uid);
+              }
+            }}
           />
 
           {/* Bulk Delete */}

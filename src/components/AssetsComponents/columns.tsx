@@ -18,7 +18,7 @@ import ActionsCell from "./ActionsCell";
 export type FirestoreData = {
   id: string;
   serialNo: string;
-  assetName: string;
+  assetTag: string;
   type: string;
   customType?: string;
   location: string;
@@ -64,11 +64,11 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     ),
   },
   {
-    accessorKey: "assetName",
-    header: "Asset Name",
+    accessorKey: "assetTag",
+    header: "Asset Tag",
     cell: ({ row }) => (
       <div className="capitalize text-center text-secondary-foreground">
-        {row.getValue<string>("assetName") || "N/A"}
+        {row.getValue<string>("assetTag") || "N/A"}
       </div>
     ),
   },

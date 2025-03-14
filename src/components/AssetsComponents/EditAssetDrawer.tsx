@@ -19,7 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { toast, Toaster } from "sonner";
 import {
@@ -40,7 +47,7 @@ interface EditAssetDrawerProps {
   asset: {
     id: string;
     serialNo: string;
-    assetName: string;
+    assetTag: string;
     assignedEmployee: string;
     email: string;
     status: string;
@@ -64,7 +71,7 @@ export function EditAssetDrawer({
   const [formData, setFormData] = React.useState({
     id: asset.id,
     serialNo: asset.serialNo ?? "",
-    assetName: asset.assetName ?? "",
+    assetTag: asset.assetTag ?? "",
     assignedEmployee: asset.assignedEmployee ?? "",
     email: asset.email ?? "",
     status: asset.status ?? "Available",
@@ -79,7 +86,7 @@ export function EditAssetDrawer({
     setFormData({
       id: asset.id,
       serialNo: asset.serialNo ?? "",
-      assetName: asset.assetName ?? "",
+      assetTag: asset.assetTag ?? "",
       assignedEmployee: asset.assignedEmployee ?? "",
       email: asset.email ?? "",
       status: asset.status ?? "Available",
@@ -147,13 +154,43 @@ export function EditAssetDrawer({
       return;
     }
 
-    if (formData.type === "Other" && !formData.customType) {
-      toast.error("Custom type is required when 'Other' is selected!");
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
+      const assetsRef = collection(db, "it-assets");
+      const serialQuery = query(
+        assetsRef,
+        where("serialNo", "==", formData.serialNo),
+        where("userId", "==", user.uid)
+      );
+      const serialSnapshot = await getDocs(serialQuery);
+
+      // Check for duplicate asset tag (if asset tag is provided)
+      let tagSnapshot = { empty: true };
+      if (formData.assetTag) {
+        const tagQuery = query(
+          assetsRef,
+          where("assetTag", "==", formData.assetTag),
+          where("userId", "==", user.uid)
+        );
+        tagSnapshot = await getDocs(tagQuery);
+      }
+
+      if (!serialSnapshot.empty) {
+        toast.error("Asset with this Serial Number already exists!");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!tagSnapshot.empty) {
+        toast.error("Asset with this Asset Tag already exists!");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (formData.type === "Other" && !formData.customType) {
+        toast.error("Custom type is required when 'Other' is selected!");
+        setIsSubmitting(false);
+        return;
+      }
       const assetRef = doc(db, "it-assets", asset.id);
       await updateDoc(assetRef, {
         ...formData,
@@ -206,13 +243,13 @@ export function EditAssetDrawer({
           </div>
           {/* Asset Name */}
           <div className="grid gap-2">
-            <Label htmlFor="assetName">Asset Name</Label>
+            <Label htmlFor="assetTag">Asset Tag</Label>
             <Input
-              id="assetName"
-              name="assetName"
-              value={formData.assetName}
+              id="assetTag"
+              name="assetTag"
+              value={formData.assetTag}
               onChange={handleInputChange}
-              placeholder="Enter asset name"
+              placeholder="Enter asset Tag"
               required
             />
           </div>

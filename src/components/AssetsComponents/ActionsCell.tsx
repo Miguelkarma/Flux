@@ -47,7 +47,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
       setIsDeleting(true);
       const assetRef = doc(db, "it-assets", asset.id);
       await deleteDoc(assetRef);
-      toast.success(`${asset.assetName || "Asset"} deleted successfully.`);
+      toast.success(`${asset.assetTag || "Asset"} deleted successfully.`);
       setIsDeleteDialogOpen(false);
       onAssetUpdated(); // Refresh data after deleting
     } catch (error) {
@@ -62,10 +62,10 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
 
   const handleCopyAssetName = async () => {
     try {
-      await navigator.clipboard.writeText(asset.assetName || "N/A");
-      toast.success("Asset Name copied to clipboard");
+      await navigator.clipboard.writeText(asset.assetTag || "N/A");
+      toast.success("Asset Tag copied to clipboard");
     } catch (error) {
-      toast.error("Failed to copy Asset Name");
+      toast.error("Failed to copy Asset Tag");
     }
   };
 
