@@ -28,7 +28,7 @@ const DeleteAssetDialog: React.FC<DeleteAssetDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {asset.assetName}?</DialogTitle>
+          <DialogTitle>Delete {asset.assetTag}?</DialogTitle>
           <DialogDescription>
             Are you sure you want to delete this asset? This action cannot be
             undone.

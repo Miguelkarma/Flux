@@ -58,7 +58,7 @@ export function AddAssetDrawer({
 
   const [formData, setFormData] = React.useState({
     serialNo: "",
-    assetName: "",
+    assetTag: "",
     assignedEmployee: "",
     email: "",
     status: "Available",
@@ -151,7 +151,7 @@ export function AddAssetDrawer({
       setOpen(false);
       setFormData({
         serialNo: "",
-        assetName: "",
+        assetTag: "",
         assignedEmployee: "",
         email: "",
         status: "Available",
@@ -230,9 +230,9 @@ export function AddAssetDrawer({
             <div className="grid gap-2">
               <Label htmlFor="assetTag">Asset Tag</Label>
               <Input
-                id="assetName"
-                name="assetName"
-                value={formData.assetName}
+                id="assetTag"
+                name="assetTag"
+                value={formData.assetTag}
                 onChange={handleInputChange}
                 placeholder="Enter asset name"
               />

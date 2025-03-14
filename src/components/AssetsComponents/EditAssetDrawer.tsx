@@ -64,7 +64,7 @@ export function EditAssetDrawer({
   const [formData, setFormData] = React.useState({
     id: asset.id,
     serialNo: asset.serialNo ?? "",
-    assetName: asset.assetTag ?? "",
+    assetTag: asset.assetTag ?? "",
     assignedEmployee: asset.assignedEmployee ?? "",
     email: asset.email ?? "",
     status: asset.status ?? "Available",
@@ -79,7 +79,7 @@ export function EditAssetDrawer({
     setFormData({
       id: asset.id,
       serialNo: asset.serialNo ?? "",
-      assetName: asset.assetTag ?? "",
+      assetTag: asset.assetTag ?? "",
       assignedEmployee: asset.assignedEmployee ?? "",
       email: asset.email ?? "",
       status: asset.status ?? "Available",
@@ -210,7 +210,7 @@ export function EditAssetDrawer({
             <Input
               id="assetName"
               name="assetName"
-              value={formData.assetName}
+              value={formData.assetTag}
               onChange={handleInputChange}
               placeholder="Enter asset name"
               required
