@@ -60,14 +60,15 @@ export default function Header({ theme, toggleTheme }: HeaderProps) {
 
           <Avatar>
             <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
-            <AvatarFallback className="bg-slate-700 text-cyan-500">
+            <AvatarFallback className="bg-slate-700 text-cyan-500 ">
               {user?.displayName?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
 
           <button
             onClick={handleLogout}
-            className="text-sm text-red-500 hover:underline"
+            className="relative text-sm text-red-500 transition duration-300 rounded-full mr-6  
+             hover:text-red hover:shadow-[0_0_20px_1px#ff0000] hover:rounded-full"
           >
             <CirclePower />
           </button>

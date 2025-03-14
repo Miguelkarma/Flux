@@ -62,6 +62,10 @@ export function DataTable() {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [firebaseData, setFirebaseData] = React.useState<FirestoreData[]>([]);
   const [userEmail, setUserEmail] = React.useState<string | null>(null);
+  const [pagination, setPagination] = React.useState({
+    pageSize: 8,
+    pageIndex: 0,
+  });
 
   React.useEffect(() => {
     const auth = getAuth();
@@ -114,11 +118,13 @@ export function DataTable() {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination, // Ensure pagination updates
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination, // Pass the pagination state
     },
   });
 
@@ -215,21 +221,28 @@ export function DataTable() {
       <div className="flex items-center justify-between px-2 py-4">
         <Button
           variant="outline"
-          onClick={() => table.previousPage()}
+          onClick={() =>
+            setPagination((prev) => ({
+              ...prev,
+              pageIndex: Math.max(prev.pageIndex - 1, 0),
+            }))
+          }
           disabled={!table.getCanPreviousPage()}
         >
           Previous
         </Button>
         <span>
-          Page{" "}
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
+          Page <strong>{pagination.pageIndex + 1}</strong> of{" "}
+          <strong>{table.getPageCount()}</strong>
         </span>
         <Button
           variant="outline"
-          onClick={() => table.nextPage()}
+          onClick={() =>
+            setPagination((prev) => ({
+              ...prev,
+              pageIndex: prev.pageIndex + 1,
+            }))
+          }
           disabled={!table.getCanNextPage()}
         >
           Next

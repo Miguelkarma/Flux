@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import RegistrationForm from "@/components/registration-form";
-import logo from "@/assets/logo1.png";
+
 import back from "@/assets/log.jpg";
 import "@/styles/LoginReg.css";
+import { Waypoints } from "lucide-react";
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -18,10 +19,10 @@ const Registration = () => {
               navigate("/Home");
             }}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-md">
-              <img className="size-10" src={logo} />
+            <Waypoints className="h-8 w-8 text-teal-300" />
+            <div className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent ">
+              Flux
             </div>
-            TechTrack
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">

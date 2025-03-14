@@ -4,22 +4,5 @@ import ParticlesBackground from "@/Animation/ParticlesBackground";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function ExternalAPI() {
-  const { user, handleLogout } = useAuth();
-
-  return (
-    <SidebarProvider>
-      <div className="flex h-screen w-screen mr-2 ">
-        {/* Sidebar */}
-        <Sidebar user={user} onLogout={handleLogout} />
-
-        {/* Main content area */}
-        <main className="flex flex-col flex-2 min-w-0 mb-8">
-          <SidebarTrigger />
-          <ParticlesBackground />
-
-          <div className="flex flex-1 overflow"></div>
-        </main>
-      </div>
-    </SidebarProvider>
-  );
+  return <></>;
 }
