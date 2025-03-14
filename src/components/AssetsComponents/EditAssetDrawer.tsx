@@ -40,7 +40,7 @@ interface EditAssetDrawerProps {
   asset: {
     id: string;
     serialNo: string;
-    assetName: string;
+    assetTag: string;
     assignedEmployee: string;
     email: string;
     status: string;
@@ -64,7 +64,7 @@ export function EditAssetDrawer({
   const [formData, setFormData] = React.useState({
     id: asset.id,
     serialNo: asset.serialNo ?? "",
-    assetName: asset.assetName ?? "",
+    assetName: asset.assetTag ?? "",
     assignedEmployee: asset.assignedEmployee ?? "",
     email: asset.email ?? "",
     status: asset.status ?? "Available",
@@ -79,7 +79,7 @@ export function EditAssetDrawer({
     setFormData({
       id: asset.id,
       serialNo: asset.serialNo ?? "",
-      assetName: asset.assetName ?? "",
+      assetName: asset.assetTag ?? "",
       assignedEmployee: asset.assignedEmployee ?? "",
       email: asset.email ?? "",
       status: asset.status ?? "Available",
