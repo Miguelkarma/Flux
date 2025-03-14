@@ -12,9 +12,7 @@ export default function QuickActions() {
   return (
     <Card className="bg-[hsl(var(--card))] border-slate-700/50 backdrop-blur-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-slate-100 text-base">
-          Quick Actions
-        </CardTitle>
+        <CardTitle className=" text-base">Quick Actions</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-3 ">

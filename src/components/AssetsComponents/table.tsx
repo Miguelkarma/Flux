@@ -8,7 +8,7 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
-import { ChevronDown} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AddAssetDrawer } from "./AddAssetDrawer";
 import { columns } from "./columns";
+
 import { db } from "@/firebase/firebase";
 import {
   collection,
@@ -39,6 +40,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Card } from "../ui/card";
 import TableLoader from "@/Animation/TableLoader";
 import { BulkDeleteComponent } from "./BulkDeleteDialog";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export type FirestoreData = {
   id: string;
@@ -138,10 +140,12 @@ export function DataTable() {
     <>
       <div className="flex items-center justify-between ">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Asset Tag..."
+          value={
+            (table.getColumn("assetTag")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("assetTag")?.setFilterValue(event.target.value)
           }
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
         />
@@ -200,59 +204,61 @@ export function DataTable() {
       </div>
 
       <Card className=" bg-card p-3  border-0 shadow-popover-foreground  overflow-x-auto rounded-md border-b  ">
-        <Table className="w-full shadow-popover-foreground ">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : typeof header.column.columnDef.header === "function"
-                      ? header.column.columnDef.header(header.getContext())
-                      : header.column.columnDef.header}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  <div className="flex justify-center items-center h-full">
-                    <TableLoader />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : firebaseData.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {typeof cell.column.columnDef.cell === "function"
-                        ? cell.column.columnDef.cell(cell.getContext())
-                        : cell.column.columnDef.cell}
-                    </TableCell>
+        <ScrollArea className=" rounded-md transition">
+          <Table className="w-full shadow-popover-foreground ">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : typeof header.column.columnDef.header === "function"
+                        ? header.column.columnDef.header(header.getContext())
+                        : header.column.columnDef.header}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-
+              ))}
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-left"
+                  >
+                    <div className="flex justify-center items-center h-full">
+                      <TableLoader />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : firebaseData.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {typeof cell.column.columnDef.cell === "function"
+                          ? cell.column.columnDef.cell(cell.getContext())
+                          : cell.column.columnDef.cell}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="horizontal" className="scrollbar  " />
+        </ScrollArea>
         <div className="flex items-center justify-between px-2 py-2">
           <Button
             variant="outline"
