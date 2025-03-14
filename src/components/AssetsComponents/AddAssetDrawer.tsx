@@ -262,7 +262,7 @@ export function AddAssetDrawer({
                 name="assetTag"
                 value={formData.assetTag}
                 onChange={handleInputChange}
-                placeholder="Enter asset name"
+                placeholder="Enter asset Tag"
               />
             </div>
             <div className="grid gap-2">
