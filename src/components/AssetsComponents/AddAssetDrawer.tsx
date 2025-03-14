@@ -24,7 +24,6 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { Toaster, toast } from "sonner";
 
-import { getAuth } from "firebase/auth";
 import { Card } from "../ui/card";
 import {
   Laptop,
@@ -43,6 +42,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { query, where, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -68,16 +69,13 @@ export function AddAssetDrawer({
     dateAdded: new Date().toISOString(),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  [];
-  const handleDateChange = (selectedDate: Date | undefined) => {
+  const handleDateChange = (selectedDate?: Date) => {
     setFormData((prev) => ({
       ...prev,
-      dateAdded: selectedDate
-        ? selectedDate.toISOString()
-        : new Date().toISOString(),
+      dateAdded: selectedDate?.toISOString() ?? prev.dateAdded,
     }));
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -111,6 +109,15 @@ export function AddAssetDrawer({
     e.preventDefault();
     setIsSubmitting(true);
 
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      toast.error("You must be logged in to add an asset!");
+      setIsSubmitting(false);
+      return;
+    }
+
     if (!userEmail) {
       toast.error("You must be logged in to add an asset!");
       setIsSubmitting(false);
@@ -130,15 +137,36 @@ export function AddAssetDrawer({
     }
 
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
+      const assetsRef = collection(db, "it-assets");
+      const serialQuery = query(
+        assetsRef,
+        where("serialNo", "==", formData.serialNo),
+        where("userId", "==", user.uid)
+      );
+      const serialSnapshot = await getDocs(serialQuery);
 
-      if (!user) {
-        toast.error("User not authenticated!");
+      // Check for duplicate asset tag (if asset tag is provided)
+      let tagSnapshot = { empty: true };
+      if (formData.assetTag) {
+        const tagQuery = query(
+          assetsRef,
+          where("assetTag", "==", formData.assetTag),
+          where("userId", "==", user.uid)
+        );
+        tagSnapshot = await getDocs(tagQuery);
+      }
+
+      if (!serialSnapshot.empty) {
+        toast.error("Asset with this Serial Number already exists!");
         setIsSubmitting(false);
         return;
       }
 
+      if (!tagSnapshot.empty) {
+        toast.error("Asset with this Asset Tag already exists!");
+        setIsSubmitting(false);
+        return;
+      }
       await addDoc(collection(db, "it-assets"), {
         ...formData,
         type: formData.type === "Other" ? formData.customType : formData.type,
@@ -360,7 +388,7 @@ export function AddAssetDrawer({
                   <SelectItem value="Available">Available</SelectItem>
                   <SelectItem value="Maintenance">Maintenance</SelectItem>
                   <SelectItem value="Retired">Retired</SelectItem>
-                  <SelectItem value="Lost">Lost</SelectItem>
+                  <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
                 </SelectContent>
               </Select>
             </div>
