@@ -8,6 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import SystemTime from "@/components/DashboardComponents/SystemTime";
 import QuickActions from "@/components/DashboardComponents/QuickActions";
 import AssetSummary from "@/components/DashboardComponents/AssetSummary";
+import { toast, Toaster } from "sonner";
 
 export default function Dashboard() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -26,11 +27,28 @@ export default function Dashboard() {
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+  //toast
+  useEffect(() => {
+    const toastMessage = sessionStorage.getItem("toastMessage");
+    if (toastMessage) {
+      toast.success(toastMessage);
+      sessionStorage.removeItem("toastMessage");
+    }
+  }, []);
 
   return (
     <div
       className={`${theme} min-h-screen bg-gradient-to-br from-black to-slate-900 text-slate-100 relative overflow-hidden`}
     >
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors={true}
+        theme="system"
+        closeButton={true}
+        expand={true}
+        visibleToasts={3}
+      />
       {/* Background particle effect */}
       <DashboardParticles />
 

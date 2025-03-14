@@ -7,7 +7,7 @@ import "@/App.css";
 import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
 import Dashboard from "@/DashboardPages/Pages/Dashboard/renderDashboard";
 import Assets from "@/DashboardPages/Pages/Assets/renderPageAssets";
-import Exchange from "@/DashboardPages/Pages/CurrencyExchange/renderPageCurrency";
+import Exchange from "@/DashboardPages/Pages/Exchange/renderPageCurrency";
 
 const AppRouter = () => {
   return (

@@ -38,6 +38,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Card } from "../ui/card";
 
 export type FirestoreData = {
   id: string;
@@ -131,14 +132,16 @@ export function DataTable() {
   return (
     <>
       <div className="flex items-center gap-4 py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-lg flex-grow"
-        />
+        <Card className="max-w-lg flex-grow p-2">
+          <Input
+            placeholder="Filter emails..."
+            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("email")?.setFilterValue(event.target.value)
+            }
+            className="border-teal-700"
+          />
+        </Card>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
