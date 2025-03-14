@@ -25,6 +25,7 @@ import { db } from "@/firebase/firebase";
 import { Toaster, toast } from "sonner";
 
 import { getAuth } from "firebase/auth";
+import { Card } from "../ui/card";
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -132,15 +133,23 @@ export function AddAssetDrawer({
         expand={true}
         visibleToasts={3}
       />
+
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button variant="outline">
-            Add <Plus className=" h-4 w-4" />
-          </Button>
+          <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-12 bg-transparent border-0">
+            <Button
+              variant="outline"
+              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground t rounded-lg"
+            >
+              <span className="max-sm:hidden"> Add</span>{" "}
+              <Plus className=" h-4 w-4" />
+            </Button>
+          </Card>
         </SheetTrigger>
+
         <SheetContent
           side="bottom"
-          className=" w-full  bg-gradient-to-br from-black/100 to-teal-300/40 "
+          className=" w-full  bg-gradient-to-tr from-black/100 to-cyan-800/40 text-foreground"
         >
           <SheetHeader>
             <SheetTitle>Add New Asset</SheetTitle>
@@ -204,9 +213,10 @@ export function AddAssetDrawer({
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="Active">Active</SelectItem>
                   <SelectItem value="Available">Available</SelectItem>
-                  <SelectItem value="Assigned">Assigned</SelectItem>
-                  <SelectItem value="Under Repair">Under Repair</SelectItem>
+                  <SelectItem value="Maintenance">Maintenance</SelectItem>
+                  <SelectItem value="Retired">Retired</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -217,7 +227,7 @@ export function AddAssetDrawer({
                 </Button>
               </SheetClose>
               <Button
-                className="bg-gradient-to-br from-gray-700 to-teal-400/50"
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
                 type="submit"
                 disabled={isSubmitting}
               >

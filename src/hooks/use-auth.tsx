@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "@/firebase/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
@@ -9,11 +9,8 @@ export function useAuth() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        navigate("/login");
-      }
+      setUser(currentUser);
+      if (!currentUser) navigate("/login");
     });
 
     return () => unsubscribe();
@@ -21,8 +18,9 @@ export function useAuth() {
 
   const handleLogout = async () => {
     await signOut(auth);
+    sessionStorage.setItem("toastMessage", "Logged Out Successfully");
     navigate("/login");
   };
 
-  return { user, handleLogout };
+  return useMemo(() => ({ user, handleLogout }), [user]);
 }

@@ -58,17 +58,17 @@ function MetricCard({
 
   return (
     <div
-      className={`bg-slate-800/50 rounded-lg border ${getColor()} p-4 relative overflow-hidden`}
+      className={`bg-[hsl(var(--card))] rounded-lg border ${getColor()} p-6 relative overflow-hidden`}
     >
       <div className="flex items-center justify-between mb-2">
-        <div className="text-sm text-slate-400">{title}</div>
+        <div className="text-sm text-slate-500">{title}</div>
         <Icon className={`h-5 w-5 text-${color}-500`} />
       </div>
-      <div className="text-2xl font-bold mb-1 bg-gradient-to-r bg-clip-text text-transparent from-slate-100 to-slate-300">
+      <div className="text-2xl font-bold mb-1 bg-gradient-to-r bg-clip-text text-transparent from-primary to-teal-200">
         {value}
         {isPercentage ? "%" : ""}
       </div>
-      <div className="text-xs text-slate-500">{detail}</div>
+      <div className="text-xs text-primary">{detail}</div>
       <div className="absolute bottom-2 right-2 flex items-center">
         {getTrendIcon()}
       </div>

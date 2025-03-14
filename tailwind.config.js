@@ -29,11 +29,21 @@ module.exports = {
     },
     extend: {
       colors: {
+        "landing-background": "hsl(var(--landing-background))",
+        "landing-foreground": "hsl(var(--landing-foreground))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        "sidebar-background": "hsl(var(--sidebar-background))",
+        "sidebar-foreground": "hsl(var(--sidebar-foreground))",
+        "sidebar-primary": "hsl(var(--sidebar-primary))",
+        "sidebar-primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+        "sidebar-accent": "hsl(var(--sidebar-accent))",
+        "sidebar-accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+        "sidebar-border": "hsl(var(--sidebar-border))",
+        "sidebar-ring": "hsl(var(--sidebar-ring))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

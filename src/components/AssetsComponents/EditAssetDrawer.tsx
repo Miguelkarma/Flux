@@ -108,7 +108,7 @@ export function EditAssetDrawer({
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent
           side="bottom"
-          className="w-full bg-gradient-to-br from-black/100 to-teal-300/40 "
+          className="w-full  bg-gradient-to-tr from-black/100 to-cyan-800/40 text-foreground"
         >
           <SheetHeader>
             <SheetTitle>Edit Asset</SheetTitle>
@@ -183,7 +183,7 @@ export function EditAssetDrawer({
                 </Button>
               </SheetClose>
               <Button
-                className="bg-gradient-to-br from-gray-700 to-teal-400/50"
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
                 type="submit"
                 disabled={isSubmitting}
               >

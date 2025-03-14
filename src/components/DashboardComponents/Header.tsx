@@ -1,5 +1,4 @@
-import { Waypoints, Moon, Search, Sun, CirclePower } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Waypoints, Search, CirclePower } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
@@ -8,14 +7,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
+import Switch from "@/components/ui/switch";
 
-interface HeaderProps {
-  theme: "dark" | "light";
-  toggleTheme: () => void;
-}
-
-export default function Header({ theme, toggleTheme }: HeaderProps) {
+export default function Header() {
   const { user, handleLogout } = useAuth();
+
   return (
     <header className="flex items-center justify-between py-4 border-b border-slate-700/50 mb-6">
       <div className="flex items-center space-x-2">
@@ -26,7 +22,7 @@ export default function Header({ theme, toggleTheme }: HeaderProps) {
       </div>
 
       <div className="flex items-center space-x-6">
-        <div className="hidden md:flex items-center space-x-1 bg-slate-800/50 rounded-full px-3 py-1.5 border border-slate-700/50 backdrop-blur-sm">
+        <div className="hidden md:flex items-center space-x-1 bg-secondary rounded-full px-3 py-1.5 border border-slate-700/50 backdrop-blur-sm">
           <Search className="h-4 w-4 text-slate-400" />
           <input
             type="text"
@@ -39,18 +35,7 @@ export default function Header({ theme, toggleTheme }: HeaderProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={toggleTheme}
-                  className="text-slate-400 hover:text-slate-100"
-                >
-                  {theme === "dark" ? (
-                    <Moon className="h-5 w-5" />
-                  ) : (
-                    <Sun className="h-5 w-5" />
-                  )}
-                </Button>
+                <Switch />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Toggle theme</p>
@@ -60,7 +45,7 @@ export default function Header({ theme, toggleTheme }: HeaderProps) {
 
           <Avatar>
             <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
-            <AvatarFallback className="bg-slate-700 text-cyan-500 ">
+            <AvatarFallback className="bg-slate-700 text-cyan-500">
               {user?.displayName?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>

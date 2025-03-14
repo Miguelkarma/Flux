@@ -31,7 +31,7 @@ export default function DashboardParticles() {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      resizeCanvas(); // Set initial size
+      resizeCanvas();
 
       const particles: Particle[] = [];
       const particleCount = 100;
@@ -82,7 +82,7 @@ export default function DashboardParticles() {
       }
 
       for (let i = 0; i < particleCount; i++) {
-        particles.push(new ParticleClass(canvas, ctx)); 
+        particles.push(new ParticleClass(canvas, ctx));
       }
 
       const animate = () => {
