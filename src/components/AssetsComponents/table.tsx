@@ -83,6 +83,7 @@ export function DataTable() {
         console.log("User is not authenticated");
         setUserEmail(null);
         setFirebaseData([]);
+        setLoading(false);
       }
     });
 

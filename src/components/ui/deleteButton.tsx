@@ -15,7 +15,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
 }) => {
   return (
     <StyledWrapper className={className}>
-      <button className="bin-button" onClick={onClick}>
+      <button className="bin-button" onClick={onClick} aria-label="Delete">
         <div className="bin-icon">
           <svg
             className="bin-top"

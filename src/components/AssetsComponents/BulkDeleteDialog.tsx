@@ -27,6 +27,8 @@ export function BulkDeleteComponent({
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  console.log(DeleteButton);
+
   const handleBulkDelete = async () => {
     setIsDeleting(true);
     try {
