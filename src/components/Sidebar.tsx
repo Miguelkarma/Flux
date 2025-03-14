@@ -125,7 +125,7 @@ export default function Sidebar() {
           case "Available":
             available++;
             break;
-          case "Lost/Stolen":
+          case "Lost":
             lost++;
             break;
 
