@@ -53,8 +53,13 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
       let data;
       try {
         if (file.name.endsWith(".csv")) {
-          data = Papa.parse(e.target.result as string, { header: true }).data;
+          // Use Papa.parse for CSV files
+          const parseResult = Papa.parse(e.target.result as string, {
+            header: true,
+          });
+          data = parseResult.data;
         } else {
+          // Parse JSON files
           data = JSON.parse(e.target.result as string);
         }
 
@@ -86,28 +91,30 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-primary"
+          variant="outline"
+          className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
           onClick={() => setOpen(true)}
         >
-          Upload File <Upload />
+          <span className="max-sm:hidden "> Upload File </span>
+          <Upload />
         </Button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle className=" text-primary">Bulk Add Assets</DialogTitle>
+        <DialogTitle className="text-primary">Bulk Add Assets</DialogTitle>
         <DialogDescription>
           Only CSV and JSON files are supported.
         </DialogDescription>
         <p className="font-semibold text-primary">Format Example:</p>
-        <div className="bg-card p-2 rounded-md text-sm  text-primary overflow-auto">
+        <div className="bg-card p-2 rounded-md text-sm text-primary overflow-auto">
           <p className="font-semibold">CSV Format Example:</p>
-          <pre className="whitespace-pre-wrap text-xs ">
+          <pre className="whitespace-pre-wrap text-xs">
             serialNo,assetName,assignedEmployee,email,status,type,
             customType,location,dateAdded
           </pre>
         </div>
 
-        <div className="bg-card p-2 rounded-md text-sm mt-2  text-primary overflow-auto">
+        <div className="bg-card p-2 rounded-md text-sm mt-2 text-primary overflow-auto">
           <p className="font-semibold">JSON Format Example:</p>
           <pre className="whitespace-pre-wrap text-xs">
             "serialNo": "12345", "assetName": "Laptop", "assignedEmployee":
@@ -127,7 +134,8 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
             accept=".csv,.json"
             onChange={handleFileChange}
             disabled={!user}
-            className=" text-primary"
+            className="text-primary"
+            aria-label="file"
           />
           <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-700" />
         </div>
