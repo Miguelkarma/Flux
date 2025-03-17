@@ -69,14 +69,10 @@ export function AddAssetDrawer({
     dateAdded: new Date().toISOString(),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  [];
-  const handleDateChange = (selectedDate: Date | undefined) => {
+  const handleDateChange = (selectedDate?: Date) => {
     setFormData((prev) => ({
       ...prev,
-      dateAdded: selectedDate
-        ? selectedDate.toISOString()
-        : new Date().toISOString(),
+      dateAdded: selectedDate?.toISOString() ?? prev.dateAdded,
     }));
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -391,7 +387,7 @@ export function AddAssetDrawer({
                   <SelectItem value="Available">Available</SelectItem>
                   <SelectItem value="Maintenance">Maintenance</SelectItem>
                   <SelectItem value="Retired">Retired</SelectItem>
-                  <SelectItem value="Lost">Lost</SelectItem>
+                  <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
                 </SelectContent>
               </Select>
             </div>
