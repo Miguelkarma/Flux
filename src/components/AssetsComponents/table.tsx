@@ -152,7 +152,7 @@ export function DataTable() {
           onChange={(event) =>
             table.getColumn("assetTag")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
         />
         {/* columns dropdown */}
         <div className="flex items-center space-x-1 max-sm:space-x-1">
