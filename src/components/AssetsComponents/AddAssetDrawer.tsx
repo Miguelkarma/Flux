@@ -69,8 +69,6 @@ export function AddAssetDrawer({
     dateAdded: new Date().toISOString(),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  [];
   const handleDateChange = (selectedDate: Date | undefined) => {
     setFormData((prev) => ({
       ...prev,
