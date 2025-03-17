@@ -41,7 +41,6 @@ import { Card } from "../ui/card";
 import TableLoader from "@/Animation/TableLoader";
 import { BulkDeleteComponent } from "./BulkDeleteDialog";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { UploadFile } from "./UploadFile";
 
 type NewType = {
   id: string;
@@ -194,15 +193,6 @@ export function DataTable() {
               }
             }}
             userEmail={userEmail}
-          />
-          <UploadFile
-            onAssetsAdded={() => {
-              const auth = getAuth();
-              const user = auth.currentUser;
-              if (user) {
-                fetchAssets(user.uid);
-              }
-            }}
           />
 
           {/* Bulk Delete */}
