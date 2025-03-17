@@ -155,7 +155,7 @@ export function DataTable() {
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
         />
         {/* columns dropdown */}
-        <div className="flex items-center space-x-2 max-sm:space-x-1">
+        <div className="flex items-center space-x-1 max-sm:space-x-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
