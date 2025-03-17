@@ -30,15 +30,11 @@ Object.defineProperty(globalThis, "ResizeObserver", {
   value: MockResizeObserver,
 });
 
-// Define a complete mock FileReader class that preserves the static properties
 class MockFileReader {
   onload: ((this: FileReader, ev: unknown) => unknown) | null = null;
 
-  readAsText(): void {
-    // Implementation will be overridden in individual tests
-  }
+  readAsText(): void {}
 
-  // Add other required methods and properties
   abort() {}
   addEventListener() {}
   removeEventListener() {}
