@@ -159,7 +159,8 @@ export function EditAssetDrawer({
       const serialQuery = query(
         assetsRef,
         where("serialNo", "==", formData.serialNo),
-        where("userId", "==", user.uid)
+        where("userId", "==", user.uid),
+        where("__name__", "!=", asset.id)
       );
       const serialSnapshot = await getDocs(serialQuery);
 
