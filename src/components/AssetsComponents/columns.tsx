@@ -189,14 +189,15 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
 
       const statusColors: Record<string, string> = {
         Active:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-green-500 rounded-lg",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-teal-500 rounded-lg",
         Maintenance:
           "text-secondary-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
         Retired:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-purple-500 rounded-lg",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-gray-500 rounded-lg",
         Available:
           "text-secondary-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
-        Lost: "text-secondary-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
+        "Lost/Stolen":
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
       };
 
       const badgeClass =
