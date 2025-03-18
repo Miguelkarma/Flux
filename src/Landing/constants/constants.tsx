@@ -1,5 +1,13 @@
 import { MenuItem } from "@/Landing/constants/types";
 
+import logJpg from "@/assets/log.jpg";
+
+export const IMAGES = {
+  BG_JPG: logJpg,
+  BG_PNG: logJpg,
+  HERO: logJpg,
+  LOGO: logJpg,
+};
 import {
   ChartArea,
   Building2,
@@ -26,8 +34,7 @@ import {
 } from "lucide-react";
 
 import {
-  CheckCircle,
-  Star,
+  
   FileText,
   BookOpen,
   Newspaper,
@@ -212,36 +219,38 @@ export const featureData = {
       iconBoxColor: "bg-blue-600",
       title: "Advance Analytics",
       desc: "Experience advanced analytics capabilities that enable you to dive deep into data, uncover meaningful patterns, and derive actionable insights",
-      imgSrc: CheckCircle,
+      imgSrc: IMAGES.BG_JPG,
     },
     {
       icon: <Files size={32} />,
       iconBoxColor: "bg-cyan-500",
       title: "Automated Reports",
       desc: "Save time and effort with automated reporting, generating comprehensive and accurate reports automatically, streamlining your data analysis",
-      imgSrc: Star,
+      imgSrc: IMAGES.BG_PNG,
     },
     {
       icon: <UserRoundPen size={32} />,
       iconBoxColor: "bg-yellow-500",
       title: "Retention Report",
       desc: "Enhance retention with our report, maximizing customer engagement and loyalty for business",
+      imgSrc: IMAGES.HERO,
     },
     {
       icon: <GitFork size={32} />,
       iconBoxColor: "bg-red-500",
       title: "A/B Test Variants",
       desc: "Efficiently compare A/B test variants to determine the most effective strategies",
+      imgSrc: IMAGES.LOGO,
     },
     {
       icon: <Blocks size={32} />,
       iconBoxColor: "bg-purple-500",
       title: "Integration Directory",
       desc: "Seamlessly integrate with our directory, maximizing efficiency and unlocking the full potentials",
+      imgSrc: IMAGES.HERO,
     },
   ],
 };
-
 // Process
 export const processData = {
   sectionSubtitle: "How it works",

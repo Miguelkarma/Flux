@@ -155,3 +155,34 @@
 
   md:py-16;
 }
+
+.section-head{
+  @apply pb-8
+  text-center
+  md:pb-16
+  
+  lg:max-w-screen-sm
+  lg:mx-auto;
+}
+
+.section-subtitle{
+  @apply text-primary
+  text-sm
+  font-medium
+  uppercase;
+}
+.section-title{
+  @apply text-foreground
+  text-3xl
+  font-semibold
+  leading-snug
+  py-3
+  
+  md:text-[40px];
+}
+.section-text{
+  @apply text-muted-foreground
+
+  md:text-xl
+  ;
+}
