@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import Loader from "./Animation/Loader";
-import Navbar from "@/Landing/Navbar";
+import Header from "@/Landing/Header";
 import Hero from "@/Landing/Hero";
-import Features from "@/Landing/Features";
-import CTA from "@/Landing/CTA";
-import Footer from "@/Landing/Footer";
-import MouseMoveEffect from "./Animation/MouseMoveEffect";
+import Brand from "./Landing/Brand";
+import { ReactLenis } from "lenis/react";
 import "./App.css";
+import Features from "./Landing/Features";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 3000);
+    return () => clearTimeout(timer); // Cleanup to prevent memory leaks
   }, []);
 
   if (loading) {
@@ -26,20 +26,17 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-black">
-      <div className="pointer-events-none fixed inset-0">
-        <div className="inset-0 bg-gradient-to-b from-background via-background to-black" />
-      </div>
-      <div className="relative z-10 flex flex-col flex-grow">
-        <Navbar />
-        <MouseMoveEffect />
-        <div className="flex flex-col flex-grow items-center justify-center bg-mask">
+    <ReactLenis root>
+      <div className="relative isolate overflow-hidden">
+        {/* Header */}
+        <Header />
+        {/* Main Content */}
+        <main>
           <Hero />
-        </div>
-        <Features />
-        <CTA />
-        <Footer />
+          <Brand />
+          <Features/>
+        </main>
       </div>
-    </div>
+    </ReactLenis>
   );
 }

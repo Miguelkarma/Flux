@@ -1,74 +1,52 @@
-import { motion } from "framer-motion";
-import { Server, Database, ShieldCheck, Activity } from "lucide-react";
-
-const features = [
-  {
-    name: "Centralized Asset Tracking",
-    description:
-      "Manage and monitor all IT assets from a single, unified dashboard for complete visibility.",
-    icon: Server,
-  },
-  {
-    name: "Automated Inventory Management",
-    description:
-      "Reduce manual effort with automated asset discovery, tracking, and reporting.",
-    icon: Database,
-  },
-  {
-    name: "Robust Security & Compliance",
-    description:
-      "Ensure your IT assets meet security standards with built-in compliance monitoring.",
-    icon: ShieldCheck,
-  },
-  {
-    name: "Real-Time Performance Monitoring",
-    description:
-      "Get instant insights into asset health, utilization, and lifecycle to optimize operations.",
-    icon: Activity,
-  },
-];
+import { motion } from "motion/react";
+import { featureData } from "@/Landing/constants/constants";
+import FeaturedCard from "@/Landing/constants/FeatureCard";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export default function Features() {
   return (
-    <section className="container space-y-16 py-24 md:py-32">
-      {/* Animated Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-[58rem] text-center"
-      >
-        <h2 className="font-DM Sans, sans-serif; font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl bg-gradient-to-b from-gray-200 via-gray-400 to-gray-800 bg-clip-text text-transparent ">
-          Smarter IT Asset Management
-        </h2>
-        <p className="mt-4 text-landing-foreground sm:text-lg">
-          Optimize asset utilization, enhance security, and gain real-time
-          insights with our advanced IT asset management solutions.
-        </p>
-      </motion.div>
-
-      {/* Feature Grid with Scroll Animation */}
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
-        {features.map((feature, index) => (
-          <motion.div
-            key={feature.name}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="relative overflow-hidden rounded-lg border border-gray-300 bg-transparent p-8 text-gray-200"
-          >
-            <div className="flex items-center gap-4">
-              <feature.icon className="h-8 w-8" />
-              <h3 className="font-bold">{feature.name}</h3>
-            </div>
-            <p className="mt-2 text-landing-foreground">
-              {feature.description}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
+    <>
+      <section className="section">
+        <div className="container">
+          <div className="section-head">
+            <motion.p className="">{featureData.sectionSubtitle}</motion.p>
+            <motion.h2 className="section-title">
+              {featureData.sectionTitle}
+            </motion.h2>
+            <motion.p className="section-text">
+              {featureData.sectionText}
+            </motion.p>
+          </div>
+          <div className="">
+            {featureData.features.map(
+              ({ icon, iconBoxColor, title, desc, imgSrc }, index) => (
+                <FeaturedCard key={index}>
+                  <>
+                    <div className="">
+                      <motion.div className={`${iconBoxColor}`}>
+                        {icon}
+                      </motion.div>
+                      <motion.h3 className="">{title}</motion.h3>
+                      <motion.p className="">{desc}</motion.p>
+                      <motion.div className="">
+                        <Button variant="link" className="">
+                          Learn more <ArrowRight />
+                        </Button>
+                      </motion.div>
+                    </div>
+                    {imgSrc && (
+                      <motion.figure className="">
+                        <img src={imgSrc} alt="" />
+                      </motion.figure>
+                    )}
+                  </>
+                </FeaturedCard>
+              )
+            )}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
