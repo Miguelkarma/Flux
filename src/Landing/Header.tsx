@@ -63,7 +63,7 @@ const Header = () => {
   };
 
   return (
-    <header className="border h-16 md:h-20 lg:h-22 relative">
+    <header className="border-b shadow-3xl border-teal-900 h-16 md:h-20 lg:h-22 relative">
       <div className="container mx-auto h-full flex items-center justify-between">
         {/* Logo */}
         <span className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent">
@@ -76,20 +76,20 @@ const Header = () => {
           initial="initial"
           whileHover="hover"
         >
-          <NavigationMenu className="text-sm">
-            <NavigationMenuList className="flex items-center gap-1 relative z-10">
+          <NavigationMenu className="text-sm ">
+            <NavigationMenuList className="flex items-center gap-1 relative z-10 ">
               {navMenu.map(({ href, label, icon }, index) => {
                 const gradients = [
-                  "radial-gradient(circle, rgba(153, 233, 242, 0.5) 0%, rgba(102, 204, 214, 0.06) 50%, rgba(77, 182, 194, 0) 100%)",
+                  "radial-gradient(circle, rgba(153, 233, 242, 0.5) 0%, rgba(102, 204, 214, 0.06) 70%, rgba(77, 182, 194, 0) 80%)",
                 ];
                 const iconColors = ["text-teal-500"];
                 const gradient = gradients[index % gradients.length];
                 const iconColor = iconColors[index % iconColors.length];
 
                 return (
-                  <NavigationMenuItem key={index} className="relative">
+                  <NavigationMenuItem key={index} className="relative ">
                     <motion.div
-                      className="block rounded-xl overflow-visible relative"
+                      className="block rounded-xl overflow-visible relative "
                       style={{ perspective: "600px" }}
                       whileHover="hover"
                       initial="initial"
@@ -108,7 +108,7 @@ const Header = () => {
                       <motion.a
                         href={href || "#"}
                         onClick={(e) => handleScroll(e, href || "#")}
-                        className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-foreground hover:text-teal-500 transition-colors rounded-xl font-normal"
+                        className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-foreground  transition-colors rounded-xl font-normal "
                         variants={itemVariants}
                         transition={sharedTransition}
                         style={{
@@ -118,7 +118,7 @@ const Header = () => {
                       >
                         {icon && (
                           <motion.span
-                            className={`transition-colors duration-300 ${iconColor} hover:text-teal-400`}
+                            className={`transition-colors duration-300 ${iconColor} text-teal-400`}
                           >
                             {icon}
                           </motion.span>
@@ -130,7 +130,7 @@ const Header = () => {
                       <motion.a
                         href={href || "#"}
                         onClick={(e) => handleScroll(e, href || "#")}
-                        className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-muted-foreground hover:text-teal-500 transition-colors rounded-xl"
+                        className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-muted-foreground text-teal-500 transition-colors rounded-xl"
                         variants={backVariants}
                         transition={sharedTransition}
                         style={{
@@ -141,7 +141,7 @@ const Header = () => {
                       >
                         {icon && (
                           <span
-                            className={`transition-colors duration-300 hover:text-teal-400`}
+                            className={`transition-colors duration-300 text-teal-400`}
                           >
                             {icon}
                           </span>

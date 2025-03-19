@@ -44,7 +44,7 @@
     --sidebar-ring: 180 60% 47%;
 
     --landing-background: 220 40% 10%;
-    --landing-foreground: 210 12% 70%;
+    --landing-foreground: 198 85% 10%;
   }
 
   .dark {
@@ -166,13 +166,13 @@
 }
 
 .section-subtitle {
-  @apply text-primary
+  @apply text-teal-300
   text-sm
   font-medium
   uppercase;
 }
 .section-title {
-  @apply text-foreground
+  @apply text-teal-100
   text-3xl
   font-semibold
   leading-snug
@@ -181,7 +181,7 @@
   md:text-[40px];
 }
 .section-text {
-  @apply text-muted-foreground
+  @apply text-slate-400
 
   md:text-xl;
 }

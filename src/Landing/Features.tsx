@@ -59,13 +59,13 @@ export default function Features() {
                       </motion.div>
                       <motion.h3
                         variants={variants.fadeInUp}
-                        className="text-foreground text-xl font-medium mt-4 mb-3"
+                        className="text-teal-100 text-xl font-medium mt-4 mb-3"
                       >
                         {title}
                       </motion.h3>
                       <motion.p
                         variants={variants.fadeInUp}
-                        className="text-muted-foreground line-clamp-2"
+                        className="text-slate-400 line-clamp-2"
                       >
                         {desc}
                       </motion.p>

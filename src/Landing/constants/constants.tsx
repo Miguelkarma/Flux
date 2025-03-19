@@ -12,10 +12,6 @@ import {
   QrCode,
   Laptop,
   BarChart2,
-  Files,
-  UserRoundCog,
-  GitMerge,
-  ClipboardList,
   CreditCard,
   Github,
   Linkedin,
@@ -26,6 +22,10 @@ import {
   Rocket,
   Settings,
   Star,
+  Server,
+  Users,
+  Activity,
+  UserPlus,
 } from "lucide-react";
 
 //brands
@@ -145,48 +145,51 @@ export const heroData = {
 
 // Feature
 export const featureData = {
-  sectionSubtitle: "Features",
-  sectionTitle: "Discover Powerful Features",
+  sectionSubtitle: "Core Features",
+  sectionTitle: "Efficient IT Asset Management",
   sectionText:
-    "Unleash the power of our platform with a multitude of powerful features, empowering you to manage your IT assets efficiently.",
+    "Manage your IT assets seamlessly with a powerful suite of features designed to enhance tracking, monitoring, and reporting.",
+
   features: [
     {
-      icon: <BarChart2 size={32} />,
+      icon: <Server size={32} />,
       iconBoxColor: "bg-blue-600",
-      title: "Asset Lifecycle Management",
-      desc: "Track the complete lifecycle of IT assets from procurement to disposal, ensuring optimal utilization and compliance",
+      title: "Asset Management",
+      desc: "Add, update, and delete IT equipment while storing crucial details like name, serial number, and status.",
       imgSrc: IMAGES.BG_JPG,
     },
     {
-      icon: <Files size={32} />,
+      icon: <Users size={32} />,
       iconBoxColor: "bg-cyan-500",
-      title: "Automated Inventory",
-      desc: "Save time and effort with automated inventory tracking, generating comprehensive and accurate reports automatically",
+      title: "Assignment Tracking",
+      desc: "Easily assign equipment to employees and track which employee has which device in real time.",
       imgSrc: IMAGES.BG_PNG,
     },
     {
-      icon: <UserRoundCog size={32} />,
-      iconBoxColor: "bg-yellow-500",
-      title: "Maintenance Scheduling",
-      desc: "Enhance equipment lifespan with scheduled maintenance, maximizing uptime and operational efficiency",
+      icon: <Activity size={32} />,
+      iconBoxColor: "bg-emerald-500",
+      title: "Status Monitoring",
+      desc: "Keep track of asset status—Available, Assigned, or Under Repair—to optimize asset utilization.",
       imgSrc: IMAGES.HERO,
     },
     {
-      icon: <GitMerge size={32} />,
+      icon: <BarChart2 size={32} />,
       iconBoxColor: "bg-red-500",
-      title: "Software License Management",
-      desc: "Efficiently track software licenses to ensure compliance and optimize license utilization",
+      title: "Basic Reporting",
+      desc: "Gain insights into total assets, assigned assets, and available assets with clear and concise reporting.",
       imgSrc: IMAGES.LOGO,
     },
     {
-      icon: <ClipboardList size={32} />,
+      icon: <UserPlus size={32} />,
       iconBoxColor: "bg-purple-500",
-      title: "Audit & Compliance",
-      desc: "Seamlessly handle IT audits with comprehensive reporting and compliance tracking features",
+      title: "Employee Management",
+      desc: "Add and manage employees within the system, allowing seamless asset assignment and tracking.",
       imgSrc: IMAGES.HERO,
     },
   ],
 };
+
+
 // Process
 export const processData = {
   sectionSubtitle: "How it works",

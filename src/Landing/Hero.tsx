@@ -41,7 +41,7 @@ export default function Hero() {
         className="container text-center"
       >
         <div className="max-w-screen-md mx-auto">
-          <p className="text-sm uppercase tracking-wider bg-secondary/50 text-secondary-foreground max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10">
+          <p className="text-sm uppercase tracking-wider bg-secondary/50 text-teal-300 max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10">
             {heroData.sectionSubtitle}
           </p>
 
@@ -53,7 +53,7 @@ export default function Hero() {
             </span>
           </h2>
 
-          <p className="text-muted-foreground md:text-xl">
+          <p className="text-slate-400 md:text-xl">
             {heroData.sectionText}
           </p>
 
