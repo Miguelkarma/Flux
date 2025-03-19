@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <ReactLenis root>
-      <div className="relative isolate overflow-hidden">
+      <div className="relative isolate overflow-hidden bg-[hsl(222.2,84%,4.9%)]">
         {/* Header */}
         <Header />
         {/* Main Content */}

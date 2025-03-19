@@ -36,7 +36,7 @@ const FeatureCard = ({ classes, children }: FeatureCardProps) => {
       className={`relative overflow-hidden p-[1px] ring ring-inset ring-zinc-800/50 rounded-[14px] ${classes}`}
     >
       <div
-        className="relative isolate bg-landing-foreground backdrop-blur-md p-4 rounded-xl overflow-hidden"
+        className="relative isolate bg-landing-foreground backdrop-blur-md p-4 rounded-xl overflow-hidden "
         ref={cardRef}
         onMouseOver={() => setShowGlow(true)}
         onMouseOut={() => setShowGlow(false)}

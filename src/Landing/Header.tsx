@@ -63,7 +63,10 @@ const Header = () => {
   };
 
   return (
-    <header className="border-b shadow-3xl border-teal-900 h-16 md:h-20 lg:h-22 relative">
+    <header
+      id="header"
+      className="border-b shadow-3xl border-teal-900 h-16 md:h-20 lg:h-22 relative"
+    >
       <div className="container mx-auto h-full flex items-center justify-between">
         {/* Logo */}
         <span className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent">

@@ -3,21 +3,23 @@ import * as variants from "@/Animation/motionVariants";
 import { ctaData } from "./constants/constants";
 import { Button } from "@/components/ui/button";
 import log from "@/assets/log.jpg";
+import { ArrowRightCircle } from "lucide-react";
+import { Link } from "react-scroll";
 
 export default function CTA() {
   return (
-    <section id="cta" className="section">
-      <div className="container">
+    <section id="cta" className="section ">
+      <div className="container ">
         <motion.div
           variants={variants.fadeInUp}
           initial="start"
           whileInView="end"
           viewport={{ once: true }}
-          className="bg-primary rounded-xl border-t border-primary-foreground/30 overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center"
+          className="bg-landing-background rounded-xl border-t border-primary-foreground/30 overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center border-none  "
         >
-          <div className="p-8 md:p-16 xl:p-20">
+          <div className="p-8 md:p-16 xl:p-20 ">
             <motion.h2
-              className="text-[26px] leading-tight font-semibold mb-6 capitalize sm:text-[34px] md:text-[40px] lg:text-[46px] lg:mb-10"
+              className="text-[26px] leading-tight font-semibold mb-6 capitalize sm:text-[34px] md:text-[40px] lg:text-[46px] lg:mb-10 text-teal-100"
               variants={variants.fadeIn}
               initial="start"
               whileInView="end"
@@ -32,15 +34,11 @@ export default function CTA() {
               whileInView="end"
               viewport={{ once: true }}
             >
-              <Button className="bg-foreground text-background hover:bg-foreground/95">
-                Free Trial lolz
-              </Button>
-              <Button
-                variant="outline"
-                className="!bg-transparent border-current"
-              >
-                Pricing & Plans
-              </Button>
+              <Link to="header" smooth={true} duration={500}>
+                <Button className="bg-slate-700 text-teal-100 hover:bg-foreground/95">
+                  Start Now <ArrowRightCircle></ArrowRightCircle>
+                </Button>
+              </Link>
             </motion.div>
           </div>
           <motion.figure

@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import * as variants from "@/Animation/motionVariants";
 import { processData } from "@/Landing/constants/constants";
-import Log from "@/assets/log.jpg";
+import form from "@/assets/process.png";
 
 const Process = () => {
   return (
@@ -61,7 +61,7 @@ const Process = () => {
                     {title}
                   </motion.h3>
                   <motion.p
-                    className="text-sm text-muted-foreground md:text-base"
+                    className="text-sm text-slate-400 md:text-base"
                     variants={variants.fadeInLeft}
                   >
                     {text}
@@ -76,15 +76,15 @@ const Process = () => {
               initial="start"
               whileInView={"end"}
               viewport={{ once: true }}
-              className="mx-auto bg-primary rounded-3xl max-w-[580px] overflow-hidden p-8 !pb-0
+              className="mx-auto bg-landing-foreground rounded-3xl max-w-[580px] overflow-hidden p-8 !pb-0
             lg:p-12 "
             >
               <img
-                src={Log}
+                src={form}
                 width={500}
                 height={528}
                 alt="Flux Dashboard"
-                className="w-full h-full object-contain object-bottom  "
+                className="w-full h-full object-contain object-bottom rounded-t-xl  "
               />
             </motion.figure>
           </div>

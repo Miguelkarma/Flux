@@ -62,7 +62,7 @@ const Blog = () => {
               index
             ) => (
               <motion.div key={index} variants={variants.fadeInUp}>
-                <Card className="group">
+                <Card className="group bg-landing-foreground text-teal-100 border-teal-100/0">
                   <CardHeader>
                     <figure className="rounded-lg overflow-hidden">
                       <img
@@ -73,11 +73,11 @@ const Blog = () => {
                     </figure>
                   </CardHeader>
                   <CardContent>
-                    <Badge className="mb-3">{badge}</Badge>
+                    <Badge className="mb-3 bg-slate-700">{badge}</Badge>
                     <CardTitle className="leading-normal">
                       <a
                         href="#"
-                        className="hover:text-primary transiotion-colors"
+                        className="hover:text-teal-300 transiotion-colors"
                       >
                         {title}
                       </a>

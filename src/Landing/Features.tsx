@@ -74,9 +74,9 @@ export default function Features() {
                     {imgSrc && (
                       <motion.figure
                         variants={variants.fadeInUp}
-                        className="p-6 pt-0"
+                        className="p-6 pt-0 "
                       >
-                        <img src={imgSrc} alt="title" />
+                        <img src={imgSrc} alt="title" className="rounded-md" />
                       </motion.figure>
                     )}
                   </>

@@ -9,7 +9,6 @@ export const IMAGES = {
   LOGO: logJpg,
 };
 import {
-  QrCode,
   Laptop,
   BarChart2,
   CreditCard,
@@ -145,7 +144,7 @@ export const heroData = {
 
 // Feature
 export const featureData = {
-  sectionSubtitle: "Core Features",
+  sectionSubtitle: "Features",
   sectionTitle: "Efficient IT Asset Management",
   sectionText:
     "Manage your IT assets seamlessly with a powerful suite of features designed to enhance tracking, monitoring, and reporting.",
@@ -202,11 +201,7 @@ export const processData = {
       title: "Create your account",
       text: "Join us now and create your account to start exploring our platform and unlocking powerful asset tracking features.",
     },
-    {
-      icon: <QrCode size={32} />,
-      title: "Install our asset tracking app",
-      text: "Install our tracking app to effortlessly monitor and manage your IT equipment, gaining valuable insights and optimizing your inventory.",
-    },
+  
     {
       icon: <CreditCard size={32} />,
       title: "Start tagging your assets",
@@ -218,22 +213,19 @@ export const processData = {
 // Overview
 export const overviewData = {
   sectionSubtitle: "Overview",
-  sectionTitle: " IT Asset Management Solution",
-  sectionText:
-    "Powerful asset tracking made easy. Make data-driven decisions about your IT infrastructure with our comprehensive tool.",
-  listTitle: "More than 1M+ organizations around the world are already using",
+
   list: [
     {
-      title: "1M+",
-      text: "Assets Tracked",
+      title: "Tracking",
+      text: "Monitor IT assets",
     },
     {
-      title: "4.86",
-      text: "Average Rating",
+      title: "Optimized Utilization",
+      text: "Improve asset lifecycle management",
     },
     {
-      title: "60K+",
-      text: "Active Organizations",
+      title: "Seamless",
+      text: "Automate inventory",
     },
   ],
 };
@@ -244,14 +236,14 @@ export const reviewData = {
   sectionTitle: "What Our Customers Are Saying",
   reviewCard: [
     {
-      title: "We've reduced equipment losses by 85% thanks to AssetTrack.",
-      text: "Our IT department is running more efficiently with the help of AssetTrack, resulting in better equipment utilization, improved maintenance scheduling",
+      title: "We've reduced equipment losses by 85% thanks to Flux.",
+      text: "Our IT department is running more efficiently with the help of Flux, resulting in better equipment utilization, improved maintenance scheduling",
       reviewAuthor: "Wade Warren",
       date: "3 months ago",
     },
     {
-      title: "Great service from the expert support system of AssetTrack",
-      text: "Experience exceptional service and support from AssetTrack's expert team, dedicated to providing knowledgeable assistance and ensuring seamless asset management",
+      title: "Great service from the expert support system of Flux",
+      text: "Experience exceptional service and support from Flux's expert team, dedicated to providing knowledgeable assistance and ensuring seamless asset management",
       reviewAuthor: "Dianne Russell",
       date: "3 months ago",
     },
