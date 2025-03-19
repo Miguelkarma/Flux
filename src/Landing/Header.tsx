@@ -14,8 +14,20 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const handleScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <header className="border h-16 md:h-20 lg:h-22 relative">
       <div className="container mx-auto h-full flex items-center justify-between">
@@ -32,6 +44,7 @@ const Header = () => {
                 <NavigationMenuItem key={index}>
                   <NavigationMenuLink
                     href={href || "#"}
+                    onClick={(e) => handleScroll(e, href || "#")}
                     className={navigationMenuTriggerStyle()}
                   >
                     {label}
@@ -41,11 +54,25 @@ const Header = () => {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-
         {/* Auth Buttons */}
         <div className="hidden lg:flex gap-2">
-          <Button variant="ghost">Sign In</Button>
-          <Button>Log In</Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              navigate("/registration");
+            }}
+          >
+            Sign In
+          </Button>
+          <Button
+            className="relative w-auto px-6 py-2 p-4 text-white bg-black border border-white/30 rounded-full transition-all hover:bg-black 
+                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-200 before:rounded-full"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Log In
+          </Button>
         </div>
 
         {/* Mobile Menu */}

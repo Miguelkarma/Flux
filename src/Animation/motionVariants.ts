@@ -1,13 +1,18 @@
-import { Variants } from "motion/react";
+import { Variants } from "framer-motion";
+
+const easing = [0.6, -0.05, 0.01, 0.99];
 
 export const fadeIn: Variants = {
   start: {
     opacity: 0,
+    scale: 0.95,
   },
   end: {
     opacity: 1,
+    scale: 1,
     transition: {
       duration: 0.7,
+      ease: easing,
     },
   },
 };
@@ -22,6 +27,7 @@ export const fadeInUp: Variants = {
     opacity: 1,
     transition: {
       duration: 0.7,
+      ease: easing,
     },
   },
 };
@@ -36,6 +42,7 @@ export const fadeInRight: Variants = {
     opacity: 1,
     transition: {
       duration: 0.7,
+      ease: easing,
     },
   },
 };
@@ -50,6 +57,7 @@ export const fadeInLeft: Variants = {
     opacity: 1,
     transition: {
       duration: 0.7,
+      ease: easing,
     },
   },
 };
@@ -63,16 +71,35 @@ export const fadeInScale: Variants = {
     scale: 1,
     opacity: 1,
     transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
       duration: 0.7,
     },
   },
 };
 
 export const staggerContainer: Variants = {
-  start: {},
-  end: {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.15,
+      duration: 0.8,
     },
   },
 };
+
+export const lazyLoad: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+

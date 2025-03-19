@@ -5,7 +5,7 @@ import log from "@/assets/log.jpg";
 
 const Overview = () => {
   return (
-    <section className="">
+    <section id="overview" className="section">
       <div className="container">
         <div className="section-head">
           <motion.p

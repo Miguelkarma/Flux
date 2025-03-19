@@ -5,7 +5,7 @@ import Log from "@/assets/log.jpg";
 
 const Process = () => {
   return (
-    <section className="section">
+    <section id="process" className="section">
       <div className="container">
         <div className="section-head">
           <motion.p
@@ -77,14 +77,14 @@ const Process = () => {
               whileInView={"end"}
               viewport={{ once: true }}
               className="mx-auto bg-primary rounded-3xl max-w-[580px] overflow-hidden p-8 !pb-0
-            lg:p-12"
+            lg:p-12 "
             >
               <img
                 src={Log}
                 width={500}
                 height={528}
-                alt=""
-                className="w-full h-full object-contain object-bottom"
+                alt="Flux Dashboard"
+                className="w-full h-full object-contain object-bottom  "
               />
             </motion.figure>
           </div>

@@ -8,7 +8,7 @@ import * as variants from "@/Animation/motionVariants";
 export default function Features() {
   return (
     <>
-      <section className="section">
+      <section id="features" className="section">
         <div className="container">
           <div className="section-head">
             <motion.p

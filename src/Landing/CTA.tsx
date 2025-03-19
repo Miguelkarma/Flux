@@ -6,7 +6,7 @@ import log from "@/assets/log.jpg";
 
 export default function CTA() {
   return (
-    <section className="">
+    <section id="cta" className="section">
       <div className="container">
         <motion.div
           variants={variants.fadeInUp}

@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Blog = () => {
   return (
-    <section className="">
+    <section id="blog" className="section">
       <div className="container">
         <div className="section-head">
           <motion.p

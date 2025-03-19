@@ -9,28 +9,17 @@ export const IMAGES = {
   LOGO: logJpg,
 };
 import {
-  ChartArea,
-  Building2,
-  Component,
-  Code,
-  BetweenHorizonalEnd,
-  BrainCircuit,
-  Blocks,
-  Terminal,
-  Package,
-  SquareMousePointer,
-  ChartPie,
+  QrCode,
+  Laptop,
+  BarChart2,
   Files,
-  UserRoundPen,
-  GitFork,
-  LaptopMinimal,
-  ArrowBigDownDash,
+  UserRoundCog,
+  GitMerge,
+  ClipboardList,
   CreditCard,
-  Twitter,
   Github,
   Linkedin,
   Instagram,
-  Youtube,
 } from "lucide-react";
 
 //brands
@@ -107,94 +96,39 @@ export const brands = [
 // Header
 export const navMenu: MenuItem[] = [
   {
-    href: "/products",
-    label: "Products",
-    submenu: [
-      {
-        href: "#",
-        icon: <ChartArea />,
-        label: "User Analytics",
-        desc: "Powerful options to securely authenticate and manage",
-      },
-      {
-        href: "#",
-        icon: <Building2 />,
-        label: "B2B SaaS Suite",
-        desc: "Add-on features built specifically for B2B applications",
-      },
-      {
-        href: "#",
-        icon: <Component />,
-        label: "React Components",
-        desc: "Embeddable prebuilt UI components for quick and seamless integrations",
-      },
-      {
-        href: "#",
-        icon: <Code />,
-        label: "Next.js Analytics",
-        desc: "The fastest and most seamless authentication solution for Next.js",
-      },
-      {
-        href: "#",
-        icon: <BetweenHorizonalEnd />,
-        label: "AnalytiX Elements",
-        desc: "Unstyled UI primitives for endless customization. Powered by AnalytiX",
-      },
-      {
-        href: "#",
-        icon: <BrainCircuit />,
-        label: "Authentication for AI",
-        desc: "Authentication and abuse protection tailored to AI applications",
-      },
-    ],
-  },
-  {
-    href: "/features",
+    href: "#features",
     label: "Features",
   },
   {
-    href: "/docs",
-    label: "Docs",
-    submenu: [
-      {
-        href: "#",
-        icon: <Terminal />,
-        label: "Getting Started",
-        desc: "Powerful options to securely authenticate and manage",
-      },
-      {
-        href: "#",
-        icon: <Package />,
-        label: "Core Concepts",
-        desc: "Add-on features built specifically for B2B applications",
-      },
-      {
-        href: "#",
-        icon: <SquareMousePointer />,
-        label: "Customization",
-        desc: "Embeddable prebuilt UI components for quick and seamless integrations",
-      },
-      {
-        href: "#",
-        icon: <Blocks />,
-        label: "Official Plugins",
-        desc: "The fastest and most seamless authentication solution for Next.js",
-      },
-    ],
+    href: "#process",
+    label: "Process",
+  },
+
+  {
+    href: "#overview",
+    label: "Overview",
   },
   {
-    href: "/pricing",
-    label: "Pricing",
+    href: "#reviews",
+    label: "Reviews",
+  },
+  {
+    href: "#blog",
+    label: "Blogs",
+  },
+  {
+    href: "#cta",
+    label: "Try Now",
   },
 ];
 
 // Hero
 export const heroData = {
-  sectionSubtitle: "All in one analytics tool",
-  sectionTitle: "Presenting the next-gen user",
-  decoTitle: "analytics",
+  sectionSubtitle: "IT asset management",
+  sectionTitle: "Presenting the next-gen equipment",
+  decoTitle: "tracking system",
   sectionText:
-    "Next-gen user analytics: Gain valuable insights into user behavior and drive data-informed decision-making with our revolutionary platform.",
+    "Next-gen IT asset management: Gain complete visibility into your hardware and software inventory and drive efficient resource allocation with our comprehensive platform.",
 };
 
 // Feature
@@ -202,41 +136,41 @@ export const featureData = {
   sectionSubtitle: "Features",
   sectionTitle: "Discover Powerful Features",
   sectionText:
-    "Unleash the power of our platform with a multitude of powerful features, empowering you to achieve your goals.",
+    "Unleash the power of our platform with a multitude of powerful features, empowering you to manage your IT assets efficiently.",
   features: [
     {
-      icon: <ChartPie size={32} />,
+      icon: <BarChart2 size={32} />,
       iconBoxColor: "bg-blue-600",
-      title: "Advance Analytics",
-      desc: "Experience advanced analytics capabilities that enable you to dive deep into data, uncover meaningful patterns, and derive actionable insights",
+      title: "Asset Lifecycle Management",
+      desc: "Track the complete lifecycle of IT assets from procurement to disposal, ensuring optimal utilization and compliance",
       imgSrc: IMAGES.BG_JPG,
     },
     {
       icon: <Files size={32} />,
       iconBoxColor: "bg-cyan-500",
-      title: "Automated Reports",
-      desc: "Save time and effort with automated reporting, generating comprehensive and accurate reports automatically, streamlining your data analysis",
+      title: "Automated Inventory",
+      desc: "Save time and effort with automated inventory tracking, generating comprehensive and accurate reports automatically",
       imgSrc: IMAGES.BG_PNG,
     },
     {
-      icon: <UserRoundPen size={32} />,
+      icon: <UserRoundCog size={32} />,
       iconBoxColor: "bg-yellow-500",
-      title: "Retention Report",
-      desc: "Enhance retention with our report, maximizing customer engagement and loyalty for business",
+      title: "Maintenance Scheduling",
+      desc: "Enhance equipment lifespan with scheduled maintenance, maximizing uptime and operational efficiency",
       imgSrc: IMAGES.HERO,
     },
     {
-      icon: <GitFork size={32} />,
+      icon: <GitMerge size={32} />,
       iconBoxColor: "bg-red-500",
-      title: "A/B Test Variants",
-      desc: "Efficiently compare A/B test variants to determine the most effective strategies",
+      title: "Software License Management",
+      desc: "Efficiently track software licenses to ensure compliance and optimize license utilization",
       imgSrc: IMAGES.LOGO,
     },
     {
-      icon: <Blocks size={32} />,
+      icon: <ClipboardList size={32} />,
       iconBoxColor: "bg-purple-500",
-      title: "Integration Directory",
-      desc: "Seamlessly integrate with our directory, maximizing efficiency and unlocking the full potentials",
+      title: "Audit & Compliance",
+      desc: "Seamlessly handle IT audits with comprehensive reporting and compliance tracking features",
       imgSrc: IMAGES.HERO,
     },
   ],
@@ -246,22 +180,22 @@ export const processData = {
   sectionSubtitle: "How it works",
   sectionTitle: "Easy Process to Get Started",
   sectionText:
-    "Discover how it works by leveraging advanced algorithms and data analysis techniques.",
+    "Discover how our IT asset management system works by leveraging advanced tracking and inventory management techniques.",
   list: [
     {
-      icon: <LaptopMinimal size={32} />,
+      icon: <Laptop size={32} />,
       title: "Create your account",
-      text: "Join us now and create your account to start exploring our platform and unlocking exciting features.",
+      text: "Join us now and create your account to start exploring our platform and unlocking powerful asset tracking features.",
     },
     {
-      icon: <ArrowBigDownDash size={32} />,
-      title: "Install our tracking app",
-      text: "Install our tracking app to effortlessly monitor and manage your activities, gaining valuable insights and optimizing your performance.",
+      icon: <QrCode size={32} />,
+      title: "Install our asset tracking app",
+      text: "Install our tracking app to effortlessly monitor and manage your IT equipment, gaining valuable insights and optimizing your inventory.",
     },
     {
       icon: <CreditCard size={32} />,
-      title: "Start tracking your website",
-      text: "Start tracking your website effortlessly to gain valuable insights into visitor behavior, performance metrics, and optimization opportunities.",
+      title: "Start tagging your assets",
+      text: "Start tagging your IT assets effortlessly to gain complete visibility into your equipment lifecycle, maintenance needs, and utilization metrics.",
     },
   ],
 };
@@ -269,14 +203,14 @@ export const processData = {
 // Overview
 export const overviewData = {
   sectionSubtitle: "Overview",
-  sectionTitle: "All-In-One Analytics Tool",
+  sectionTitle: " IT Asset Management Solution",
   sectionText:
-    "Powerful analytics made easy. Make data-driven decisions with our all-in-one tool.",
-  listTitle: "More than 1M+ people around the world are already using",
+    "Powerful asset tracking made easy. Make data-driven decisions about your IT infrastructure with our comprehensive tool.",
+  listTitle: "More than 1M+ organizations around the world are already using",
   list: [
     {
       title: "1M+",
-      text: "Active Downloads",
+      text: "Assets Tracked",
     },
     {
       title: "4.86",
@@ -284,7 +218,7 @@ export const overviewData = {
     },
     {
       title: "60K+",
-      text: "Active Users",
+      text: "Active Organizations",
     },
   ],
 };
@@ -292,25 +226,25 @@ export const overviewData = {
 // Review
 export const reviewData = {
   sectionSubtitle: "Reviews",
-  sectionTitle: "What Our Customers Are Says",
+  sectionTitle: "What Our Customers Are Saying",
   reviewCard: [
     {
-      title: "We’re building a better application now, thanks to AnalytiX.",
-      text: "Our application is undergoing significant improvements with the help of NioLand, resulting in enhanced functionality, improved user experience",
+      title: "We've reduced equipment losses by 85% thanks to AssetTrack.",
+      text: "Our IT department is running more efficiently with the help of AssetTrack, resulting in better equipment utilization, improved maintenance scheduling",
       reviewAuthor: "Wade Warren",
-      date: "3month ago",
+      date: "3 months ago",
     },
     {
-      title: "Great Service from a expert support system of AnalytiX",
-      text: "Experience exceptional service and support from AnalytiX expert team, dedicated to providing knowledgeable assistance and ensuring a seamless",
+      title: "Great service from the expert support system of AssetTrack",
+      text: "Experience exceptional service and support from AssetTrack's expert team, dedicated to providing knowledgeable assistance and ensuring seamless asset management",
       reviewAuthor: "Dianne Russell",
-      date: "3month ago",
+      date: "3 months ago",
     },
     {
-      title: "Pricing is amazing for the small businesses around the world",
-      text: "Our pricing is tailored to suit the needs of small businesses worldwide, offering affordable and competitive rates that provide excellent value for",
+      title: "Pricing is amazing for small IT departments around the world",
+      text: "AssetTrack's pricing is tailored to suit the needs of small IT departments worldwide, offering affordable and competitive rates that provide excellent value for",
       reviewAuthor: "Marvin McKinney",
-      date: "3month ago",
+      date: "3 months ago",
     },
   ],
 };
@@ -320,12 +254,12 @@ export const blogData = {
   sectionSubtitle: "Our Blog",
   sectionTitle: "Resource Center",
   sectionText:
-    "Unlock the potential of our resource center, accessing valuable information and insights for your business growth.",
+    "Unlock the potential of our resource center, accessing valuable information and insights for effective IT asset management.",
   blogs: [
     {
       imgSrc: logJpg,
-      badge: "Growth",
-      title: "Why customer retention is the ultimate growth strategy?",
+      badge: "Best Practices",
+      title: "Why IT asset lifecycle management is critical for cost control",
       author: {
         avatarSrc: logJpg,
         authorName: "John Carte",
@@ -335,8 +269,8 @@ export const blogData = {
     },
     {
       imgSrc: logJpg,
-      badge: "Marketing",
-      title: "Optimizing your advertising campaigns for higher ROAS",
+      badge: "Compliance",
+      title: "Navigating software licensing audits with confidence",
       author: {
         avatarSrc: logJpg,
         authorName: "Annette Black",
@@ -346,8 +280,8 @@ export const blogData = {
     },
     {
       imgSrc: logJpg,
-      badge: "Growth",
-      title: "How to build the ultimate tech stack for growth",
+      badge: "Security",
+      title: "How to build the ultimate IT asset security protocol",
       author: {
         avatarSrc: logJpg,
         authorName: "Ralph Edwards",
@@ -360,7 +294,7 @@ export const blogData = {
 
 // Cta
 export const ctaData = {
-  text: "Start tracking your user analytics to boost your business",
+  text: "Start tracking your IT assets to optimize resource allocation and reduce costs",
 };
 
 // Footer
@@ -371,7 +305,7 @@ export const footerData = {
       items: [
         {
           href: "#",
-          label: "Components",
+          label: "Hardware Tracking",
         },
         {
           href: "#",
@@ -388,7 +322,7 @@ export const footerData = {
       ],
     },
     {
-      title: "Developers",
+      title: "IT Managers",
       items: [
         {
           href: "#",
@@ -396,11 +330,11 @@ export const footerData = {
         },
         {
           href: "#",
-          label: "Discord server",
+          label: "Support forum",
         },
         {
           href: "#",
-          label: "Support",
+          label: "Technical support",
         },
         {
           href: "#",
@@ -455,27 +389,19 @@ export const footerData = {
       ],
     },
   ],
-  copyright: "© 2024 codewithsadee",
+
   socialLinks: [
     {
-      href: "https://x.com/codewithsadee_",
-      icon: <Twitter size={18} />,
-    },
-    {
-      href: "https://github.com/codewithsadee",
+      href: "https://github.com/miguelkarma",
       icon: <Github size={18} />,
     },
     {
-      href: "https://www.linkedin.com/in/codewithsadee/",
+      href: "https://www.linkedin.com/",
       icon: <Linkedin size={18} />,
     },
     {
-      href: "https://www.instagram.com/codewithsadee",
+      href: "https://www.instagram.com/migzyr",
       icon: <Instagram size={18} />,
-    },
-    {
-      href: "https://www.youtube.com/codewithsadee",
-      icon: <Youtube size={18} />,
     },
   ],
 };

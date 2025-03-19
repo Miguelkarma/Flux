@@ -187,5 +187,9 @@
 }
 
 .img-cover {
-  @apply w-full h-full object-cover;
+  @apply w-full h-full object-cover ;
+}
+.feature-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }

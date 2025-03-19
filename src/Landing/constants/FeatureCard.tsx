@@ -1,5 +1,5 @@
-import {useState, useCallback, useRef, MouseEvent} from "react"
-import { motion, useMotionValue,frame } from "motion/react";
+import { useState, useCallback, useRef, MouseEvent } from "react";
+import { motion, useMotionValue, frame } from "motion/react";
 import { JSX } from "react";
 import * as variants from "@/Animation/motionVariants";
 
@@ -12,18 +12,21 @@ const FeatureCard = ({ classes, children }: FeatureCardProps) => {
   const glowRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const [showGlow, setShowGlow] =useState(false);
+  const [showGlow, setShowGlow] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const handleMouseMove = useCallback ((event:MouseEvent)=>{
-    const rect = cardRef.current ?. getBoundingClientRect();
-    frame.read(()=>{
-      x.set(event.clientX - Number (rect?.left));
-      y.set(event.clientY - Number(rect?.top));
-    });
-  },[x,y])
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      const rect = cardRef.current?.getBoundingClientRect();
+      frame.read(() => {
+        x.set(event.clientX - Number(rect?.left));
+        y.set(event.clientY - Number(rect?.top));
+      });
+    },
+    [x, y]
+  );
   return (
     <motion.div
       variants={variants.staggerContainer}

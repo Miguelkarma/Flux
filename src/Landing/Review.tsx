@@ -12,7 +12,7 @@ import { Quote } from "lucide-react";
 
 const Review = () => {
   return (
-    <section className="">
+    <section id="reviews" className="section">
       <div className="container">
         <div className="section-head">
           <motion.p
