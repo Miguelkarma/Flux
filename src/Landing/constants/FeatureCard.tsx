@@ -36,7 +36,7 @@ const FeatureCard = ({ classes, children }: FeatureCardProps) => {
       className={`relative overflow-hidden p-[1px] ring ring-inset ring-zinc-800/50 rounded-[14px] ${classes}`}
     >
       <div
-        className="relative isolate bg-card backdrop-blur-md p-4 rounded-xl overflow-hidden"
+        className="relative isolate bg-slate-900 backdrop-blur-md p-4 rounded-xl overflow-hidden"
         ref={cardRef}
         onMouseOver={() => setShowGlow(true)}
         onMouseOut={() => setShowGlow(false)}
@@ -46,7 +46,7 @@ const FeatureCard = ({ classes, children }: FeatureCardProps) => {
       </div>
 
       <motion.div
-        className="absolute -top-[150px] -left-[150px] rounded-full -z-10 w-[300px] h-[300px] bg-foreground blur-[50px]"
+        className="absolute -top-[150px] -left-[150px] rounded-full -z-10 w-[300px] h-[300px] bg-teal-200 blur-[50px]"
         ref={glowRef}
         initial={{ opacity: 0 }}
         animate={{ opacity: Number(showGlow) }}

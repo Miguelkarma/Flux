@@ -82,7 +82,7 @@ export default function Hero() {
               height={815}
               alt="Flux Dashboard"
               loading="lazy"
-              className="rounded-xl"
+              className="rounded-xl opacity-90"
             />
           </motion.figure>
 

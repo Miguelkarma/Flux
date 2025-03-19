@@ -20,6 +20,12 @@ import {
   Github,
   Linkedin,
   Instagram,
+  Workflow,
+  Newspaper,
+  Eye,
+  Rocket,
+  Settings,
+  Star,
 } from "lucide-react";
 
 //brands
@@ -98,27 +104,33 @@ export const navMenu: MenuItem[] = [
   {
     href: "#features",
     label: "Features",
+    icon: <Settings />,
   },
   {
     href: "#process",
     label: "Process",
+    icon: <Workflow />,
   },
 
   {
     href: "#overview",
     label: "Overview",
+    icon: <Eye />,
   },
   {
     href: "#reviews",
     label: "Reviews",
+    icon: <Star />,
   },
   {
     href: "#blog",
     label: "Blogs",
+    icon: <Newspaper />,
   },
   {
     href: "#cta",
     label: "Try Now",
+    icon: <Rocket />,
   },
 ];
 

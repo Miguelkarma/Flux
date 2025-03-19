@@ -1,8 +1,7 @@
 import { motion } from "motion/react";
 import { featureData } from "@/Landing/constants/constants";
 import FeaturedCard from "@/Landing/constants/FeatureCard";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+
 import * as variants from "@/Animation/motionVariants";
 
 export default function Features() {
@@ -70,11 +69,7 @@ export default function Features() {
                       >
                         {desc}
                       </motion.p>
-                      <motion.div variants={variants.fadeInUp}>
-                        <Button variant="link" className="p-0 h-auto mt-3">
-                          Learn more <ArrowRight />
-                        </Button>
-                      </motion.div>
+                      <motion.div variants={variants.fadeInUp}></motion.div>
                     </div>
                     {imgSrc && (
                       <motion.figure
