@@ -156,7 +156,7 @@
   md:py-16;
 }
 
-.section-head{
+.section-head {
   @apply pb-8
   text-center
   md:pb-16
@@ -165,13 +165,13 @@
   lg:mx-auto;
 }
 
-.section-subtitle{
+.section-subtitle {
   @apply text-primary
   text-sm
   font-medium
   uppercase;
 }
-.section-title{
+.section-title {
   @apply text-foreground
   text-3xl
   font-semibold
@@ -180,9 +180,12 @@
   
   md:text-[40px];
 }
-.section-text{
+.section-text {
   @apply text-muted-foreground
 
-  md:text-xl
-  ;
+  md:text-xl;
+}
+
+.img-cover {
+  @apply w-full h-full object-cover;
 }

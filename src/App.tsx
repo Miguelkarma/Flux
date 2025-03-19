@@ -6,6 +6,12 @@ import Brand from "./Landing/Brand";
 import { ReactLenis } from "lenis/react";
 import "./App.css";
 import Features from "./Landing/Features";
+import Process from "./Landing/Process";
+import Overview from "./Landing/Overview";
+import Review from "./Landing/Review";
+import Blog from "./Landing/Blog";
+import CTA from "./Landing/CTA";
+import Footer from "./Landing/Footer";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -34,8 +40,14 @@ export default function Home() {
         <main>
           <Hero />
           <Brand />
-          <Features/>
+          <Features />
+          <Process />
+          <Overview />
+          <Review />
+          <Blog />
+          <CTA />
         </main>
+        <Footer />
       </div>
     </ReactLenis>
   );

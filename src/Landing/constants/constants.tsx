@@ -33,16 +33,6 @@ import {
   Youtube,
 } from "lucide-react";
 
-import {
-  
-  FileText,
-  BookOpen,
-  Newspaper,
-  User,
-  Users,
-  UserCircle,
-} from "lucide-react";
-
 //brands
 export const brands = [
   <svg
@@ -55,9 +45,9 @@ export const brands = [
     viewBox="0 0 24 24"
   >
     <path
-      fill-rule="evenodd"
+      fillRule="evenodd"
       d="M21.7 8.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.839c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.839 4.225 4.225 0 0 0-.79 1.965 30.146 30.146 0 0 0-.2 3.206v1.5a30.12 30.12 0 0 0 .2 3.206c.094.712.364 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.151 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965 30.12 30.12 0 0 0 .2-3.206v-1.516a30.672 30.672 0 0 0-.202-3.206Zm-11.692 6.554v-5.62l5.4 2.819-5.4 2.801Z"
-      clip-rule="evenodd"
+      clipRule="evenodd"
     />
   </svg>,
   <svg
@@ -70,9 +60,9 @@ export const brands = [
     viewBox="0 0 24 24"
   >
     <path
-      fill-rule="evenodd"
+      fillRule="evenodd"
       d="M12.037 21.998a10.313 10.313 0 0 1-7.168-3.049 9.888 9.888 0 0 1-2.868-7.118 9.947 9.947 0 0 1 3.064-6.949A10.37 10.37 0 0 1 12.212 2h.176a9.935 9.935 0 0 1 6.614 2.564L16.457 6.88a6.187 6.187 0 0 0-4.131-1.566 6.9 6.9 0 0 0-4.794 1.913 6.618 6.618 0 0 0-2.045 4.657 6.608 6.608 0 0 0 1.882 4.723 6.891 6.891 0 0 0 4.725 2.07h.143c1.41.072 2.8-.354 3.917-1.2a5.77 5.77 0 0 0 2.172-3.41l.043-.117H12.22v-3.41h9.678c.075.617.109 1.238.1 1.859-.099 5.741-4.017 9.6-9.746 9.6l-.215-.002Z"
-      clip-rule="evenodd"
+      clipRule="evenodd"
     />
   </svg>,
   <svg
@@ -333,33 +323,33 @@ export const blogData = {
     "Unlock the potential of our resource center, accessing valuable information and insights for your business growth.",
   blogs: [
     {
-      imgSrc: FileText,
+      imgSrc: logJpg,
       badge: "Growth",
       title: "Why customer retention is the ultimate growth strategy?",
       author: {
-        avatarSrc: User,
+        avatarSrc: logJpg,
         authorName: "John Carte",
         publishDate: "Oct 10, 2024",
         readingTime: "8 min read",
       },
     },
     {
-      imgSrc: BookOpen,
+      imgSrc: logJpg,
       badge: "Marketing",
       title: "Optimizing your advertising campaigns for higher ROAS",
       author: {
-        avatarSrc: Users,
+        avatarSrc: logJpg,
         authorName: "Annette Black",
         publishDate: "Jul 15, 2024",
         readingTime: "5 min read",
       },
     },
     {
-      imgSrc: Newspaper,
+      imgSrc: logJpg,
       badge: "Growth",
       title: "How to build the ultimate tech stack for growth",
       author: {
-        avatarSrc: UserCircle,
+        avatarSrc: logJpg,
         authorName: "Ralph Edwards",
         publishDate: "Mar 24, 2024",
         readingTime: "2 min read",

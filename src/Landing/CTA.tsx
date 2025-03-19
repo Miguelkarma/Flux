@@ -1,26 +1,63 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import * as variants from "@/Animation/motionVariants";
+import { ctaData } from "./constants/constants";
+import { Button } from "@/components/ui/button";
+import log from "@/assets/log.jpg";
 
 export default function CTA() {
   return (
-    <section className="border-t">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center"
-      >
-        <div className="container flex flex-col items-center gap-4 py-24 text-center md:py-32">
-          <h2 className="font-DM Sans, sans-serif; font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl bg-gradient-to-b from-gray-200 via-gray-400 to-gray-800 bg-clip-text text-transparent ">
-            Streamline Your IT Asset Management
-          </h2>
-          <p className="max-w-[42rem] leading-normal text-landing-foreground sm:text-xl sm:leading-8">
-            Simplify asset tracking, optimize resource utilization, and gain
-            full visibility into your IT infrastructure with our powerful asset
-            management solution.
-          </p>
-        </div>
-      </motion.div>
+    <section className="">
+      <div className="container">
+        <motion.div
+          variants={variants.fadeInUp}
+          initial="start"
+          whileInView="end"
+          viewport={{ once: true }}
+          className="bg-primary rounded-xl border-t border-primary-foreground/30 overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center"
+        >
+          <div className="p-8 md:p-16 xl:p-20">
+            <motion.h2
+              className="text-[26px] leading-tight font-semibold mb-6 capitalize sm:text-[34px] md:text-[40px] lg:text-[46px] lg:mb-10"
+              variants={variants.fadeIn}
+              initial="start"
+              whileInView="end"
+              viewport={{ once: true }}
+            >
+              {ctaData.text}
+            </motion.h2>
+            <motion.div
+              className="flex items-center gap-3 lg:gap-4"
+              variants={variants.fadeIn}
+              initial="start"
+              whileInView="end"
+              viewport={{ once: true }}
+            >
+              <Button className="bg-foreground text-background hover:bg-foreground/95">
+                Free Trial lolz
+              </Button>
+              <Button
+                variant="outline"
+                className="!bg-transparent border-current"
+              >
+                Pricing & Plans
+              </Button>
+            </motion.div>
+          </div>
+          <motion.figure
+            className="-order-1 pt-14 ps-8 sm:ps-12 md:ps-14 lg:order-none lg:p-0"
+            variants={variants.fadeInLeft}
+            initial="start"
+            whileInView="end"
+            viewport={{ once: true }}
+          >
+            <img
+              src={log}
+              alt="pricelol"
+              className="w-full h-full object-contain object-right"
+            />
+          </motion.figure>
+        </motion.div>
+      </div>
     </section>
   );
 }
