@@ -24,7 +24,9 @@ function StatusItem({ label, value, color }: StatusItemProps) {
       case "red":
         return "from-rose-700 via-rose-500 to-rose-400";
       default:
-        return "from-cyan-500 to-blue-500";
+        return "from-blue-700 via-blue-500 to-cyan-200";
+      case "gray":
+        return "from-slate-700 via-slate-500 to-slate-400";
     }
   };
 
@@ -181,6 +183,11 @@ export default function Sidebar() {
               color="teal"
             />
             <StatusItem
+              label="Available"
+              value={statusCounts.available}
+              color="default"
+            />
+            <StatusItem
               label="Maintenance"
               value={statusCounts.maintenance}
               color="amber"
@@ -188,13 +195,9 @@ export default function Sidebar() {
             <StatusItem
               label="Retired"
               value={statusCounts.retired}
-              color="red"
+              color="gray"
             />
-            <StatusItem
-              label="Available"
-              value={statusCounts.available}
-              color="red"
-            />
+
             <StatusItem
               label="Lost/Stolen"
               value={statusCounts.lost}
