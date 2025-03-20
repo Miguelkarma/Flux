@@ -8,7 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import Loader from "@/Animation/SmallLoader";
 import CurrencyConverter from "@/components/ExchangeComponents/currency-converter";
-import ExchangeRateTable from "../../../components/ExchangeComponents/ExchangeRateTable";
+import ExchangeRateTable from "@/components/ExchangeComponents/ExchangeRateTable";
 
 export default function Exchange() {
   const { theme } = useTheme();

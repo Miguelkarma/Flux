@@ -1,28 +1,29 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import Login from "../authentication/Login";
 import Registration from "@/authentication/Registration";
 import App from "@/App.tsx";
 import "@/App.css";
-import ExternalAPI from "@/DashboardPages/Pages/ExternalAPI";
-import Dashboard from "@/DashboardPages/Pages/Dashboard/renderDashboard";
-import Assets from "@/DashboardPages/Pages/Assets/renderPageAssets";
-import Exchange from "@/DashboardPages/Pages/Exchange/renderPageCurrency";
+import ExternalAPI from "@/DashboardPages/ExternalAPI";
+import Dashboard from "@/DashboardPages/Dashboard/renderDashboard";
+import Assets from "@/DashboardPages/Assets/renderPageAssets";
+import Exchange from "@/DashboardPages/Exchange/renderPageCurrency";
+import Employee from "@/DashboardPages/Employee/RenderEmployee";
 
 const AppRouter = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />{" "}
+        <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
-        <Route path="/home" element={<App />} />
-        <Route path="/ExternalAPI" element={<ExternalAPI />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Assets" element={<Assets />} />
-        <Route path="/Exchange" element={<Exchange />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/assets" element={<Assets />} />
+        <Route path="/employee" element={<Employee />} />
+        <Route path="/external-api" element={<ExternalAPI />} />
+        <Route path="/exchange" element={<Exchange />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 };
 

@@ -47,11 +47,11 @@ function StatusItem({ label, value, color }: StatusItemProps) {
 }
 
 const items = [
-  { title: "Dashboard", url: "/Dashboard", icon: Command },
-  { title: "Assets", url: "/Assets", icon: Laptop },
-  { title: "Employee", url: "/Employee", icon: Users },
-  { title: "Exchange", url: "/Exchange", icon: Banknote },
-  { title: "Coming Soon", url: "/ExternalAPI", icon: ExternalLink },
+  { title: "Dashboard", url: "/dashboard", icon: Command },
+  { title: "Assets", url: "/assets", icon: Laptop },
+  { title: "Employee", url: "/employee", icon: Users },
+  { title: "Exchange", url: "/exchange", icon: Banknote },
+  { title: "Coming Soon", url: "/external-api", icon: ExternalLink },
 ];
 
 export default function Sidebar() {
