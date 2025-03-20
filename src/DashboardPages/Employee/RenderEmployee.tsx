@@ -1,7 +1,7 @@
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import DashboardParticles from "@/Animation/DashboardParticles";
-import { EmployeeTable } from "@/components/EmployeeComponents/employeeTable";
+import { EmployeeTable } from "@/components/EmployeeComponents/table";
 
 export default function Employee() {
   return (
@@ -18,7 +18,7 @@ export default function Employee() {
 
             <div className="col-span-12 md:col-span-9 lg:col-span-9 p-2">
               <div className="grid gap-6">
-                <EmployeeTable data={[]} />
+                <EmployeeTable />
               </div>
             </div>
           </div>

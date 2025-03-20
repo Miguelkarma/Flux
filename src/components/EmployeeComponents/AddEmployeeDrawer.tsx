@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import {
   Sheet,
@@ -21,15 +23,17 @@ import {
 } from "@/components/ui/select";
 import {
   Plus,
-  Calendar as CalendarIcon,
-  Briefcase,
-  Users,
+  CalendarIcon,
   BadgeCheck,
-  Phone,
+  Briefcase,
+  User,
+  Mail,
+  MapPin,
 } from "lucide-react";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/firebase/firebase";
 import { Toaster, toast } from "sonner";
-import { getAuth } from "firebase/auth";
-import { Card } from "@/components/ui/card";
+import { Card } from "../ui/card";
 import {
   Popover,
   PopoverContent,
@@ -37,7 +41,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { NewEmployeeData, addEmployee, checkEmployeeExists } from "@/hooks/employeeHooks";
+import { getAuth } from "firebase/auth";
 
 interface AddEmployeeDrawerProps {
   onEmployeeAdded: () => void;
@@ -51,16 +55,18 @@ export function AddEmployeeDrawer({
   const [open, setOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const [formData, setFormData] = React.useState<NewEmployeeData>({
+  const [formData, setFormData] = React.useState({
     employeeId: "",
     firstName: "",
     lastName: "",
     email: "",
     department: "",
     position: "",
-    hireDate: new Date().toISOString(),
     status: "Active",
     phoneNumber: "",
+    hireDate: new Date().toISOString(),
+    manager: "",
+    location: "",
   });
 
   const handleDateChange = (selectedDate?: Date) => {
@@ -118,27 +124,43 @@ export function AddEmployeeDrawer({
     }
 
     try {
-      // Check if employee already exists
-      const employeeExists = await checkEmployeeExists(formData.email, user.uid);
-      
-      if (employeeExists) {
-        toast.error("An employee with this email already exists!");
+      const employeesRef = collection(db, "employees");
+
+      // Check for duplicate employee ID (if provided)
+      if (formData.employeeId) {
+        const idQuery = query(
+          employeesRef,
+          where("employeeId", "==", formData.employeeId),
+          where("userId", "==", user.uid)
+        );
+        const idSnapshot = await getDocs(idQuery);
+
+        if (!idSnapshot.empty) {
+          toast.error("Employee with this ID already exists!");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // Check for duplicate email
+      const emailQuery = query(
+        employeesRef,
+        where("email", "==", formData.email),
+        where("userId", "==", user.uid)
+      );
+      const emailSnapshot = await getDocs(emailQuery);
+
+      if (!emailSnapshot.empty) {
+        toast.error("Employee with this email already exists!");
         setIsSubmitting(false);
         return;
       }
 
-      // Generate unique employee ID if not set
-      const employeeId = formData.employeeId || `EMP${Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, "0")}`;
-      
-      const newEmployee: NewEmployeeData = {
+      await addDoc(collection(db, "employees"), {
         ...formData,
-        employeeId,
-      };
-
-      // Add employee to Firestore
-      await addEmployee(newEmployee, user.uid);
+        userId: user.uid,
+        createdAt: new Date().toISOString(),
+      });
 
       toast.success("Employee added successfully!");
       onEmployeeAdded();
@@ -150,9 +172,11 @@ export function AddEmployeeDrawer({
         email: "",
         department: "",
         position: "",
-        hireDate: new Date().toISOString(),
         status: "Active",
         phoneNumber: "",
+        hireDate: new Date().toISOString(),
+        manager: "",
+        location: "",
       });
     } catch (error) {
       console.error("Error adding employee:", error);
@@ -213,95 +237,17 @@ export function AddEmployeeDrawer({
           <form onSubmit={handleSubmit} className="grid gap-6 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="firstName">First Name *</Label>
+                <Label htmlFor="employeeId">Employee ID</Label>
                 <Input
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
+                  id="employeeId"
+                  name="employeeId"
+                  value={formData.employeeId}
                   onChange={handleInputChange}
-                  placeholder="Enter first name"
-                  required
+                  placeholder="Enter employee ID"
+                  icon={BadgeCheck}
                 />
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="lastName">Last Name *</Label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  placeholder="Enter last name"
-                  required
-                />
-              </div>
-            </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter email address"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="department">Department</Label>
-                <Select
-                  value={formData.department}
-                  onValueChange={handleDepartmentChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Engineering">
-                      <Users className="inline-block w-4 h-4 mr-2" />{" "}
-                      Engineering
-                    </SelectItem>
-                    <SelectItem value="Marketing">
-                      <Users className="inline-block w-4 h-4 mr-2" /> Marketing
-                    </SelectItem>
-                    <SelectItem value="Sales">
-                      <Users className="inline-block w-4 h-4 mr-2" /> Sales
-                    </SelectItem>
-                    <SelectItem value="Human Resources">
-                      <Users className="inline-block w-4 h-4 mr-2" /> Human
-                      Resources
-                    </SelectItem>
-                    <SelectItem value="Finance">
-                      <Users className="inline-block w-4 h-4 mr-2" /> Finance
-                    </SelectItem>
-                    <SelectItem value="Operations">
-                      <Users className="inline-block w-4 h-4 mr-2" /> Operations
-                    </SelectItem>
-                    <SelectItem value="Customer Support">
-                      <Users className="inline-block w-4 h-4 mr-2" /> Customer
-                      Support
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="position">Position</Label>
-                <Input
-                  id="position"
-                  name="position"
-                  value={formData.position}
-                  onChange={handleInputChange}
-                  placeholder="Enter position"
-                  className="flex items-center"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="hireDate">Hire Date</Label>
                 <Popover>
@@ -310,6 +256,7 @@ export function AddEmployeeDrawer({
                       variant="outline"
                       className="w-full justify-between text-left"
                     >
+                      {" "}
                       {formData.hireDate
                         ? format(new Date(formData.hireDate), "PPP")
                         : "Select a date"}
@@ -326,48 +273,120 @@ export function AddEmployeeDrawer({
                   </PopoverContent>
                 </Popover>
               </div>
+            </div>
 
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="position">Position</Label>
+              <Input
+                id="position"
+                name="position"
+                value={formData.position}
+                onChange={handleInputChange}
+                placeholder="Enter position/title"
+                icon={Briefcase}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="firstName">First Name *</Label>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="Enter first name"
+                  icon={User}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="lastName">Last Name *</Label>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Enter last name"
+                  icon={User}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Enter email address"
+                icon={Mail}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="department">Department</Label>
                 <Select
-                  value={formData.status}
-                  onValueChange={handleStatusChange}
+                  value={formData.department}
+                  onValueChange={handleDepartmentChange}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder="Select department" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Active">
-                      <BadgeCheck className="inline-block w-4 h-4 mr-2" />{" "}
-                      Active
+                    <SelectItem value="Accounting">Accounting</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="SysAd">SysAd</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="HR">Human Resources</SelectItem>
+                    <SelectItem value="QualityAssurance">
+                      Quality Assurance
                     </SelectItem>
-                    <SelectItem value="On Leave">
-                      <BadgeCheck className="inline-block w-4 h-4 mr-2" /> On
-                      Leave
+                    <SelectItem value="IT">IT</SelectItem>
+                    <SelectItem value="Customer Support">
+                      Customer Support
                     </SelectItem>
-                    <SelectItem value="Terminated">
-                      <BadgeCheck className="inline-block w-4 h-4 mr-2" />{" "}
-                      Terminated
-                    </SelectItem>
-                    <SelectItem value="Probation">
-                      <BadgeCheck className="inline-block w-4 h-4 mr-2" />{" "}
-                      Probation
+                    <SelectItem value="SaaS">
+                      Software as a service (SaaS)
                     </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+              <div className="grid gap-2">
+                <Label htmlFor="location">Location</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder="Enter location"
+                  icon={MapPin}
+                />
+              </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Enter phone number"
-                className="flex items-center"
-              />
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="status">Status</Label>
+              <Select
+                value={formData.status}
+                onValueChange={handleStatusChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Active">Active</SelectItem>
+                  <SelectItem value="On Leave">On Leave</SelectItem>
+                  <SelectItem value="Terminated">Terminated</SelectItem>
+                  <SelectItem value="Probation">Probation</SelectItem>
+                  <SelectItem value="Remote">Remote</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <SheetFooter>
