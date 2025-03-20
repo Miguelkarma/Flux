@@ -126,6 +126,7 @@ export function EmployeeTable() {
   return (
     <>
       <div className="flex items-center justify-between">
+        
         <Input
           placeholder="Filter by name..."
           value={

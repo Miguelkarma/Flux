@@ -11,7 +11,8 @@ import {
   Headphones,
   Megaphone,
   Monitor,
-  Server,
+  Cpu,
+  ShieldCheck,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import EmployeeActionsCell from "@/components/EmployeeComponents/EmployeeActionsCell";
@@ -100,17 +101,17 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
     header: "Department",
     cell: ({ row }) => {
       const department = row.getValue<string>("department") || "N/A";
-      const departmentStyles: Record<string, string> = {
-        Laptop: "shadow-teal-500",
-        Computer: "shadow-blue-500",
-        Server: "shadow-green-500",
-        Monitor: "shadow-purple-500",
-        Keyboard: "shadow-orange-500",
-        Mouse: "shadow-yellow-500",
-        Printer: "shadow-pink-500",
-        Other: "shadow-gray-500",
-      };
-
+     const departmentStyles: Record<string, string> = {
+       Accounting: "shadow-teal-500",
+       Marketing: "shadow-blue-500",
+       Finance: "shadow-green-500",
+       "Human Resources": "shadow-purple-500",
+       "Customer Support": "shadow-orange-500",
+       IT: "shadow-yellow-500",
+       SysAd: "shadow-pink-500",
+       "Software as a service (SaaS)": "shadow-gray-500",
+       "Quality Assurance" : "shadow-indigo-500",
+     };
       const icon =
         department === "Accounting" ? (
           <Briefcase size={18} />
@@ -121,27 +122,35 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
         ) : department === "Finance" ? (
           <DollarSign size={18} />
         ) : department === "SysAd" ? (
-          <Server size={18} />
+          <Cpu size={18} />
         ) : department === "IT" ? (
           <Monitor size={18} />
         ) : department === "Customer Support" ? (
           <Headphones size={18} />
-        ) : department === "Software as a service (SaaS)" ? (
+        ) : department === "SaaS" ? (
           <Cloud size={18} />
+        ) : department === "Quality Assurance" ? (
+          <ShieldCheck size={18} />
         ) : null;
 
-      return (
-        <div className="flex items-center space-x-2">
-          <div
-            className={`p-2 bg-primary-foreground rounded-lg shadow-md ${departmentStyles[department]}`}
-          >
-            {icon}
-          </div>
-          <span className={`font-medium ${departmentStyles[department]}`}>
-            {department}
-          </span>
-        </div>
-      );
+     return (
+       <div className="flex items-center space-x-2">
+         <div
+           className={`p-2 bg-primary-foreground rounded-lg shadow-md ${
+             departmentStyles[department] || "shadow-neutral-500"
+           }`}
+         >
+           {icon}
+         </div>
+         <span
+           className={`font-medium ${
+             departmentStyles[department] || "shadow-neutral-500"
+           }`}
+         >
+           {department}
+         </span>
+       </div>
+     );
     },
   },
   {
@@ -151,10 +160,8 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
       const position = row.getValue<string>("position") || "N/A";
 
       return (
-        <div className="flex items-center space-x-2">
-          <div className="p-2 bg-primary-foreground rounded-lg shadow-md shadow-teal-500">
-            <Briefcase size={18} />
-          </div>
+        <div className="flex items-center space-x-2 text-center">
+        
           <span className="font-medium">{position}</span>
         </div>
       );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import styled from "styled-components";
 import { useTheme } from "@/hooks/ThemeProvider";
 
@@ -23,7 +23,11 @@ const Sparkle: React.FC<SparkleProps> = ({ width, deg, duration }) => {
   );
 };
 
-const Switch = () => {
+// Add interface for component props
+interface SwitchProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+// Implement forwardRef
+const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => {
   const { theme, toggleTheme } = useTheme();
   const [isChecked, setIsChecked] = useState(theme === "light");
 
@@ -46,6 +50,8 @@ const Switch = () => {
           type="checkbox"
           checked={isChecked}
           onChange={handleChange}
+          ref={ref}
+          {...props}
         />
         <label
           className="toggle-label flex items-center justify-between w-16 h-8 p-1 rounded-full cursor-pointer"
@@ -89,7 +95,11 @@ const Switch = () => {
       </div>
     </StyledWrapper>
   );
-};
+});
+
+// Add display name for debugging purposes
+Switch.displayName = "Switch";
+
 
 const StyledWrapper = styled.div`
   .toggle-cont {

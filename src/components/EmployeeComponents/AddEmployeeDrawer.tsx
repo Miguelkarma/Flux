@@ -192,7 +192,7 @@ export function AddEmployeeDrawer({
         position="top-right"
         duration={3000}
         richColors={true}
-        theme="system"
+        theme="dark"
         closeButton={true}
         expand={true}
         visibleToasts={3}
@@ -219,7 +219,7 @@ export function AddEmployeeDrawer({
             position="top-right"
             duration={3000}
             richColors={true}
-            theme="system"
+            theme="dark"
             closeButton={true}
             expand={true}
             visibleToasts={3}
@@ -344,7 +344,7 @@ export function AddEmployeeDrawer({
                     <SelectItem value="SysAd">SysAd</SelectItem>
                     <SelectItem value="Finance">Finance</SelectItem>
                     <SelectItem value="HR">Human Resources</SelectItem>
-                    <SelectItem value="QualityAssurance">
+                    <SelectItem value="Quality Assurance">
                       Quality Assurance
                     </SelectItem>
                     <SelectItem value="IT">IT</SelectItem>

@@ -196,7 +196,7 @@ export function EditEmployeeDrawer({
           position="top-right"
           duration={3000}
           richColors={true}
-          theme="system"
+          theme="dark"
           closeButton={true}
           expand={true}
           visibleToasts={3}
