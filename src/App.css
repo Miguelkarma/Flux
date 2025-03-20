@@ -166,13 +166,13 @@
 }
 
 .section-subtitle {
-  @apply text-teal-300
+  @apply text-teal-500
   text-sm
   font-medium
   uppercase;
 }
 .section-title {
-  @apply text-teal-100
+  @apply text-white
   text-3xl
   font-semibold
   leading-snug
@@ -187,7 +187,7 @@
 }
 
 .img-cover {
-  @apply w-full h-full object-cover ;
+  @apply w-full h-full object-cover;
 }
 .feature-card {
   will-change: transform, opacity;

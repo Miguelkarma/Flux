@@ -55,13 +55,13 @@ const Process = () => {
                 </motion.div>
                 <div className="grid gap-2 md:gap-3">
                   <motion.h3
-                    className="text-xl lg:text-2xl"
+                    className="text-xl lg:text-2xl text-teal-400"
                     variants={variants.fadeInLeft}
                   >
                     {title}
                   </motion.h3>
                   <motion.p
-                    className="text-sm text-slate-400 md:text-base"
+                    className="text-sm text-slate-300 md:text-base"
                     variants={variants.fadeInLeft}
                   >
                     {text}

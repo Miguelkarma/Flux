@@ -54,6 +54,7 @@ const Blog = () => {
           {blogData.blogs.map(
             (
               {
+                href,
                 imgSrc,
                 title,
                 badge,
@@ -62,7 +63,7 @@ const Blog = () => {
               index
             ) => (
               <motion.div key={index} variants={variants.fadeInUp}>
-                <Card className="group bg-landing-foreground text-teal-100 border-teal-100/0">
+                <Card className="group bg-landing-foreground text-white border-teal-100/0">
                   <CardHeader>
                     <figure className="rounded-lg overflow-hidden">
                       <img
@@ -73,11 +74,15 @@ const Blog = () => {
                     </figure>
                   </CardHeader>
                   <CardContent>
-                    <Badge className="mb-3 bg-slate-700">{badge}</Badge>
+                    <Badge className="mb-3 bg-slate-700 text-white hover:bg-slate-800">
+                      {badge}
+                    </Badge>
                     <CardTitle className="leading-normal">
                       <a
-                        href="#"
-                        className="hover:text-teal-300 transiotion-colors"
+                        href={href || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-teal-400 transition-colors"
                       >
                         {title}
                       </a>
@@ -93,14 +98,12 @@ const Blog = () => {
                       <div className="flex items-center gap-1.5">
                         <time
                           dateTime={publishDate}
-                          className="text-xs text-muted-foreground"
+                          className="text-xs text-slate-400"
                         >
                           {publishDate}
                         </time>
                         <span className="w-1 h-1 bg-muted-foreground/50 rounded-full"></span>
-                        <p className="text-xs text-muted-foreground">
-                          {readingTime}
-                        </p>
+                        <p className="text-xs text-slate-400">{readingTime}</p>
                       </div>
                     </div>
                   </CardFooter>

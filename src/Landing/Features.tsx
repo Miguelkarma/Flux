@@ -45,8 +45,8 @@ export default function Features() {
                   key={index}
                   classes={
                     index < 2
-                      ? "md:col-span-2 lg:col-span-1 xl:col-span-3"
-                      : "xl:col-span-2"
+                      ? "md:col-span-2 lg:col-span-1 xl:col-span-3 "
+                      : "xl:col-span-2 "
                   }
                 >
                   <>
@@ -59,7 +59,7 @@ export default function Features() {
                       </motion.div>
                       <motion.h3
                         variants={variants.fadeInUp}
-                        className="text-teal-100 text-xl font-medium mt-4 mb-3"
+                        className="text-white text-xl font-medium mt-4 mb-3"
                       >
                         {title}
                       </motion.h3>

@@ -11,7 +11,7 @@ const Overview = () => {
         <figure className="">
           <OverviewBeam />
         </figure>
-        
+
         <motion.div
           className="flex flex-wrap justify-center items-center text-center gap-5 md:gap-10 xl:gap-64 w-full mx-auto lg:ml-3 md:ml-7 sm:ml-7 max-sm:ml-0 my-20"
           variants={variants.staggerContainer}
@@ -25,7 +25,7 @@ const Overview = () => {
               className="text-center"
               variants={variants.fadeInLeft}
             >
-              <h3 className="text-3xl text-teal-100">{title}</h3>
+              <h3 className="text-3xl text-white">{title}</h3>
               <p className="text-slate-400">{text}</p>
             </motion.div>
           ))}

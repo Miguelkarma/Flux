@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import * as variants from "@/Animation/motionVariants";
 import { ctaData } from "./constants/constants";
 import { Button } from "@/components/ui/button";
-import log from "@/assets/log.jpg";
+import CTApic from "@/assets/CTA.jpg";
 import { ArrowRightCircle } from "lucide-react";
 import { Link } from "react-scroll";
 
@@ -19,7 +19,7 @@ export default function CTA() {
         >
           <div className="p-8 md:p-16 xl:p-20 ">
             <motion.h2
-              className="text-[26px] leading-tight font-semibold mb-6 capitalize sm:text-[34px] md:text-[40px] lg:text-[46px] lg:mb-10 text-teal-100"
+              className="text-[26px] leading-tight font-semibold mb-6 capitalize sm:text-[34px] md:text-[40px] lg:text-[46px] lg:mb-10 text-white"
               variants={variants.fadeIn}
               initial="start"
               whileInView="end"
@@ -35,7 +35,7 @@ export default function CTA() {
               viewport={{ once: true }}
             >
               <Link to="header" smooth={true} duration={500}>
-                <Button className="bg-slate-700 text-teal-100 hover:bg-foreground/95">
+                <Button className="bg-slate-700 text-teal-400 hover:bg-foreground/95">
                   Start Now <ArrowRightCircle></ArrowRightCircle>
                 </Button>
               </Link>
@@ -49,7 +49,7 @@ export default function CTA() {
             viewport={{ once: true }}
           >
             <img
-              src={log}
+              src={CTApic}
               alt="pricelol"
               className="w-full h-full object-contain object-right"
             />

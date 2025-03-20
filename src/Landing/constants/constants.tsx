@@ -1,17 +1,27 @@
 import { MenuItem } from "@/Landing/constants/types";
+// blog pics
+import blog1 from "@/assets/blog/blog1.png";
+import avatar1 from "@/assets/blog/blog1avatar.png";
+import blog2 from "@/assets/blog/blog2.png";
+import avatar2 from "@/assets/blog/blog2avatar.png";
+import blog3 from "@/assets/blog/blog3.png";
+import avatar3 from "@/assets/blog/blog3avatar.webp";
+// feature pics
+import feature1 from "@/assets/feature/feature1.jpg";
+import feature2 from "@/assets/feature/feature2.jpg";
+import feature3 from "@/assets/feature/feature3.jpg";
+import feature4 from "@/assets/feature/feature4.jpeg";
+import feature5 from "@/assets/feature/feature5.jpeg";
 
-import logJpg from "@/assets/log.jpg";
-
-export const IMAGES = {
-  BG_JPG: logJpg,
-  BG_PNG: logJpg,
-  HERO: logJpg,
-  LOGO: logJpg,
+export const featureImages = {
+  feature1: feature1,
+  feature2: feature2,
+  feature3: feature3,
+  feature4: feature4,
+  feature5: feature5,
 };
 import {
-  Laptop,
   BarChart2,
-  CreditCard,
   Github,
   Linkedin,
   Instagram,
@@ -25,6 +35,7 @@ import {
   Users,
   Activity,
   UserPlus,
+  TagIcon,
 } from "lucide-react";
 
 //brands
@@ -155,39 +166,38 @@ export const featureData = {
       iconBoxColor: "bg-blue-600",
       title: "Asset Management",
       desc: "Add, update, and delete IT equipment while storing crucial details like name, serial number, and status.",
-      imgSrc: IMAGES.BG_JPG,
+      imgSrc: featureImages.feature1,
     },
     {
       icon: <Users size={32} />,
-      iconBoxColor: "bg-cyan-500",
+      iconBoxColor: "bg-cyan-700",
       title: "Assignment Tracking",
-      desc: "Easily assign equipment to employees and track which employee has which device in real time.",
-      imgSrc: IMAGES.BG_PNG,
+      desc: "Easily assign equipment to employees and track which employee has which device",
+      imgSrc: featureImages.feature2,
     },
     {
       icon: <Activity size={32} />,
       iconBoxColor: "bg-emerald-500",
       title: "Status Monitoring",
       desc: "Keep track of asset status—Available, Assigned, or Under Repair—to optimize asset utilization.",
-      imgSrc: IMAGES.HERO,
+      imgSrc: featureImages.feature3,
     },
     {
       icon: <BarChart2 size={32} />,
-      iconBoxColor: "bg-red-500",
+      iconBoxColor: "bg-violet-700",
       title: "Basic Reporting",
       desc: "Gain insights into total assets, assigned assets, and available assets with clear and concise reporting.",
-      imgSrc: IMAGES.LOGO,
+      imgSrc: featureImages.feature4,
     },
     {
       icon: <UserPlus size={32} />,
-      iconBoxColor: "bg-purple-500",
+      iconBoxColor: "bg-teal-600",
       title: "Employee Management",
       desc: "Add and manage employees within the system, allowing seamless asset assignment and tracking.",
-      imgSrc: IMAGES.HERO,
+      imgSrc: featureImages.feature5,
     },
   ],
 };
-
 
 // Process
 export const processData = {
@@ -197,13 +207,13 @@ export const processData = {
     "Discover how our IT asset management system works by leveraging advanced tracking and inventory management techniques.",
   list: [
     {
-      icon: <Laptop size={32} />,
+      icon: <UserPlus size={32} />,
       title: "Create your account",
       text: "Join us now and create your account to start exploring our platform and unlocking powerful asset tracking features.",
     },
-  
+
     {
-      icon: <CreditCard size={32} />,
+      icon: <TagIcon size={32} />,
       title: "Start tagging your assets",
       text: "Start tagging your IT assets effortlessly to gain complete visibility into your equipment lifecycle, maintenance needs, and utilization metrics.",
     },
@@ -264,36 +274,39 @@ export const blogData = {
     "Unlock the potential of our resource center, accessing valuable information and insights for effective IT asset management.",
   blogs: [
     {
-      imgSrc: logJpg,
+      href: "https://www.assetpanda.com/resource-center/blog/it-asset-management-best-practices/",
+      imgSrc: blog1,
       badge: "Best Practices",
-      title: "Why IT asset lifecycle management is critical for cost control",
+      title: "IT Asset Management Best Practices - Complete Guide (2024)",
       author: {
-        avatarSrc: logJpg,
-        authorName: "John Carte",
-        publishDate: "Oct 10, 2024",
-        readingTime: "8 min read",
+        avatarSrc: avatar1,
+        authorName: "AssetPanda",
+        publishDate: "July 15, 2024",
+        readingTime: "9 min read",
       },
     },
     {
-      imgSrc: logJpg,
-      badge: "Compliance",
-      title: "Navigating software licensing audits with confidence",
+      href: "https://www.atlassian.com/itsm/it-asset-management?",
+      imgSrc: blog2,
+      badge: "Guide",
+      title: "ITAM: The Ultimate Guide to IT Asset Management ",
       author: {
-        avatarSrc: logJpg,
-        authorName: "Annette Black",
-        publishDate: "Jul 15, 2024",
+        avatarSrc: avatar2,
+        authorName: "Atlassian",
+        publishDate: "May 15, 2023",
+        readingTime: "10 min read",
+      },
+    },
+    {
+      href: "https://www.issuetrak.com/blog/what-is-it-asset-management-why-is-it-asset-management-important?",
+      imgSrc: blog3,
+      badge: "Optimization",
+      title: "Enhancing Operational Efficiency through IT Asset Management",
+      author: {
+        avatarSrc: avatar3,
+        authorName: "Issuetrak",
+        publishDate: "September 4, 2024",
         readingTime: "5 min read",
-      },
-    },
-    {
-      imgSrc: logJpg,
-      badge: "Security",
-      title: "How to build the ultimate IT asset security protocol",
-      author: {
-        avatarSrc: logJpg,
-        authorName: "Ralph Edwards",
-        publishDate: "Mar 24, 2024",
-        readingTime: "2 min read",
       },
     },
   ],

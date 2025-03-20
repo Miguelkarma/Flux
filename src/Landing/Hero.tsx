@@ -33,7 +33,7 @@ export default function Hero() {
   );
 
   return (
-    <section  ref={sectionRef} className="py-10 md:py-16">
+    <section ref={sectionRef} className="py-10 md:py-16">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -53,9 +53,7 @@ export default function Hero() {
             </span>
           </h2>
 
-          <p className="text-slate-400 md:text-xl">
-            {heroData.sectionText}
-          </p>
+          <p className="text-slate-400 md:text-xl">{heroData.sectionText}</p>
 
           <div className="flex justify-center gap-2 mt-6 md:mt-10">
             <StartButton

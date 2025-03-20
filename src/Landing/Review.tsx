@@ -44,7 +44,7 @@ const Review = () => {
           {reviewData.reviewCard.map(
             ({ title, text, reviewAuthor, date }, index) => (
               <motion.div key={index} variants={variants.fadeInUp}>
-                <Card className="relative bg-landing-foreground text-teal-100 border-none ">
+                <Card className="relative bg-landing-foreground text-white border-none ">
                   <CardHeader>
                     <CardTitle className="text-lg">{title}</CardTitle>
                   </CardHeader>
