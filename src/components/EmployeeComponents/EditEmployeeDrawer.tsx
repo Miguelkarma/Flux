@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { getAuth } from "firebase/auth";
 import {
   Sheet,
   SheetClose,
@@ -21,16 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { toast, Toaster } from "sonner";
+import { Toaster } from "sonner";
 import {
   BadgeCheck,
   Briefcase,
@@ -43,6 +33,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import type { EmployeeData } from "./columns";
+import {
+  useFormState,
+  submitEmployeeForm,
+} from "@/hooks/assetHook/edit-form-hook";
 
 interface EditEmployeeDrawerProps {
   employee: EmployeeData;
@@ -57,25 +51,9 @@ export function EditEmployeeDrawer({
   onClose,
   onEmployeeUpdated,
 }: EditEmployeeDrawerProps) {
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [formData, setFormData] = React.useState({
-    id: employee.id,
-    employeeId: employee.employeeId ?? "",
-    firstName: employee.firstName ?? "",
-    lastName: employee.lastName ?? "",
-    email: employee.email ?? "",
-    department: employee.department ?? "",
-    position: employee.position ?? "",
-    status: employee.status ?? "Active",
-    phoneNumber: employee.phoneNumber ?? "",
-    hireDate: employee.hireDate ?? new Date().toISOString(),
-    manager: employee.manager ?? "",
-    location: employee.location ?? "",
-  });
-
-  // Update state when employee changes
-  React.useEffect(() => {
-    setFormData({
+  // Create a memoized initial form data object based on employee
+  const initialFormData = React.useMemo(
+    () => ({
       id: employee.id,
       employeeId: employee.employeeId ?? "",
       firstName: employee.firstName ?? "",
@@ -88,102 +66,43 @@ export function EditEmployeeDrawer({
       hireDate: employee.hireDate ?? new Date().toISOString(),
       manager: employee.manager ?? "",
       location: employee.location ?? "",
+    }),
+    [employee]
+  );
+
+  // Initialize the form state using the useFormState hook with default values
+  const {
+    formData,
+    setFormData,
+    isSubmitting,
+    setIsSubmitting,
+    handleInputChange,
+    handleSelectChange,
+    handleDateChange,
+  } = useFormState(initialFormData);
+
+  // Reset form when drawer opens or employee changes
+  React.useEffect(() => {
+    if (isOpen) {
+      setFormData(initialFormData);
+    }
+  }, [isOpen, initialFormData, setFormData]);
+
+  // Custom handler for date changes that uses the hook's handleDateChange
+  const handleHireDateChange = (date: Date | undefined) => {
+    handleDateChange("hireDate")(date);
+  };
+
+  // Submit handler that uses the imported submitEmployeeForm function
+  const handleSubmit = (e: React.FormEvent) => {
+    submitEmployeeForm({
+      e,
+      formData,
+      employee,
+      setIsSubmitting,
+      onEmployeeUpdated,
+      onClose,
     });
-  }, [employee]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSelectChange = (field: string) => (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleDateChange = (date: Date | undefined) => {
-    setFormData((prev) => ({
-      ...prev,
-      hireDate: date ? date.toISOString() : new Date().toISOString(),
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const userEmail = user?.email;
-
-    if (!userEmail) {
-      toast.error("You must be logged in to update an employee!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.firstName || !formData.lastName || !formData.email) {
-      toast.error("First name, last name, and email are required!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const employeesRef = collection(db, "employees");
-
-      // Check for duplicate employee ID (if changed)
-      if (formData.employeeId && formData.employeeId !== employee.employeeId) {
-        const idQuery = query(
-          employeesRef,
-          where("employeeId", "==", formData.employeeId),
-          where("userId", "==", user.uid)
-        );
-        const idSnapshot = await getDocs(idQuery);
-
-        if (!idSnapshot.empty) {
-          toast.error("Employee with this ID already exists!");
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
-      // Check for duplicate email (if changed)
-      if (formData.email !== employee.email) {
-        const emailQuery = query(
-          employeesRef,
-          where("email", "==", formData.email),
-          where("userId", "==", user.uid)
-        );
-        const emailSnapshot = await getDocs(emailQuery);
-
-        if (!emailSnapshot.empty) {
-          toast.error("Employee with this email already exists!");
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
-      const employeeRef = doc(db, "employees", employee.id);
-      await updateDoc(employeeRef, {
-        ...formData,
-        updatedAt: new Date().toISOString(),
-        updatedBy: userEmail,
-      });
-
-      toast.success("Employee updated successfully!");
-      onEmployeeUpdated();
-      onClose();
-    } catch (error) {
-      console.error("Error updating employee:", error);
-      toast.error("Failed to update employee");
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   return (
@@ -244,7 +163,7 @@ export function EditEmployeeDrawer({
                     <Calendar
                       mode="single"
                       selected={new Date(formData.hireDate)}
-                      onSelect={handleDateChange}
+                      onSelect={handleHireDateChange}
                       initialFocus
                     />
                   </PopoverContent>
@@ -320,7 +239,9 @@ export function EditEmployeeDrawer({
                     <SelectItem value="Marketing">Marketing</SelectItem>
                     <SelectItem value="SysAd">SysAd</SelectItem>
                     <SelectItem value="Finance">Finance</SelectItem>
-                    <SelectItem value="HR">Human Resources</SelectItem>
+                    <SelectItem value="Human Resources">
+                      Human Resources
+                    </SelectItem>
                     <SelectItem value="Quality Assurance">
                       Quality Assurance
                     </SelectItem>

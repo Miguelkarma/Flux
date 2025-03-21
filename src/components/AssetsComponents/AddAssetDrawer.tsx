@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import {
   Sheet,
@@ -20,10 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { Toaster, toast } from "sonner";
-
+import { Toaster } from "sonner";
 import { Card } from "../ui/card";
 import {
   Laptop,
@@ -42,8 +41,19 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { query, where, getDocs } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { useForm } from "@/hooks/assetHook/add-form-hook";
+
+interface Asset {
+  serialNo: string;
+  assetTag: string;
+  assignedEmployee: string;
+  email: string;
+  status: string;
+  type: string;
+  customType: string;
+  location: string;
+  dateAdded: string;
+}
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
@@ -54,10 +64,7 @@ export function AddAssetDrawer({
   onAssetAdded,
   userEmail,
 }: AddAssetDrawerProps) {
-  const [open, setOpen] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const [formData, setFormData] = React.useState({
+  const initialValues: Asset = {
     serialNo: "",
     assetTag: "",
     assignedEmployee: "",
@@ -67,133 +74,47 @@ export function AddAssetDrawer({
     customType: "",
     location: "",
     dateAdded: new Date().toISOString(),
+  };
+
+  const {
+    formData,
+    handleInputChange,
+    handleSelectChange,
+    handleDateChange,
+    handleTypeChange,
+    handleSubmit,
+    isSubmitting,
+    open,
+    setOpen,
+  } = useForm<Asset>({
+    initialValues,
+    collectionName: "it-assets",
+    onSuccess: onAssetAdded,
+    userEmail,
+    validationRules: {
+      required: ["serialNo", "type"],
+      unique: [
+        {
+          field: "serialNo",
+          errorMessage: "Asset with this Serial Number already exists!",
+        },
+        {
+          field: "assetTag",
+          errorMessage: "Asset with this Asset Tag already exists!",
+        },
+      ],
+    },
   });
 
-  const handleDateChange = (selectedDate?: Date) => {
-    setFormData((prev) => ({
-      ...prev,
-      dateAdded: selectedDate?.toISOString() ?? prev.dateAdded,
-    }));
+  // Custom handler for type changes to manage customType field
+  const handleAssetTypeChange = (value: string) => {
+    handleTypeChange(value);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  const handleTypeChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      type: value,
-      customType: value === "Other" ? "" : prev.customType,
-    }));
-  };
-
+  // Custom handler for customType changes
   const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      customType: e.target.value,
-    }));
-  };
-
-  const handleStatusChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      status: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast.error("You must be logged in to add an asset!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!userEmail) {
-      toast.error("You must be logged in to add an asset!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.serialNo || !formData.type) {
-      toast.error("Serial number and asset type are required!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (formData.type === "Other" && !formData.customType) {
-      toast.error("Custom type is required when 'Other' is selected!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const assetsRef = collection(db, "it-assets");
-      const serialQuery = query(
-        assetsRef,
-        where("serialNo", "==", formData.serialNo),
-        where("userId", "==", user.uid)
-      );
-      const serialSnapshot = await getDocs(serialQuery);
-
-      // Check for duplicate asset tag (if asset tag is provided)
-      let tagSnapshot = { empty: true };
-      if (formData.assetTag) {
-        const tagQuery = query(
-          assetsRef,
-          where("assetTag", "==", formData.assetTag),
-          where("userId", "==", user.uid)
-        );
-        tagSnapshot = await getDocs(tagQuery);
-      }
-
-      if (!serialSnapshot.empty) {
-        toast.error("Asset with this Serial Number already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (!tagSnapshot.empty) {
-        toast.error("Asset with this Asset Tag already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-      await addDoc(collection(db, "it-assets"), {
-        ...formData,
-        type: formData.type === "Other" ? formData.customType : formData.type,
-        userId: user.uid,
-        dateAdded: new Date().toISOString(),
-      });
-
-      toast.success("Asset added successfully!");
-      onAssetAdded();
-      setOpen(false);
-      setFormData({
-        serialNo: "",
-        assetTag: "",
-        assignedEmployee: "",
-        email: "",
-        status: "Available",
-        type: "",
-        customType: "",
-        location: "",
-        dateAdded: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Error adding asset:", error);
-      toast.error("Failed to add asset");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const { value } = e.target;
+    formData.customType = value;
   };
 
   return (
@@ -210,7 +131,7 @@ export function AddAssetDrawer({
       />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-12 bg-transparent border-0">
+          <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-12 bg-transparent border-0">
             <Button
               variant="outline"
               className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg mr-1"
@@ -269,7 +190,7 @@ export function AddAssetDrawer({
               <Label htmlFor="type">Asset Type</Label>
               <Select
                 value={formData.type}
-                onValueChange={handleTypeChange}
+                onValueChange={handleAssetTypeChange}
                 required
               >
                 <SelectTrigger>
@@ -367,7 +288,7 @@ export function AddAssetDrawer({
                   <Calendar
                     mode="single"
                     selected={new Date(formData.dateAdded)}
-                    onSelect={handleDateChange}
+                    onSelect={handleDateChange("dateAdded")}
                     initialFocus
                   />
                 </PopoverContent>
@@ -378,7 +299,7 @@ export function AddAssetDrawer({
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={handleStatusChange}
+                onValueChange={handleSelectChange("status")}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />

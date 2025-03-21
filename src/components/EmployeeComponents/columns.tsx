@@ -13,6 +13,7 @@ import {
   Monitor,
   Cpu,
   ShieldCheck,
+  Mail,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import EmployeeActionsCell from "@/components/EmployeeComponents/EmployeeActionsCell";
@@ -93,8 +94,11 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (
-      <div className="text-secondary-foreground">
-        {row.getValue<string>("email") || "N/A"}
+      <div className="flex items-center gap-2">
+        <Mail className="h-5 w-5 text-secondary-foreground" />
+        <span className="font-medium text-secondary-foreground">
+          {row.getValue<string>("email") || "N/A"}
+        </span>
       </div>
     ),
   },

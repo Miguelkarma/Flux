@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { useForm } from "@/hooks/add-form-hook";
+import { useForm } from "@/hooks/assetHook/add-form-hook";
 
 interface Employee {
   employeeId: string;
@@ -296,6 +296,28 @@ export function AddEmployeeDrawer({
                   <SelectItem value="Remote">Remote</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Input
+                id="phoneNumber"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                placeholder="Enter phone number"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="manager">Manager</Label>
+              <Input
+                id="manager"
+                name="manager"
+                value={formData.manager}
+                onChange={handleInputChange}
+                placeholder="Enter manager's name"
+              />
             </div>
 
             <SheetFooter>
