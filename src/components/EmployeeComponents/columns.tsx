@@ -81,8 +81,10 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
       const fullName = `${row.original.firstName} ${row.original.lastName}`;
       return (
         <div className="flex items-center gap-2">
-          <UserCircle className="h-5 w-5 text-primary" />
-          <span className="font-medium">{fullName}</span>
+          <UserCircle className="h-5 w-5 text-secondary-foreground" />
+          <span className="font-medium text-secondary-foreground">
+            {fullName}
+          </span>
         </div>
       );
     },
@@ -101,17 +103,17 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
     header: "Department",
     cell: ({ row }) => {
       const department = row.getValue<string>("department") || "N/A";
-     const departmentStyles: Record<string, string> = {
-       Accounting: "shadow-teal-500",
-       Marketing: "shadow-blue-500",
-       Finance: "shadow-green-500",
-       "Human Resources": "shadow-purple-500",
-       "Customer Support": "shadow-orange-500",
-       IT: "shadow-yellow-500",
-       SysAd: "shadow-pink-500",
-       "Software as a service (SaaS)": "shadow-gray-500",
-       "Quality Assurance" : "shadow-indigo-500",
-     };
+      const departmentStyles: Record<string, string> = {
+        Accounting: "shadow-teal-500",
+        Marketing: "shadow-blue-500",
+        Finance: "shadow-green-500",
+        "Human Resources": "shadow-purple-500",
+        "Customer Support": "shadow-orange-500",
+        IT: "shadow-yellow-500",
+        SysAd: "shadow-pink-500",
+        "Software as a service (SaaS)": "shadow-gray-500",
+        "Quality Assurance": "shadow-indigo-500",
+      };
       const icon =
         department === "Accounting" ? (
           <Briefcase size={18} />
@@ -133,24 +135,24 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
           <ShieldCheck size={18} />
         ) : null;
 
-     return (
-       <div className="flex items-center space-x-2">
-         <div
-           className={`p-2 bg-primary-foreground rounded-lg shadow-md ${
-             departmentStyles[department] || "shadow-neutral-500"
-           }`}
-         >
-           {icon}
-         </div>
-         <span
-           className={`font-medium ${
-             departmentStyles[department] || "shadow-neutral-500"
-           }`}
-         >
-           {department}
-         </span>
-       </div>
-     );
+      return (
+        <div className="flex items-center space-x-2">
+          <div
+            className={`p-2 bg-primary-foreground rounded-lg shadow-md ${
+              departmentStyles[department] || "shadow-neutral-500"
+            }`}
+          >
+            {icon}
+          </div>
+          <span
+            className={`font-medium text-secondary-foreground ${
+              departmentStyles[department] || "shadow-neutral-500"
+            }`}
+          >
+            {department}
+          </span>
+        </div>
+      );
     },
   },
   {
@@ -161,8 +163,9 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
 
       return (
         <div className="flex items-center space-x-2 text-center">
-        
-          <span className="font-medium">{position}</span>
+          <span className="font-medium text-secondary-foreground">
+            {position}
+          </span>
         </div>
       );
     },

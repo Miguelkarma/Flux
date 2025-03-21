@@ -48,14 +48,14 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
       setIsDeleting(true);
       const employeeRef = doc(db, "employees", employee.id);
       await deleteDoc(employeeRef);
-     
+      toast.success(
+        `${employee.firstName} ${employee.lastName} deleted successfully.`
+      );
       setIsDeleteDialogOpen(false);
       onEmployeeUpdated(); // Refresh data after deleting
     } catch (error) {
       console.error("Delete error:", error);
-      toast.error(
-        "Failed to delete employee. Check Firestore rules and authentication."
-      );
+      toast.error("Failed to delete employee. ");
     } finally {
       setIsDeleting(false);
     }
@@ -72,7 +72,6 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
 
   return (
     <>
-    
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
