@@ -193,7 +193,7 @@ export default function Sidebar() {
             <StatusItem
               label="Available"
               value={statusCounts.available}
-              color="default"
+              color="red"
             />
             <StatusItem
               label="Lost/Stolen"
