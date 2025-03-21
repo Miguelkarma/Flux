@@ -27,9 +27,7 @@ export type EmployeeData = {
   department: string;
   position: string;
   status: string;
-  phoneNumber: string;
   hireDate: string;
-  manager: string;
   location: string;
 };
 
@@ -115,7 +113,7 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
         "Customer Support": "shadow-orange-500",
         IT: "shadow-yellow-500",
         SysAd: "shadow-pink-500",
-        "Software as a service (SaaS)": "shadow-gray-500",
+        "Software as a service (SaaS)": "shadow-sky-600",
         "Quality Assurance": "shadow-indigo-500",
       };
       const icon =
@@ -133,7 +131,7 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
           <Monitor size={18} />
         ) : department === "Customer Support" ? (
           <Headphones size={18} />
-        ) : department === "SaaS" ? (
+        ) : department === "Software as a service (SaaS)" ? (
           <Cloud size={18} />
         ) : department === "Quality Assurance" ? (
           <ShieldCheck size={18} />

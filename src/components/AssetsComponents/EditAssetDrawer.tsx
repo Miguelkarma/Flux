@@ -66,6 +66,8 @@ export function EditAssetDrawer({
   // Initialize the form state using the useFormState hook
   const {
     formData,
+    employees,
+    handleEmployeeChange,
     setFormData,
     isSubmitting,
     setIsSubmitting,
@@ -101,12 +103,10 @@ export function EditAssetDrawer({
     });
   }, [asset, setFormData]);
 
-  // Custom handler for date changes that uses the hook's handleDateChange
   const handleAssetDateChange = (date: Date | undefined) => {
     handleDateChange("dateAdded")(date);
   };
 
-  // Submit handler that uses the imported submitAssetForm function
   const handleSubmit = (e: React.FormEvent) => {
     submitAssetForm({
       e,
@@ -225,27 +225,23 @@ export function EditAssetDrawer({
           </div>
           {/* Assigned Employee */}
           <div className="grid gap-2">
-            <Label htmlFor="assignedEmployee">Assigned Employee</Label>
-            <Input
-              id="assignedEmployee"
-              name="assignedEmployee"
-              value={formData.assignedEmployee}
-              onChange={handleInputChange}
-              placeholder="Enter employee name"
-            />
+            <Label htmlFor="employeeId">Assigned Employee</Label>
+            <Select onValueChange={handleEmployeeChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select an employee" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                {employees.map((employee) => (
+                  <SelectItem key={employee.id} value={employee.id}>
+                    {employee.employeeId} - {employee.firstName}{" "}
+                    {employee.lastName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          {/* Email */}
-          <div className="grid gap-2">
-            <Label htmlFor="email">Employee Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter employee email"
-            />
-          </div>
+
           {/* Date Added */}
           <div className="grid gap-2">
             <Label htmlFor="dateAdded">Date Added</Label>

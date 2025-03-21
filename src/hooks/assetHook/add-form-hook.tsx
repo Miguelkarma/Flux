@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { toast } from "sonner";
 import { collection, addDoc, query, getDocs, where } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
@@ -15,7 +15,7 @@ interface ValidationRules {
 }
 
 /**
- * Custom hook for managing add form state and submission
+ * custom hook for managing add form state and submission
  */
 export function useForm<T extends Record<string, any>>({
   initialValues,
@@ -33,8 +33,50 @@ export function useForm<T extends Record<string, any>>({
   const [formData, setFormData] = React.useState<T>(initialValues);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [employees, setEmployees] = React.useState<
+    Array<{ id: string; firstName: string; employeeId: string; lastName: string}>
+  >([]);
 
-  // Input change handler
+  // fetch employees
+  React.useEffect(() => {
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const fetchEmployees = async () => {
+          try {
+            const employeesCollection = collection(db, "employees");
+
+            const userQuery = query(
+              employeesCollection,
+              where("userId", "==", user.uid)
+            );
+            const employeesSnapshot = await getDocs(userQuery);
+
+            const employeesList = employeesSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              firstName: doc.data().firstName || "",
+              employeeId: doc.data().employeeId || "",
+              lastName: doc.data().lastName || "",
+            }));
+
+            setEmployees(employeesList);
+          } catch (error) {
+            console.error("Error fetching employees:", error);
+          }
+        };
+
+        fetchEmployees();
+      } else {
+        console.error("No authenticated user found");
+        setEmployees([]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // input change handler
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -43,7 +85,7 @@ export function useForm<T extends Record<string, any>>({
     }));
   };
 
-  // Select change handler
+  // select change handler
   const handleSelectChange = (field: string) => (value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -51,7 +93,7 @@ export function useForm<T extends Record<string, any>>({
     }));
   };
 
-  // Date change handler
+  // date change handler
   const handleDateChange = (field: string) => (date: Date | undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -59,7 +101,27 @@ export function useForm<T extends Record<string, any>>({
     }));
   };
 
-  // Custom type change handler for assets
+  // employee change handler
+  const handleEmployeeChange = (employeeId: string) => {
+    const selectedEmployee = employees.find((emp) => emp.id === employeeId);
+    if (selectedEmployee) {
+      setFormData((prev) => ({
+        ...prev,
+        employeeId: employeeId,
+        assignedEmployee: selectedEmployee.firstName,
+        email: selectedEmployee.employeeId,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        employeeId: "",
+        assignedEmployee: "",
+        email: "",
+      }));
+    }
+  };
+
+  // custom type change handler for assets
   const handleTypeChange = (value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -68,12 +130,12 @@ export function useForm<T extends Record<string, any>>({
     }));
   };
 
-  // Reset form to initial values
+  // reset form to initial values
   const resetForm = () => {
     setFormData(initialValues);
   };
 
-  // Submit handler
+  // submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -81,19 +143,13 @@ export function useForm<T extends Record<string, any>>({
     const auth = getAuth();
     const user = auth.currentUser;
 
-    if (!user) {
-      toast.error("You must be logged in to add this item!");
+    if (!user || !userEmail) {
+      toast.error("you must be logged in to add this item!");
       setIsSubmitting(false);
       return;
     }
 
-    if (!userEmail) {
-      toast.error("You must be logged in to add this item!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Validate required fields
+    // validate required fields
     const missingRequiredFields = validationRules.required.filter(
       (field) => !formData[field]
     );
@@ -108,13 +164,13 @@ export function useForm<T extends Record<string, any>>({
       return;
     }
 
-    // Special validation for asset type
+    // special validation for asset type
     if (
       collectionName === "it-assets" &&
       formData.type === "Other" &&
       !formData.customType
     ) {
-      toast.error("Custom type is required when 'Other' is selected!");
+      toast.error("custom type is required when 'other' is selected!");
       setIsSubmitting(false);
       return;
     }
@@ -122,10 +178,10 @@ export function useForm<T extends Record<string, any>>({
     try {
       const collectionRef = collection(db, collectionName);
 
-      // Check for unique fields if specified
+      // check for unique fields if specified
       if (validationRules.unique && validationRules.unique.length > 0) {
         for (const uniqueField of validationRules.unique) {
-          if (!formData[uniqueField.field]) continue; // Skip empty fields
+          if (!formData[uniqueField.field]) continue;
 
           const fieldQuery = query(
             collectionRef,
@@ -143,7 +199,7 @@ export function useForm<T extends Record<string, any>>({
         }
       }
 
-      // Prepare data for submission
+      // prepare data for submission
       const dataToSubmit = {
         ...formData,
         userId: user.uid,
@@ -151,22 +207,22 @@ export function useForm<T extends Record<string, any>>({
         createdBy: userEmail,
       };
 
-      // Special handling for assets with custom type
+      // special handling for assets with custom type
       if (collectionName === "it-assets" && formData.type === "Other") {
         (dataToSubmit as typeof dataToSubmit & { type: string }).type =
           formData.customType;
       }
 
-      // Add the document
+      // add the document
       await addDoc(collection(db, collectionName), dataToSubmit);
 
-      toast.success(`Item added successfully!`);
+      toast.success(`item added successfully!`);
       onSuccess();
       setOpen(false);
       resetForm();
     } catch (error) {
-      console.error("Error adding item:", error);
-      toast.error("Failed to add item");
+      console.error("error adding item:", error);
+      toast.error("failed to add item");
     } finally {
       setIsSubmitting(false);
     }
@@ -179,10 +235,12 @@ export function useForm<T extends Record<string, any>>({
     setIsSubmitting,
     open,
     setOpen,
+    employees,
     handleInputChange,
     handleSelectChange,
     handleDateChange,
     handleTypeChange,
+    handleEmployeeChange,
     handleSubmit,
     resetForm,
   };

@@ -126,16 +126,15 @@ export function EmployeeTable() {
   return (
     <>
       <div className="flex items-center justify-between">
-        
         <Input
-          placeholder="Filter by name..."
+          placeholder="Filter by Employee ID..."
           value={
-            (table.getColumn("fullName")?.getFilterValue() as string) ?? ""
+            (table.getColumn("employeeId")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("fullName")?.setFilterValue(event.target.value)
+            table.getColumn("employeeId")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]  "
         />
         <div className="flex items-center space-x-1 max-sm:space-x-1">
           <DropdownMenu>

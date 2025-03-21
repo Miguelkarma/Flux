@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Toaster } from "sonner";
 import {
   BadgeCheck,
   Briefcase,
@@ -62,9 +61,7 @@ export function EditEmployeeDrawer({
       department: employee.department ?? "",
       position: employee.position ?? "",
       status: employee.status ?? "Active",
-      phoneNumber: employee.phoneNumber ?? "",
       hireDate: employee.hireDate ?? new Date().toISOString(),
-      manager: employee.manager ?? "",
       location: employee.location ?? "",
     }),
     [employee]
@@ -107,16 +104,6 @@ export function EditEmployeeDrawer({
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        duration={3000}
-        richColors={true}
-        theme="dark"
-        closeButton={true}
-        expand={true}
-        visibleToasts={3}
-        style={{ zIndex: 9999 }}
-      />
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent
           side="bottom"
@@ -249,7 +236,7 @@ export function EditEmployeeDrawer({
                     <SelectItem value="Customer Support">
                       Customer Support
                     </SelectItem>
-                    <SelectItem value="SaaS">
+                    <SelectItem value="Software as a service (SaaS)">
                       Software as a service (SaaS)
                     </SelectItem>
                   </SelectContent>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { toast } from "sonner";
 import {
   collection,
@@ -13,18 +13,81 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
-/**
- * Custom hook for form state management
- */
+// form state management
 export function useFormState<T>(initialData: T) {
   const [formData, setFormData] = React.useState<T>(initialData);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [employees, setEmployees] = React.useState<
+    Array<{
+      id: string;
+      firstName: string;
+      employeeId: string;
+      lastName: string;
+    }>
+  >([]);
 
-  // Update form data when initial data changes
+  // fetch employees
+  React.useEffect(() => {
+    const auth = getAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const fetchEmployees = async () => {
+          try {
+            const employeesCollection = collection(db, "employees");
+
+            const userQuery = query(
+              employeesCollection,
+              where("userId", "==", user.uid)
+            );
+            const employeesSnapshot = await getDocs(userQuery);
+
+            const employeesList = employeesSnapshot.docs.map((doc) => ({
+              id: doc.id,
+              firstName: doc.data().firstName || "",
+              employeeId: doc.data().employeeId || "",
+              lastName: doc.data().lastName || "",
+            }));
+
+            setEmployees(employeesList);
+          } catch (error) {
+            console.error("Error fetching employees:", error);
+          }
+        };
+
+        fetchEmployees();
+      } else {
+        console.error("No authenticated user found");
+        setEmployees([]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleEmployeeChange = (employeeId: string) => {
+    const selectedEmployee = employees.find((emp) => emp.id === employeeId);
+    if (selectedEmployee) {
+      setFormData((prev) => ({
+        ...prev,
+        employeeId: employeeId,
+        assignedEmployee: selectedEmployee.firstName,
+        email: selectedEmployee.employeeId,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        employeeId: "",
+        assignedEmployee: "",
+        email: "",
+      }));
+    }
+  };
+
+  // update form data when initial data changes
   const prevInitialDataRef = React.useRef<T>(initialData);
 
   React.useEffect(() => {
-    // Only update if initialData has actually changed
     if (
       JSON.stringify(prevInitialDataRef.current) !== JSON.stringify(initialData)
     ) {
@@ -33,24 +96,18 @@ export function useFormState<T>(initialData: T) {
     }
   }, [initialData]);
 
-  // Input change handler
+  // input change handler
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Select change handler
+  // select change handler
   const handleSelectChange = (field: string) => (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Date change handler
+  // date change handler
   const handleDateChange = (field: string) => (date: Date | undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -60,18 +117,18 @@ export function useFormState<T>(initialData: T) {
 
   return {
     formData,
+    employees,
     setFormData,
     isSubmitting,
     setIsSubmitting,
     handleInputChange,
     handleSelectChange,
     handleDateChange,
+    handleEmployeeChange,
   };
 }
 
-/**
- * Submit handler for employee form
- */
+// submit handler for employee form
 export async function submitEmployeeForm({
   e,
   formData,
@@ -95,13 +152,13 @@ export async function submitEmployeeForm({
   const userEmail = user?.email;
 
   if (!userEmail) {
-    toast.error("You must be logged in to update an employee!");
+    toast.error("you must be logged in to update an employee!");
     setIsSubmitting(false);
     return;
   }
 
   if (!formData.firstName || !formData.lastName || !formData.email) {
-    toast.error("First name, last name, and email are required!");
+    toast.error("first name, last name, and email are required!");
     setIsSubmitting(false);
     return;
   }
@@ -109,7 +166,7 @@ export async function submitEmployeeForm({
   try {
     const employeesRef = collection(db, "employees");
 
-    // Check for duplicate employee ID (if changed)
+    // check for duplicate employee ID
     if (formData.employeeId && formData.employeeId !== employee.employeeId) {
       const idQuery = query(
         employeesRef,
@@ -119,13 +176,13 @@ export async function submitEmployeeForm({
       const idSnapshot = await getDocs(idQuery);
 
       if (!idSnapshot.empty) {
-        toast.error("Employee with this ID already exists!");
+        toast.error("employee with this ID already exists!");
         setIsSubmitting(false);
         return;
       }
     }
 
-    // Check for duplicate email (if changed)
+    // check for duplicate email
     if (formData.email !== employee.email) {
       const emailQuery = query(
         employeesRef,
@@ -135,7 +192,7 @@ export async function submitEmployeeForm({
       const emailSnapshot = await getDocs(emailQuery);
 
       if (!emailSnapshot.empty) {
-        toast.error("Employee with this email already exists!");
+        toast.error("employee with this email already exists!");
         setIsSubmitting(false);
         return;
       }
@@ -148,20 +205,18 @@ export async function submitEmployeeForm({
       updatedBy: userEmail,
     });
 
-    toast.success("Employee updated successfully!");
+    toast.success("employee updated successfully!");
     onEmployeeUpdated();
     onClose();
   } catch (error) {
-    console.error("Error updating employee:", error);
-    toast.error("Failed to update employee");
+    console.error("error updating employee:", error);
+    toast.error("failed to update employee");
   } finally {
     setIsSubmitting(false);
   }
 }
 
-/**
- * Submit handler for asset form
- */
+// submit handler for asset form
 export async function submitAssetForm({
   e,
   formData,
@@ -185,19 +240,19 @@ export async function submitAssetForm({
   const userEmail = user?.email;
 
   if (!userEmail) {
-    toast.error("You must be logged in to update an asset!");
+    toast.error("you must be logged in to update an asset!");
     setIsSubmitting(false);
     return;
   }
 
   if (!formData.serialNo || !formData.type) {
-    toast.error("Serial number and asset type are required!");
+    toast.error("serial number and asset type are required!");
     setIsSubmitting(false);
     return;
   }
 
   if (formData.type === "Other" && !formData.customType) {
-    toast.error("Custom type is required when 'Other' is selected!");
+    toast.error("custom type is required when 'Other' is selected!");
     setIsSubmitting(false);
     return;
   }
@@ -205,7 +260,7 @@ export async function submitAssetForm({
   try {
     const assetsRef = collection(db, "it-assets");
 
-    // Check for duplicate serial number (if changed)
+    // check for duplicate serial number
     if (formData.serialNo !== asset.serialNo) {
       const serialQuery = query(
         assetsRef,
@@ -215,13 +270,13 @@ export async function submitAssetForm({
       const serialSnapshot = await getDocs(serialQuery);
 
       if (!serialSnapshot.empty) {
-        toast.error("Asset with this Serial Number already exists!");
+        toast.error("asset with this serial number already exists!");
         setIsSubmitting(false);
         return;
       }
     }
 
-    // Check for duplicate asset tag (if asset tag is provided and changed)
+    // check for duplicate asset tag
     if (formData.assetTag && formData.assetTag !== asset.assetTag) {
       const tagQuery = query(
         assetsRef,
@@ -231,7 +286,7 @@ export async function submitAssetForm({
       const tagSnapshot = await getDocs(tagQuery);
 
       if (!tagSnapshot.empty) {
-        toast.error("Asset with this Asset Tag already exists!");
+        toast.error("asset with this asset tag already exists!");
         setIsSubmitting(false);
         return;
       }
@@ -244,12 +299,12 @@ export async function submitAssetForm({
       updatedBy: userEmail,
     });
 
-    toast.success("Asset updated successfully!");
+    toast.success("asset updated successfully!");
     onAssetUpdated();
     onClose();
   } catch (error) {
-    console.error("Error updating asset:", error);
-    toast.error("Failed to update asset");
+    console.error("error updating asset:", error);
+    toast.error("failed to update asset");
   } finally {
     setIsSubmitting(false);
   }

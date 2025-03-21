@@ -78,6 +78,8 @@ export function AddAssetDrawer({
 
   const {
     formData,
+    employees,
+    handleEmployeeChange,
     handleInputChange,
     handleSelectChange,
     handleDateChange,
@@ -106,12 +108,10 @@ export function AddAssetDrawer({
     },
   });
 
-  // Custom handler for type changes to manage customType field
   const handleAssetTypeChange = (value: string) => {
     handleTypeChange(value);
   };
 
-  // Custom handler for customType changes
   const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     formData.customType = value;
@@ -249,27 +249,25 @@ export function AddAssetDrawer({
                 placeholder="Enter location (e.g., IT Department, Accounting)"
               />
             </div>
+
             <div className="grid gap-2">
-              <Label htmlFor="assignedEmployee">Assigned Employee</Label>
-              <Input
-                id="assignedEmployee"
-                name="assignedEmployee"
-                value={formData.assignedEmployee}
-                onChange={handleInputChange}
-                placeholder="Enter employee name"
-              />
+              <Label htmlFor="employeeId">Assigned Employee</Label>
+              <Select onValueChange={handleEmployeeChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an employee" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  {employees.map((employee) => (
+                    <SelectItem key={employee.id} value={employee.id}>
+                      {employee.employeeId} - {employee.firstName}{" "}
+                      {employee.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Employee Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter employee email"
-              />
-            </div>
+
             <div className="grid gap-2">
               <Label htmlFor="dateAdded">Date Added</Label>
               <Popover>

@@ -260,7 +260,7 @@ export function AddEmployeeDrawer({
                     <SelectItem value="Customer Support">
                       Customer Support
                     </SelectItem>
-                    <SelectItem value="SaaS">
+                    <SelectItem value="Software as a service (SaaS)">
                       Software as a service (SaaS)
                     </SelectItem>
                   </SelectContent>

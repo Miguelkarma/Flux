@@ -63,7 +63,7 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
 
   const handleCopyId = async () => {
     try {
-      await navigator.clipboard.writeText(employee.id || "");
+      await navigator.clipboard.writeText(employee.employeeId || "");
       toast.success("Employee ID copied to clipboard");
     } catch (error) {
       toast.error("Failed to copy Employee ID");

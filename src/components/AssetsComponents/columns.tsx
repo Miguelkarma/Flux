@@ -22,7 +22,7 @@ export type FirestoreData = {
   type: string;
   customType?: string;
   location: string;
-  email: string;
+
   assignedEmployee: string;
   status: string;
   dateAdded: string;
@@ -127,23 +127,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
       </div>
     ),
   },
-  {
-    accessorKey: "email",
-    header: ({ column }) => (
-      <Button
-        className="font-extrabold"
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Email <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="text-secondary-foreground">
-        {row.getValue<string>("email") || "N/A"}
-      </div>
-    ),
-  },
+
   {
     accessorKey: "assignedEmployee",
     header: "Assigned Employee",
