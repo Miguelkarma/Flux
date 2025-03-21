@@ -31,7 +31,14 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { toast, Toaster } from "sonner";
-import { CalendarIcon } from "lucide-react";
+import {
+  BadgeCheck,
+  Briefcase,
+  CalendarIcon,
+  Mail,
+  User,
+  MapPin,
+} from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
@@ -92,10 +99,10 @@ export function EditEmployeeDrawer({
     }));
   };
 
-  const handleDepartmentChange = (value: string) => {
+  const handleSelectChange = (field: string) => (value: string) => {
     setFormData((prev) => ({
       ...prev,
-      department: value,
+      [field]: value,
     }));
   };
 
@@ -103,13 +110,6 @@ export function EditEmployeeDrawer({
     setFormData((prev) => ({
       ...prev,
       hireDate: date ? date.toISOString() : new Date().toISOString(),
-    }));
-  };
-
-  const handleStatusChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      status: value,
     }));
   };
 
@@ -187,93 +187,111 @@ export function EditEmployeeDrawer({
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent
-        side="bottom"
-        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
-      >
-        <Toaster
-          position="top-right"
-          duration={3000}
-          richColors={true}
-          theme="dark"
-          closeButton={true}
-          expand={true}
-          visibleToasts={3}
-          style={{ zIndex: 9999 }}
-        />
-        <SheetHeader>
-          <SheetTitle>Edit Employee</SheetTitle>
-          <SheetDescription>
-            Update the employee details below.
-          </SheetDescription>
-        </SheetHeader>
-        <form onSubmit={handleSubmit} className="grid gap-6 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="employeeId">Employee ID</Label>
+    <>
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors={true}
+        theme="dark"
+        closeButton={true}
+        expand={true}
+        visibleToasts={3}
+        style={{ zIndex: 9999 }}
+      />
+      <Sheet open={isOpen} onOpenChange={onClose}>
+        <SheetContent
+          side="bottom"
+          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+        >
+          <SheetHeader>
+            <SheetTitle className="text-popover-foreground">
+              Edit Employee
+            </SheetTitle>
+            <SheetDescription className="text-primary">
+              Update the employee details below. First name, last name, and
+              email are required.
+            </SheetDescription>
+          </SheetHeader>
+          <form onSubmit={handleSubmit} className="grid gap-6 py-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="employeeId">Employee ID</Label>
+                <Input
+                  id="employeeId"
+                  name="employeeId"
+                  value={formData.employeeId}
+                  onChange={handleInputChange}
+                  placeholder="Enter employee ID"
+                  icon={BadgeCheck}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="hireDate">Hire Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between text-left"
+                    >
+                      {formData.hireDate
+                        ? format(new Date(formData.hireDate), "PPP")
+                        : "Select a date"}
+                      <CalendarIcon className="w-4 h-4 opacity-70" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-full p-2">
+                    <Calendar
+                      mode="single"
+                      selected={new Date(formData.hireDate)}
+                      onSelect={handleDateChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="position">Position</Label>
               <Input
-                id="employeeId"
-                name="employeeId"
-                value={formData.employeeId}
+                id="position"
+                name="position"
+                value={formData.position}
                 onChange={handleInputChange}
-                placeholder="Enter employee ID"
+                placeholder="Enter position/title"
+                icon={Briefcase}
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="hireDate">Hire Date</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between text-left"
-                  >
-                    {formData.hireDate
-                      ? format(new Date(formData.hireDate), "PPP")
-                      : "Select a date"}
-                    <CalendarIcon className="w-4 h-4 opacity-70" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-full p-2">
-                  <Calendar
-                    mode="single"
-                    selected={new Date(formData.hireDate)}
-                    onSelect={handleDateChange}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="firstName">First Name *</Label>
+                <Input
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  placeholder="Enter first name"
+                  icon={User}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="lastName">Last Name *</Label>
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  placeholder="Enter last name"
+                  icon={User}
+                  required
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="firstName">First Name *</Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-                placeholder="Enter first name"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="lastName">Last Name *</Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                placeholder="Enter last name"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <Label htmlFor="email">Email *</Label>
               <Input
                 id="email"
@@ -282,114 +300,89 @@ export function EditEmployeeDrawer({
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter email address"
+                icon={Mail}
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Enter phone number"
-              />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="department">Department</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="department">Department</Label>
+                <Select
+                  value={formData.department}
+                  onValueChange={handleSelectChange("department")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Accounting">Accounting</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="SysAd">SysAd</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="HR">Human Resources</SelectItem>
+                    <SelectItem value="Quality Assurance">
+                      Quality Assurance
+                    </SelectItem>
+                    <SelectItem value="IT">IT</SelectItem>
+                    <SelectItem value="Customer Support">
+                      Customer Support
+                    </SelectItem>
+                    <SelectItem value="SaaS">
+                      Software as a service (SaaS)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="location">Location</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder="Enter location"
+                  icon={MapPin}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <Label htmlFor="status">Status</Label>
               <Select
-                value={formData.department}
-                onValueChange={handleDepartmentChange}
+                value={formData.status}
+                onValueChange={handleSelectChange("status")}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select department" />
+                  <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Engineering">Engineering</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="Sales">Sales</SelectItem>
-                  <SelectItem value="Finance">Finance</SelectItem>
-                  <SelectItem value="HR">Human Resources</SelectItem>
-                  <SelectItem value="Operations">Operations</SelectItem>
-                  <SelectItem value="IT">IT</SelectItem>
-                  <SelectItem value="Customer Support">
-                    Customer Support
-                  </SelectItem>
-                  <SelectItem value="Product">Product</SelectItem>
-                  <SelectItem value="Legal">Legal</SelectItem>
+                  <SelectItem value="Active">Active</SelectItem>
+                  <SelectItem value="On Leave">On Leave</SelectItem>
+                  <SelectItem value="Terminated">Terminated</SelectItem>
+                  <SelectItem value="Probation">Probation</SelectItem>
+                  <SelectItem value="Remote">Remote</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="position">Position</Label>
-              <Input
-                id="position"
-                name="position"
-                value={formData.position}
-                onChange={handleInputChange}
-                placeholder="Enter position/title"
-              />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Enter location"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="manager">Manager</Label>
-              <Input
-                id="manager"
-                name="manager"
-                value={formData.manager}
-                onChange={handleInputChange}
-                placeholder="Enter manager's name"
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={handleStatusChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="On Leave">On Leave</SelectItem>
-                <SelectItem value="Terminated">Terminated</SelectItem>
-                <SelectItem value="Probation">Probation</SelectItem>
-                <SelectItem value="Remote">Remote</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="button" variant="outline" className="bg-teal-950">
-                Cancel
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button type="button" className="bg-teal-950 text-foreground">
+                  Cancel
+                </Button>
+              </SheetClose>
+              <Button
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Updating..." : "Update Employee"}
               </Button>
-            </SheetClose>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
-            >
-              {isSubmitting ? "Updating..." : "Update Employee"}
-            </Button>
-          </SheetFooter>
-        </form>
-      </SheetContent>
-    </Sheet>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
