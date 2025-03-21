@@ -170,7 +170,8 @@ export function EditAssetDrawer({
         const tagQuery = query(
           assetsRef,
           where("assetTag", "==", formData.assetTag),
-          where("userId", "==", user.uid)
+          where("userId", "==", user.uid),
+          where("__name__", "!=", asset.id)
         );
         tagSnapshot = await getDocs(tagQuery);
       }
