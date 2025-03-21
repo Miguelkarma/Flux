@@ -188,7 +188,7 @@ export default function Sidebar() {
             <StatusItem
               label="Retired"
               value={statusCounts.retired}
-              color="gray"
+              color="red"
             />
             <StatusItem
               label="Available"
