@@ -181,11 +181,6 @@ export default function Sidebar() {
               color="teal"
             />
             <StatusItem
-              label="Available"
-              value={statusCounts.available}
-              color="default"
-            />
-            <StatusItem
               label="Maintenance"
               value={statusCounts.maintenance}
               color="amber"
@@ -194,6 +189,11 @@ export default function Sidebar() {
               label="Retired"
               value={statusCounts.retired}
               color="red"
+            />
+            <StatusItem
+              label="Available"
+              value={statusCounts.available}
+              color="default"
             />
             <StatusItem
               label="Lost/Stolen"
