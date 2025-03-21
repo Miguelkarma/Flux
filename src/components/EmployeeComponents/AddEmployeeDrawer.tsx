@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Sheet,
   SheetClose,
@@ -30,9 +29,7 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 import { Card } from "../ui/card";
 import {
   Popover,
@@ -41,7 +38,21 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { getAuth } from "firebase/auth";
+import { useForm } from "@/hooks/form-hook";
+
+interface Employee {
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  department: string;
+  position: string;
+  status: string;
+  phoneNumber: string;
+  hireDate: string;
+  manager: string;
+  location: string;
+}
 
 interface AddEmployeeDrawerProps {
   onEmployeeAdded: () => void;
@@ -52,10 +63,7 @@ export function AddEmployeeDrawer({
   onEmployeeAdded,
   userEmail,
 }: AddEmployeeDrawerProps) {
-  const [open, setOpen] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const [formData, setFormData] = React.useState({
+  const initialValues: Employee = {
     employeeId: "",
     firstName: "",
     lastName: "",
@@ -67,124 +75,36 @@ export function AddEmployeeDrawer({
     hireDate: new Date().toISOString(),
     manager: "",
     location: "",
+  };
+
+  const {
+    formData,
+    handleInputChange,
+    handleSelectChange,
+    handleDateChange,
+    handleSubmit,
+    isSubmitting,
+    open,
+    setOpen,
+  } = useForm<Employee>({
+    initialValues,
+    collectionName: "employees",
+    onSuccess: onEmployeeAdded,
+    userEmail,
+    validationRules: {
+      required: ["firstName", "lastName", "email"],
+      unique: [
+        {
+          field: "employeeId",
+          errorMessage: "Employee with this ID already exists!",
+        },
+        {
+          field: "email",
+          errorMessage: "Employee with this email already exists!",
+        },
+      ],
+    },
   });
-
-  const handleDateChange = (selectedDate?: Date) => {
-    setFormData((prev) => ({
-      ...prev,
-      hireDate: selectedDate?.toISOString() ?? prev.hireDate,
-    }));
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleDepartmentChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      department: value,
-    }));
-  };
-
-  const handleStatusChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      status: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast.error("You must be logged in to add an employee!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!userEmail) {
-      toast.error("You must be logged in to add an employee!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.firstName || !formData.lastName || !formData.email) {
-      toast.error("First name, last name, and email are required!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const employeesRef = collection(db, "employees");
-
-      // Check for duplicate employee ID (if provided)
-      if (formData.employeeId) {
-        const idQuery = query(
-          employeesRef,
-          where("employeeId", "==", formData.employeeId),
-          where("userId", "==", user.uid)
-        );
-        const idSnapshot = await getDocs(idQuery);
-
-        if (!idSnapshot.empty) {
-          toast.error("Employee with this ID already exists!");
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
-      // Check for duplicate email
-      const emailQuery = query(
-        employeesRef,
-        where("email", "==", formData.email),
-        where("userId", "==", user.uid)
-      );
-      const emailSnapshot = await getDocs(emailQuery);
-
-      if (!emailSnapshot.empty) {
-        toast.error("Employee with this email already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-
-      await addDoc(collection(db, "employees"), {
-        ...formData,
-        userId: user.uid,
-        createdAt: new Date().toISOString(),
-      });
-
-      toast.success("Employee added successfully!");
-      onEmployeeAdded();
-      setOpen(false);
-      setFormData({
-        employeeId: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        department: "",
-        position: "",
-        status: "Active",
-        phoneNumber: "",
-        hireDate: new Date().toISOString(),
-        manager: "",
-        location: "",
-      });
-    } catch (error) {
-      console.error("Error adding employee:", error);
-      toast.error("Failed to add employee");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <>
@@ -215,16 +135,6 @@ export function AddEmployeeDrawer({
           side="bottom"
           className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
-          <Toaster
-            position="top-right"
-            duration={3000}
-            richColors={true}
-            theme="dark"
-            closeButton={true}
-            expand={true}
-            visibleToasts={3}
-            style={{ zIndex: 9999 }}
-          />
           <SheetHeader>
             <SheetTitle className="text-popover-foreground">
               Add New Employee
@@ -256,7 +166,6 @@ export function AddEmployeeDrawer({
                       variant="outline"
                       className="w-full justify-between text-left"
                     >
-                      {" "}
                       {formData.hireDate
                         ? format(new Date(formData.hireDate), "PPP")
                         : "Select a date"}
@@ -267,7 +176,7 @@ export function AddEmployeeDrawer({
                     <Calendar
                       mode="single"
                       selected={new Date(formData.hireDate)}
-                      onSelect={handleDateChange}
+                      onSelect={handleDateChange("hireDate")}
                       initialFocus
                     />
                   </PopoverContent>
@@ -333,7 +242,7 @@ export function AddEmployeeDrawer({
                 <Label htmlFor="department">Department</Label>
                 <Select
                   value={formData.department}
-                  onValueChange={handleDepartmentChange}
+                  onValueChange={handleSelectChange("department")}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select department" />
@@ -374,7 +283,7 @@ export function AddEmployeeDrawer({
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={handleStatusChange}
+                onValueChange={handleSelectChange("status")}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
