@@ -65,7 +65,17 @@ export function useFormState<T>(initialData: T) {
     return () => unsubscribe();
   }, []);
 
-  const handleEmployeeChange = (employeeId: string) => {
+    const handleEmployeeChange = (employeeId: string) => {
+    if (employeeId === "none") {
+      setFormData((prev) => ({
+        ...prev,
+        employeeId: "",
+        assignedEmployee: "",
+        email: "",
+      }));
+      return;
+    }
+
     const selectedEmployee = employees.find((emp) => emp.id === employeeId);
     if (selectedEmployee) {
       setFormData((prev) => ({

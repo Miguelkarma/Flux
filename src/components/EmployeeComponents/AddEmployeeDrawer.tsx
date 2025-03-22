@@ -38,7 +38,10 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { useForm } from "@/hooks/assetHook/add-form-hook";
+import {
+  useForm,
+  submitAddEmployeeForm,
+} from "@/hooks/assetHook/add-form-hook";
 
 interface Employee {
   employeeId: string;
@@ -59,10 +62,7 @@ interface AddEmployeeDrawerProps {
   userEmail: string | null;
 }
 
-export function AddEmployeeDrawer({
-  onEmployeeAdded,
-  userEmail,
-}: AddEmployeeDrawerProps) {
+export function AddEmployeeDrawer({ onEmployeeAdded }: AddEmployeeDrawerProps) {
   const initialValues: Employee = {
     employeeId: "",
     firstName: "",
@@ -82,29 +82,23 @@ export function AddEmployeeDrawer({
     handleInputChange,
     handleSelectChange,
     handleDateChange,
-    handleSubmit,
     isSubmitting,
+    setIsSubmitting,
     open,
     setOpen,
-  } = useForm<Employee>({
-    initialValues,
-    collectionName: "employees",
-    onSuccess: onEmployeeAdded,
-    userEmail,
-    validationRules: {
-      required: ["firstName", "lastName", "email"],
-      unique: [
-        {
-          field: "employeeId",
-          errorMessage: "Employee with this ID already exists!",
-        },
-        {
-          field: "email",
-          errorMessage: "Employee with this email already exists!",
-        },
-      ],
-    },
-  });
+    resetForm,
+  } = useForm<Employee>(initialValues);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    submitAddEmployeeForm({
+      e,
+      formData,
+      setIsSubmitting,
+      onEmployeeAdded,
+      onClose: () => setOpen(false),
+      resetForm,
+    });
+  };
 
   return (
     <>
@@ -144,9 +138,12 @@ export function AddEmployeeDrawer({
               name, and email are required.
             </SheetDescription>
           </SheetHeader>
-          <form onSubmit={handleSubmit} className="grid gap-6 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="grid gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="grid gap-6 py-4 max-sm:py-1 max-sm:gap-2 "
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 ">
+              <div className="grid gap-1">
                 <Label htmlFor="employeeId">Employee ID</Label>
                 <Input
                   id="employeeId"
@@ -158,7 +155,7 @@ export function AddEmployeeDrawer({
                 />
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-1">
                 <Label htmlFor="hireDate">Hire Date</Label>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -184,7 +181,7 @@ export function AddEmployeeDrawer({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-1 gap-1">
               <Label htmlFor="position">Position</Label>
               <Input
                 id="position"
@@ -298,28 +295,6 @@ export function AddEmployeeDrawer({
               </Select>
             </div>
 
-            <div className="grid grid-cols-1 gap-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Enter phone number"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-2">
-              <Label htmlFor="manager">Manager</Label>
-              <Input
-                id="manager"
-                name="manager"
-                value={formData.manager}
-                onChange={handleInputChange}
-                placeholder="Enter manager's name"
-              />
-            </div>
-
             <SheetFooter>
               <SheetClose asChild>
                 <Button type="button" className="bg-teal-950 text-foreground">
@@ -327,7 +302,7 @@ export function AddEmployeeDrawer({
                 </Button>
               </SheetClose>
               <Button
-                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground "
                 type="submit"
                 disabled={isSubmitting}
               >

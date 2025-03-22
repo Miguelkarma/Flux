@@ -45,7 +45,7 @@ interface EditAssetDrawerProps {
     serialNo: string;
     assetTag: string;
     assignedEmployee: string;
-    email: string;
+    employeeId?: string;
     status: string;
     dateAdded: string;
     type: string;
@@ -79,7 +79,7 @@ export function EditAssetDrawer({
     serialNo: asset.serialNo ?? "",
     assetTag: asset.assetTag ?? "",
     assignedEmployee: asset.assignedEmployee ?? "",
-    email: asset.email ?? "",
+    employeeId: asset.employeeId ?? "",
     status: asset.status ?? "Available",
     type: asset.type ?? "",
     customType: asset.customType ?? "",
@@ -94,7 +94,7 @@ export function EditAssetDrawer({
       serialNo: asset.serialNo ?? "",
       assetTag: asset.assetTag ?? "",
       assignedEmployee: asset.assignedEmployee ?? "",
-      email: asset.email ?? "",
+      employeeId: asset.employeeId ?? "",
       status: asset.status ?? "Available",
       type: asset.type ?? "",
       customType: asset.customType ?? "",
@@ -226,7 +226,10 @@ export function EditAssetDrawer({
           {/* Assigned Employee */}
           <div className="grid gap-2">
             <Label htmlFor="employeeId">Assigned Employee</Label>
-            <Select onValueChange={handleEmployeeChange}>
+            <Select
+              value={formData.employeeId || "none"}
+              onValueChange={handleEmployeeChange}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select an employee" />
               </SelectTrigger>

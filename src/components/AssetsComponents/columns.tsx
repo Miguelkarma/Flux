@@ -22,7 +22,6 @@ export type FirestoreData = {
   type: string;
   customType?: string;
   location: string;
-
   assignedEmployee: string;
   status: string;
   dateAdded: string;

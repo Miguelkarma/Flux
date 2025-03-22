@@ -41,12 +41,13 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { useForm } from "@/hooks/assetHook/add-form-hook";
+import { useForm, submitAddAssetForm } from "@/hooks/assetHook/add-form-hook";
 
 interface Asset {
   serialNo: string;
   assetTag: string;
   assignedEmployee: string;
+  employeeId: string;
   email: string;
   status: string;
   type: string;
@@ -57,17 +58,14 @@ interface Asset {
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
-  userEmail: string | null;
 }
 
-export function AddAssetDrawer({
-  onAssetAdded,
-  userEmail,
-}: AddAssetDrawerProps) {
+export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
   const initialValues: Asset = {
     serialNo: "",
     assetTag: "",
     assignedEmployee: "",
+    employeeId: "",
     email: "",
     status: "Available",
     type: "",
@@ -78,43 +76,32 @@ export function AddAssetDrawer({
 
   const {
     formData,
+    isSubmitting,
+    setIsSubmitting,
+    open,
+    setOpen,
     employees,
-    handleEmployeeChange,
     handleInputChange,
     handleSelectChange,
     handleDateChange,
     handleTypeChange,
-    handleSubmit,
-    isSubmitting,
-    open,
-    setOpen,
-  } = useForm<Asset>({
-    initialValues,
-    collectionName: "it-assets",
-    onSuccess: onAssetAdded,
-    userEmail,
-    validationRules: {
-      required: ["serialNo", "type"],
-      unique: [
-        {
-          field: "serialNo",
-          errorMessage: "Asset with this Serial Number already exists!",
-        },
-        {
-          field: "assetTag",
-          errorMessage: "Asset with this Asset Tag already exists!",
-        },
-      ],
-    },
-  });
+    handleEmployeeChange,
+    resetForm,
+  } = useForm<Asset>(initialValues);
 
-  const handleAssetTypeChange = (value: string) => {
-    handleTypeChange(value);
+  const handleSubmit = (e: React.FormEvent) => {
+    submitAddAssetForm({
+      e,
+      formData,
+      setIsSubmitting,
+      onAssetAdded,
+      onClose: () => setOpen(false),
+      resetForm,
+    });
   };
 
   const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    formData.customType = value;
+    handleInputChange(e);
   };
 
   return (
@@ -144,7 +131,7 @@ export function AddAssetDrawer({
 
         <SheetContent
           side="bottom"
-          className=" w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
           <Toaster
             position="top-right"
@@ -190,7 +177,7 @@ export function AddAssetDrawer({
               <Label htmlFor="type">Asset Type</Label>
               <Select
                 value={formData.type}
-                onValueChange={handleAssetTypeChange}
+                onValueChange={handleTypeChange}
                 required
               >
                 <SelectTrigger>

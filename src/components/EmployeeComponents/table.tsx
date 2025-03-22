@@ -10,7 +10,7 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -127,7 +127,7 @@ export function EmployeeTable() {
     <>
       <div className="flex items-center justify-between">
         <Input
-          placeholder="Filter by Employee ID..."
+          placeholder="Search Employee ID"
           value={
             (table.getColumn("employeeId")?.getFilterValue() as string) ?? ""
           }
@@ -135,6 +135,7 @@ export function EmployeeTable() {
             table.getColumn("employeeId")?.setFilterValue(event.target.value)
           }
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]  "
+          icon={Filter}
         />
         <div className="flex items-center space-x-1 max-sm:space-x-1">
           <DropdownMenu>

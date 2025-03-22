@@ -6,35 +6,20 @@ import { toast } from "sonner";
 import { collection, addDoc, query, getDocs, where } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
-interface ValidationRules {
-  required: string[];
-  unique?: {
-    field: string;
-    errorMessage: string;
-  }[];
-}
-
 /**
- * custom hook for managing add form state and submission
+ * custom hook for managing add form state
  */
-export function useForm<T extends Record<string, any>>({
-  initialValues,
-  collectionName,
-  onSuccess,
-  userEmail,
-  validationRules,
-}: {
-  initialValues: T;
-  collectionName: string;
-  onSuccess: () => void;
-  userEmail: string | null;
-  validationRules: ValidationRules;
-}) {
+export function useForm<T extends Record<string, any>>(initialValues: T) {
   const [formData, setFormData] = React.useState<T>(initialValues);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [employees, setEmployees] = React.useState<
-    Array<{ id: string; firstName: string; employeeId: string; lastName: string}>
+    Array<{
+      id: string;
+      firstName: string;
+      employeeId: string;
+      lastName: string;
+    }>
   >([]);
 
   // fetch employees
@@ -135,99 +120,6 @@ export function useForm<T extends Record<string, any>>({
     setFormData(initialValues);
   };
 
-  // submit handler
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user || !userEmail) {
-      toast.error("you must be logged in to add this item!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    // validate required fields
-    const missingRequiredFields = validationRules.required.filter(
-      (field) => !formData[field]
-    );
-
-    if (missingRequiredFields.length > 0) {
-      toast.error(
-        `${missingRequiredFields.join(", ")} ${
-          missingRequiredFields.length > 1 ? "are" : "is"
-        } required!`
-      );
-      setIsSubmitting(false);
-      return;
-    }
-
-    // special validation for asset type
-    if (
-      collectionName === "it-assets" &&
-      formData.type === "Other" &&
-      !formData.customType
-    ) {
-      toast.error("custom type is required when 'other' is selected!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const collectionRef = collection(db, collectionName);
-
-      // check for unique fields if specified
-      if (validationRules.unique && validationRules.unique.length > 0) {
-        for (const uniqueField of validationRules.unique) {
-          if (!formData[uniqueField.field]) continue;
-
-          const fieldQuery = query(
-            collectionRef,
-            where(uniqueField.field, "==", formData[uniqueField.field]),
-            where("userId", "==", user.uid)
-          );
-
-          const fieldSnapshot = await getDocs(fieldQuery);
-
-          if (!fieldSnapshot.empty) {
-            toast.error(uniqueField.errorMessage);
-            setIsSubmitting(false);
-            return;
-          }
-        }
-      }
-
-      // prepare data for submission
-      const dataToSubmit = {
-        ...formData,
-        userId: user.uid,
-        dateAdded: new Date().toISOString(),
-        createdBy: userEmail,
-      };
-
-      // special handling for assets with custom type
-      if (collectionName === "it-assets" && formData.type === "Other") {
-        (dataToSubmit as typeof dataToSubmit & { type: string }).type =
-          formData.customType;
-      }
-
-      // add the document
-      await addDoc(collection(db, collectionName), dataToSubmit);
-
-      toast.success(`item added successfully!`);
-      onSuccess();
-      setOpen(false);
-      resetForm();
-    } catch (error) {
-      console.error("error adding item:", error);
-      toast.error("failed to add item");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return {
     formData,
     setFormData,
@@ -241,7 +133,199 @@ export function useForm<T extends Record<string, any>>({
     handleDateChange,
     handleTypeChange,
     handleEmployeeChange,
-    handleSubmit,
     resetForm,
   };
+}
+
+// submit handler for employee form
+export async function submitAddEmployeeForm({
+  e,
+  formData,
+  setIsSubmitting,
+  onEmployeeAdded,
+  onClose,
+  resetForm,
+}: {
+  e: React.FormEvent;
+  formData: any;
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  onEmployeeAdded: () => void;
+  onClose: () => void;
+  resetForm: () => void;
+}) {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userEmail = user?.email;
+
+  if (!user || !userEmail) {
+    toast.error("you must be logged in to add an employee!");
+    setIsSubmitting(false);
+    return;
+  }
+
+  if (!formData.firstName || !formData.lastName || !formData.email) {
+    toast.error("first name, last name, and email are required!");
+    setIsSubmitting(false);
+    return;
+  }
+
+  try {
+    const employeesRef = collection(db, "employees");
+
+    // check for duplicate employee ID
+    if (formData.employeeId) {
+      const idQuery = query(
+        employeesRef,
+        where("employeeId", "==", formData.employeeId),
+        where("userId", "==", user.uid)
+      );
+      const idSnapshot = await getDocs(idQuery);
+
+      if (!idSnapshot.empty) {
+        toast.error("employee with this ID already exists!");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // check for duplicate email
+    const emailQuery = query(
+      employeesRef,
+      where("email", "==", formData.email),
+      where("userId", "==", user.uid)
+    );
+    const emailSnapshot = await getDocs(emailQuery);
+
+    if (!emailSnapshot.empty) {
+      toast.error("employee with this email already exists!");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // prepare data for submission
+    const dataToSubmit = {
+      ...formData,
+      userId: user.uid,
+      dateAdded: new Date().toISOString(),
+      createdBy: userEmail,
+    };
+
+    // add the document
+    await addDoc(employeesRef, dataToSubmit);
+
+    toast.success("employee added successfully!");
+    onEmployeeAdded();
+    onClose();
+    resetForm();
+  } catch (error) {
+    console.error("error adding employee:", error);
+    toast.error("failed to add employee");
+  } finally {
+    setIsSubmitting(false);
+  }
+}
+
+// submit handler for asset form
+export async function submitAddAssetForm({
+  e,
+  formData,
+  setIsSubmitting,
+  onAssetAdded,
+  onClose,
+  resetForm,
+}: {
+  e: React.FormEvent;
+  formData: any;
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  onAssetAdded: () => void;
+  onClose: () => void;
+  resetForm: () => void;
+}) {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const userEmail = user?.email;
+
+  if (!user || !userEmail) {
+    toast.error("you must be logged in to add an asset!");
+    setIsSubmitting(false);
+    return;
+  }
+
+  if (!formData.serialNo || !formData.type) {
+    toast.error("serial number and asset type are required!");
+    setIsSubmitting(false);
+    return;
+  }
+
+  if (formData.type === "Other" && !formData.customType) {
+    toast.error("custom type is required when 'Other' is selected!");
+    setIsSubmitting(false);
+    return;
+  }
+
+  try {
+    const assetsRef = collection(db, "it-assets");
+
+    // check for duplicate serial number
+    const serialQuery = query(
+      assetsRef,
+      where("serialNo", "==", formData.serialNo),
+      where("userId", "==", user.uid)
+    );
+    const serialSnapshot = await getDocs(serialQuery);
+
+    if (!serialSnapshot.empty) {
+      toast.error("asset with this serial number already exists!");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // check for duplicate asset tag
+    if (formData.assetTag) {
+      const tagQuery = query(
+        assetsRef,
+        where("assetTag", "==", formData.assetTag),
+        where("userId", "==", user.uid)
+      );
+      const tagSnapshot = await getDocs(tagQuery);
+
+      if (!tagSnapshot.empty) {
+        toast.error("asset with this asset tag already exists!");
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // prepare data for submission
+    const dataToSubmit = {
+      ...formData,
+      userId: user.uid,
+      dateAdded: new Date().toISOString(),
+      createdBy: userEmail,
+    };
+
+    // handle custom type
+    if (formData.type === "Other") {
+      dataToSubmit.type = formData.customType;
+    }
+
+    // add the document
+    await addDoc(assetsRef, dataToSubmit);
+
+    toast.success("asset added successfully!");
+    onAssetAdded();
+    onClose();
+    resetForm();
+  } catch (error) {
+    console.error("error adding asset:", error);
+    toast.error("failed to add asset");
+  } finally {
+    setIsSubmitting(false);
+  }
 }
