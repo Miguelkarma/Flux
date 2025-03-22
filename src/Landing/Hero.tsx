@@ -41,21 +41,23 @@ export default function Hero() {
         className="container text-center"
       >
         <div className="max-w-screen-md mx-auto">
-          <p className="text-sm uppercase tracking-wider bg-secondary/50 text-teal-300 max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10">
+          <p className="text-sm uppercase tracking-wider bg-secondary/50 text-teal-300 max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10 ">
             {heroData.sectionSubtitle}
           </p>
 
-          <h2 className="text-4xl font-semibold !leading-tight mb-4 md:text-5xl md:mb-5 lg:text-6xl">
+          <h2 className="text-4xl font-semibold !leading-tight mb-4 max-sm:text-2xl md:text-5xl md:mb-5 lg:text-6xl">
             {heroData.sectionTitle}
-            <span className="relative isolate ms-4 hidden sm:inline-block sm:max-w-[493px] bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent">
+            <span className="relative isolate ms-4 sm:inline-block sm:max-w-[493px] bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent pb-1 ">
               {heroData.decoTitle}
-              <span className="absolute -z-10 top-2 -left-6 -right-4 bottom-0.5 bg-foreground/5 rounded-full px-8 ms-3 border-t border-foreground/20 shadow-[inset_0px_0px_30px_0px] shadow-foreground/20 md:top-3 md:bottom-1 lg:top-4 lg:bottom-2"></span>
+              <span className="absolute -z-10 top-2 -left-6 -right-4 bottom-0.5 bg-foreground/5 rounded-full px-8 ms-3 border-t border-foreground/20 shadow-[inset_0px_0px_30px_0px] shadow-foreground/20   md:top-3 md:bottom-1 lg:top-4 lg:bottom-2"></span>
             </span>
           </h2>
 
-          <p className="text-slate-400 md:text-xl">{heroData.sectionText}</p>
+          <p className="text-slate-400 md:text-xl max-sm:text-xs">
+            {heroData.sectionText}
+          </p>
 
-          <div className="flex justify-center gap-2 mt-6 md:mt-10">
+          <div className="flex justify-center gap-2 mt-6 md:mt-10 ">
             <StartButton
               onClick={() => {
                 navigate("/login");
@@ -64,7 +66,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative mt-12 max-w-screen-xl mx-auto isolate rounded-xl md:mt-16">
+        <div className="relative mt-12 mx-auto isolate rounded-xl md:mt-16 max-md:w-[40em] md:w-[40em] lg:h-auto lg:w-auto max-sm:h-[13em] max-sm:w-[20em]">
           <motion.figure
             ref={heroBannerRef}
             style={{
@@ -76,16 +78,15 @@ export default function Hero() {
           >
             <img
               src={hero}
-              width={1300}
-              height={815}
               alt="Flux Dashboard"
               loading="lazy"
-              className="rounded-xl opacity-90"
+              className="rounded-xl opacity-90 
+              w-auto h-auto max-sm:h-[13em] max-sm:w-[20em] max-md:h-[30em] max-md:w-[40em] lg:h-auto lg:w-auto "
             />
           </motion.figure>
 
           <motion.div
-            className="absolute bg-teal-200 inset-5 blur-[100px] -z-10"
+            className="absolute bg-teal-200 inset-5 blur-[100px] -z-10 "
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5, ease: "backInOut" }}

@@ -35,7 +35,7 @@ export default function CTA() {
               viewport={{ once: true }}
             >
               <Link to="header" smooth={true} duration={500}>
-                <Button className="bg-slate-700 text-teal-400 hover:bg-foreground/95">
+                <Button className="bg-slate-700 text-white hover:bg-zinc-800">
                   Start Now <ArrowRightCircle></ArrowRightCircle>
                 </Button>
               </Link>

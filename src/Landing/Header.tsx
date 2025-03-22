@@ -69,9 +69,14 @@ const Header = () => {
     >
       <div className="container mx-auto h-full flex items-center justify-between">
         {/* Logo */}
-        <span className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent">
+        <Button
+          className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[2px_2px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200 hover:border hover:border-slate-600"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           Flux
-        </span>
+        </Button>
 
         {/* Desktop Navigation */}
         <motion.div
@@ -160,12 +165,13 @@ const Header = () => {
         </motion.div>
 
         {/* Auth Buttons */}
-        <div className="hidden lg:flex gap-2">
+        <div className="hidden lg:flex gap-2 !rounded-none hover:!rounded-full ">
           <Button
             variant="ghost"
             onClick={() => {
               navigate("/registration");
             }}
+            className="!rounded-full hover:!rounded-full"
           >
             Sign In
           </Button>

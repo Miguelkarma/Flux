@@ -147,10 +147,10 @@ export const navMenu: MenuItem[] = [
 // Hero
 export const heroData = {
   sectionSubtitle: "IT asset management",
-  sectionTitle: "Presenting the next-gen equipment",
+  sectionTitle: "Presenting the lightweight equipment",
   decoTitle: "tracking system",
   sectionText:
-    "Next-gen IT asset management: Gain complete visibility into your hardware and software inventory and drive efficient resource allocation with our comprehensive platform.",
+    "Lightweight IT asset management: Gain complete visibility into your hardware inventory and drive efficient resource allocation with our comprehensive platform.",
 };
 
 // Feature
@@ -249,7 +249,7 @@ export const reviewData = {
       title: "We've reduced equipment losses by 85% thanks to Flux.",
       text: "Our IT department is running more efficiently with the help of Flux, resulting in better equipment utilization, improved maintenance scheduling",
       reviewAuthor: "Wade Warren",
-      date: "3 months ago",
+      date: "1 months ago",
     },
     {
       title: "Great service from the expert support system of Flux",
@@ -259,9 +259,9 @@ export const reviewData = {
     },
     {
       title: "Pricing is amazing for small IT departments around the world",
-      text: "AssetTrack's pricing is tailored to suit the needs of small IT departments worldwide, offering affordable and competitive rates that provide excellent value for",
+      text: "Flux pricing is tailored to suit the needs of small IT departments worldwide, offering affordable and competitive rates that provide excellent value for",
       reviewAuthor: "Marvin McKinney",
-      date: "3 months ago",
+      date: "4 months ago",
     },
   ],
 };

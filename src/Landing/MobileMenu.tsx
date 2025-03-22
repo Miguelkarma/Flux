@@ -19,13 +19,14 @@ const MobileMenu = ({ navMenu }: MobileMenuProps) => {
             </li>
           ))}
         </ul>
-        <Separator className="bg-muted-foreground/20" />
+        <Separator className="bg-slate-100/20" />
 
         <div className="flex items-center gap-2 mt-4">
           <Button variant="ghost" className="w-full">
             Sign In
           </Button>
-          <Button className="w-full">Log In</Button>
+          <Button className="relative w-full  text-white bg-black border border-white/30 rounded-full transition-all hover:bg-black 
+                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[66%] before:h-[4px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent hover:border-teal-200 before:rounded-full">Log In</Button>
         </div>
       </div>
     </>

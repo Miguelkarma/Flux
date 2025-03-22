@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { footerData } from "./constants/constants";
 
 export default function Footer() {
@@ -10,9 +11,9 @@ export default function Footer() {
         {/* Footer Content */}
         <div className="flex justify-between items-center py-6">
           {/* Flux Logo */}
-          <span className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent">
+          <Button className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[2px_2px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200 hover:border hover:border-slate-600">
             Flux
-          </span>
+          </Button>
 
           {/* Social Links */}
           <ul className="flex gap-5">
