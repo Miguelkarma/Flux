@@ -29,7 +29,6 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import { Toaster } from "sonner";
 import { Card } from "../ui/card";
 import {
   Popover,
@@ -102,16 +101,6 @@ export function AddEmployeeDrawer({ onEmployeeAdded }: AddEmployeeDrawerProps) {
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        duration={3000}
-        richColors={true}
-        theme="dark"
-        closeButton={true}
-        expand={true}
-        visibleToasts={3}
-        style={{ zIndex: 9999 }}
-      />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-12 bg-transparent border-0">

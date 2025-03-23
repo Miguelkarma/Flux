@@ -4,21 +4,32 @@ import DashboardParticles from "@/Animation/DashboardParticles";
 import { EmployeeTable } from "@/components/EmployeeComponents/table";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { useState, useEffect } from "react";
+import { Toaster } from "sonner";
 
 export default function Employee() {
-   const { theme } = useTheme();
+  const { theme } = useTheme();
 
-    const [isLoading, setIsLoading] = useState(true);
-   
-     useEffect(() => {
-       const timer = setTimeout(() => {
-         setIsLoading(false);
-       }, 2000);
-   
-       return () => clearTimeout(timer);
-     }, []);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <>
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors={true}
+        theme="dark"
+        closeButton={true}
+        expand={true}
+        visibleToasts={3}
+        style={{ zIndex: 100000 }}
+      />
       <div
         className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
       >
