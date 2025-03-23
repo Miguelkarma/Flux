@@ -1,8 +1,13 @@
+
 # Ignore environment variables
 .env
 
 # Ignore node_modules directory
 node_modules/
+
+# Ignore file movements
+src/
+
 
 # Playwright
 /test-results/
