@@ -22,6 +22,8 @@ interface UploadConfig {
     csv: string;
     json: string;
   };
+  // Add required fields for validation
+  requiredFields: string[];
 }
 
 interface UploadFileProps {
@@ -53,6 +55,26 @@ export function UploadFile({
     if (event.target.files) {
       setFile(event.target.files[0]);
     }
+  };
+
+  // Validate data has required fields for the collection
+  const validateData = (
+    data: any[]
+  ): { valid: boolean; missingFields?: string[] } => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return { valid: false };
+    }
+
+    // Check first item for required fields
+    const firstItem = data[0];
+    const missingFields = config.requiredFields.filter(
+      (field) => !Object.keys(firstItem).includes(field)
+    );
+
+    return {
+      valid: missingFields.length === 0,
+      missingFields: missingFields.length > 0 ? missingFields : undefined,
+    };
   };
 
   const handleUpload = async () => {
@@ -88,6 +110,20 @@ export function UploadFile({
           data = [data];
         }
 
+        // Validate data has required fields for this collection
+        const validation = validateData(data);
+        if (!validation.valid) {
+          let errorMessage = "Invalid data format for this import type.";
+          if (validation.missingFields && validation.missingFields.length > 0) {
+            errorMessage += ` Missing required fields: ${validation.missingFields.join(
+              ", "
+            )}`;
+          }
+          toast.error(errorMessage);
+          setLoading(false);
+          return;
+        }
+
         const targetCollection = collection(db, config.collectionName);
 
         const processedItems = data.map((item) => {
@@ -101,12 +137,20 @@ export function UploadFile({
             ...item,
             userId: user.uid,
             dateAdded: new Date().toISOString(),
-            email: user.email || "",
             assignedEmployee: "",
           });
         }
 
-        toast.success(`${processedItems.length} items uploaded successfully!`);
+        let successMessage = "";
+        if (config.collectionName === "employees") {
+          successMessage = `${processedItems.length} employees uploaded successfully!`;
+        } else if (config.collectionName === "it-assets") {
+          successMessage = `${processedItems.length} IT assets uploaded successfully!`;
+        } else {
+          successMessage = `${processedItems.length} items uploaded successfully!`;
+        }
+
+        toast.success(successMessage);
         setOpen(false);
         setFile(null);
         onDataAdded();
@@ -140,8 +184,13 @@ export function UploadFile({
         <DialogTitle className="text-primary">{config.title}</DialogTitle>
         <DialogDescription>
           Only CSV and JSON files are supported. Assigned employee data will be
-          excluded from uploads.
+          excluded from uploads. Files must include all required fields for{" "}
+          {config.collectionName === "employees" ? "employees" : "IT assets"}.
         </DialogDescription>
+        <div className="text-primary text-sm mb-2">
+          <span className="font-semibold">Required fields:</span>{" "}
+          {config.requiredFields.join(", ")}
+        </div>
         <p className="font-semibold text-primary">Format Example:</p>
         <div className="bg-card p-2 rounded-md text-sm text-primary overflow-auto">
           <p className="font-semibold">CSV Format Example:</p>
