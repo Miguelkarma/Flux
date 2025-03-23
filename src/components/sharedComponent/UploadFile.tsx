@@ -15,7 +15,26 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { toast } from "sonner";
 import { FileText, Upload } from "lucide-react";
 
-export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
+interface UploadConfig {
+  title: string;
+  collectionName: string;
+  formatExamples: {
+    csv: string;
+    json: string;
+  };
+}
+
+interface UploadFileProps {
+  onDataAdded: () => void;
+  config: UploadConfig;
+  buttonLabel?: string;
+}
+
+export function UploadFile({
+  onDataAdded,
+  config,
+  buttonLabel = "Upload File",
+}: UploadFileProps) {
   const [file, setFile] = React.useState<File | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [user, setUser] = React.useState(() => getAuth().currentUser);
@@ -42,6 +61,7 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
 
     if (!user) {
       console.error("User is not authenticated");
+      toast.error("You must be logged in to upload files");
       setLoading(false);
       return;
     }
@@ -63,22 +83,38 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
           data = JSON.parse(e.target.result as string);
         }
 
-        const assetsCollection = collection(db, "it-assets");
+        // Check if data is an array
+        if (!Array.isArray(data)) {
+          data = [data];
+        }
 
-        for (const asset of data) {
-          await addDoc(assetsCollection, {
-            ...asset,
+        const targetCollection = collection(db, config.collectionName);
+
+        const processedItems = data.map((item) => {
+          // Create a new object without the assignedEmployee field
+          const { assignedEmployee, ...rest } = item;
+          return rest;
+        });
+
+        for (const item of processedItems) {
+          await addDoc(targetCollection, {
+            ...item,
             userId: user.uid,
-            uploadedAt: new Date().toISOString(),
+            dateAdded: new Date().toISOString(),
+            email: user.email || "",
+            assignedEmployee: "",
           });
         }
 
-        toast.success("Upload successful!");
+        toast.success(`${processedItems.length} items uploaded successfully!`);
         setOpen(false);
-        onAssetsAdded();
+        setFile(null);
+        onDataAdded();
       } catch (error) {
         console.error("Error uploading file:", error);
-        toast.error("Upload failed. Please try again.");
+        toast.error(
+          "Upload failed. Please check your file format and try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -95,32 +131,29 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
           className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
           onClick={() => setOpen(true)}
         >
-          <span className="max-sm:hidden "> Upload File </span>
-          <Upload />
+          <span className="max-sm:hidden">{buttonLabel}</span>
+          <Upload className="h-5 w-5" />
         </Button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle className="text-primary">Bulk Add Assets</DialogTitle>
+        <DialogTitle className="text-primary">{config.title}</DialogTitle>
         <DialogDescription>
-          Only CSV and JSON files are supported.
+          Only CSV and JSON files are supported. Assigned employee data will be
+          excluded from uploads.
         </DialogDescription>
         <p className="font-semibold text-primary">Format Example:</p>
         <div className="bg-card p-2 rounded-md text-sm text-primary overflow-auto">
           <p className="font-semibold">CSV Format Example:</p>
           <pre className="whitespace-pre-wrap text-xs">
-            serialNo,assetName,assignedEmployee,email,status,type,
-            customType,location,dateAdded
+            {config.formatExamples.csv}
           </pre>
         </div>
 
         <div className="bg-card p-2 rounded-md text-sm mt-2 text-primary overflow-auto">
           <p className="font-semibold">JSON Format Example:</p>
           <pre className="whitespace-pre-wrap text-xs">
-            "serialNo": "12345", "assetName": "Laptop", "assignedEmployee":
-            "John Doe", "email": "johndoe@example.com", "status": "In Use",
-            "type": "Server", "customType": "Chair", "location": "Office",
-            "dateAdded": "2024-03-14"
+            {config.formatExamples.json}
           </pre>
         </div>
 
@@ -140,7 +173,11 @@ export function UploadFile({ onAssetsAdded }: { onAssetsAdded: () => void }) {
           <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-700" />
         </div>
 
-        <Button onClick={handleUpload} disabled={!file || loading || !user}>
+        <Button
+          onClick={handleUpload}
+          disabled={!file || loading || !user}
+          className="w-full"
+        >
           {loading ? "Uploading..." : "Upload"}
         </Button>
       </DialogContent>

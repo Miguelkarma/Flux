@@ -10,7 +10,7 @@ import {
   ColumnFiltersState,
   SortingState,
 } from "@tanstack/react-table";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,8 +27,18 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Card } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
 import { AddEmployeeDrawer } from "@/components/EmployeeComponents/AddEmployeeDrawer";
 import { columns, EmployeeData } from "./columns";
+import TableLoader from "@/Animation/TableLoader";
+import {
+  BulkDeleteDialog,
+  BulkDeleteTrigger,
+} from "@/components/sharedComponent/BulkDeleteDialog";
+import { useBulkDelete } from "@/hooks/assetHook/use-bulk-delete-hook";
+import { UploadFile } from "@/components/sharedComponent/UploadFile";
 
 import { db } from "@/firebase/firebase";
 import {
@@ -39,14 +49,11 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Card } from "../ui/card";
-import TableLoader from "@/Animation/TableLoader";
-
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export function EmployeeTable() {
+  // State management
   const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "hireDate", desc: false },
+    { id: "hireDate", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -61,25 +68,7 @@ export function EmployeeTable() {
   });
   const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(() => {
-    const auth = getAuth();
-
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("User is authenticated:", user.uid, user.email);
-        setUserEmail(user.email);
-        const unsubscribeFirestore = fetchEmployees(user.uid);
-        return () => unsubscribeFirestore && unsubscribeFirestore();
-      } else {
-        console.log("User is not authenticated");
-        setUserEmail(null);
-        setFirebaseData([]);
-      }
-    });
-
-    return () => unsubscribeAuth();
-  }, []);
-
+  // fetch employees from Firebase
   const fetchEmployees = React.useCallback((userId: string) => {
     setLoading(true);
     const q = query(
@@ -88,20 +77,35 @@ export function EmployeeTable() {
       orderBy("hireDate", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      console.log("Snapshot received:", snapshot.docs.length, "documents");
+    return onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as EmployeeData[];
-      console.log("Fetched data:", data);
       setFirebaseData(data);
       setLoading(false);
     });
-
-    return unsubscribe;
   }, []);
 
+  // authentication effect
+  React.useEffect(() => {
+    const auth = getAuth();
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserEmail(user.email);
+        const unsubscribeFirestore = fetchEmployees(user.uid);
+        return () => unsubscribeFirestore && unsubscribeFirestore();
+      } else {
+        setUserEmail(null);
+        setFirebaseData([]);
+      }
+    });
+
+    return () => unsubscribeAuth();
+  }, [fetchEmployees]);
+
+  // initialize table
   const table = useReactTable({
     data: firebaseData,
     columns,
@@ -123,21 +127,59 @@ export function EmployeeTable() {
     },
   });
 
+  // Get selected row IDs from the table
+  const selectedRowIds = table
+    .getFilteredSelectedRowModel()
+    .rows.map((row) => row.original.id);
+
+  // Use the bulk delete hook directly
+  const {
+    isOpen,
+    isDeleting,
+    itemTypeLabel,
+    openDeleteDialog,
+    closeDeleteDialog,
+    handleBulkDelete,
+  } = useBulkDelete({
+    collectionType: "employees",
+    onDeleteSuccess: () => setRowSelection({}),
+  });
+
+  // component to trigger refresh of employees
+  const refreshEmployees = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      fetchEmployees(user.uid);
+    }
+  };
+
+  // Upload config for employees
+  const uploadConfig = {
+    title: "Upload Employees",
+    collectionName: "employees",
+    formatExamples: {
+      csv: "employeeId,firstName,lastName,email,department,position,status,hireDate,location\nEMP001,John,Doe,john.doe@example.com,IT,Developer,Active,2023-01-15,Remote\nEMP002,Jane,Smith,jane.smith@example.com,Marketing,Specialist,Active,2023-02-20,New York",
+      json: '[{"employeeId":"EMP001","firstName":"John","lastName":"Doe","email":"john.doe@example.com","department":"IT","position":"Developer","status":"Active","hireDate":"2023-01-15","location":"Remote"},{"employeeId":"EMP002","firstName":"Jane","lastName":"Smith","email":"jane.smith@example.com","department":"Marketing","position":"Specialist","status":"Active","hireDate":"2023-02-20","location":"New York"}]',
+    },
+  };
+
   return (
     <>
       <div className="flex items-center justify-between">
         <Input
-          placeholder="Search Employee ID"
+          placeholder="Filter Employee ID"
           value={
             (table.getColumn("employeeId")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
             table.getColumn("employeeId")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]  "
-          icon={Filter}
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
         />
-        <div className="flex items-center space-x-1 max-sm:space-x-1">
+
+        <div className="flex items-center space-x-2 max-sm:space-x-1">
+          {/* columns dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -167,19 +209,38 @@ export function EmployeeTable() {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          {/* employee management buttons */}
           <AddEmployeeDrawer
-            onEmployeeAdded={() => {
-              const auth = getAuth();
-              const user = auth.currentUser;
-              if (user) {
-                fetchEmployees(user.uid);
-              }
-            }}
+            onEmployeeAdded={refreshEmployees}
             userEmail={userEmail}
           />
+          <UploadFile
+            onDataAdded={refreshEmployees}
+            config={uploadConfig}
+            buttonLabel="Import"
+          />
+
+          {/* bulk delete button and dialog */}
+          {selectedRowIds.length > 0 && (
+            <>
+              <BulkDeleteTrigger
+                selectedCount={selectedRowIds.length}
+                onClick={() => openDeleteDialog(selectedRowIds)}
+              />
+              <BulkDeleteDialog
+                isOpen={isOpen}
+                onOpenChange={closeDeleteDialog}
+                onDelete={handleBulkDelete}
+                isDeleting={isDeleting}
+                selectedCount={selectedRowIds.length}
+                itemType={itemTypeLabel}
+              />
+            </>
+          )}
         </div>
       </div>
 
+      {/* Data table */}
       <Card className="bg-card p-3 border-0 shadow-popover-foreground overflow-x-auto rounded-md border-b">
         <ScrollArea className="rounded-md transition">
           <Table className="w-full shadow-popover-foreground">
@@ -228,7 +289,7 @@ export function EmployeeTable() {
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No employees found.
+                    No results.
                   </TableCell>
                 </TableRow>
               )}
@@ -236,6 +297,8 @@ export function EmployeeTable() {
           </Table>
           <ScrollBar orientation="horizontal" className="scrollbar" />
         </ScrollArea>
+
+        {/* Pagination controls */}
         <div className="flex items-center justify-between px-2 py-2">
           <Button
             variant="outline"

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { UploadFile } from "@/components/AssetsComponents/UploadFile";
+import { UploadFile } from "@/components/sharedComponent/UploadFile";
 import { collection, addDoc } from "firebase/firestore";
 
 import Papa from "papaparse";

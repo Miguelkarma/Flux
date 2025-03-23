@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { format } from "date-fns";
 import {
   Sheet,
   SheetClose,
@@ -21,10 +22,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
-import { Toaster } from "sonner";
-import { Card } from "../ui/card";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Card } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+import { Toaster } from "sonner";
+
+// Icons
+import {
+  Plus,
+  Calendar as CalendarIcon,
   Laptop,
   Server,
   Monitor,
@@ -33,16 +43,11 @@ import {
   Printer,
   Computer,
 } from "lucide-react";
-import { Calendar as CalendarIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+
+// Form handling
 import { useForm, submitAddAssetForm } from "@/hooks/assetHook/add-form-hook";
 
+// Types
 interface Asset {
   serialNo: string;
   assetTag: string;
@@ -58,9 +63,11 @@ interface Asset {
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
+  userEmail: string | null;
 }
 
 export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
+  // Initial form values
   const initialValues: Asset = {
     serialNo: "",
     assetTag: "",
@@ -74,6 +81,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
     dateAdded: new Date().toISOString(),
   };
 
+  // Form state and handlers from custom hook
   const {
     formData,
     isSubmitting,
@@ -89,6 +97,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
     resetForm,
   } = useForm<Asset>(initialValues);
 
+  // Form submission handler
   const handleSubmit = (e: React.FormEvent) => {
     submitAddAssetForm({
       e,
@@ -98,10 +107,6 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
       onClose: () => setOpen(false),
       resetForm,
     });
-  };
-
-  const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(e);
   };
 
   return (
@@ -116,33 +121,26 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
         visibleToasts={3}
         style={{ zIndex: 9999 }}
       />
+
       <Sheet open={open} onOpenChange={setOpen}>
+        {/* Trigger button */}
         <SheetTrigger asChild>
           <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-12 bg-transparent border-0">
             <Button
               variant="outline"
               className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg mr-1"
             >
-              <span className="max-sm:hidden"> Add</span>{" "}
-              <Plus className=" h-4 w-4" />
+              <span className="max-sm:hidden">Add</span>
+              <Plus className="h-4 w-4" />
             </Button>
           </Card>
         </SheetTrigger>
 
+        {/* Drawer content */}
         <SheetContent
           side="bottom"
           className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
-          <Toaster
-            position="top-right"
-            duration={3000}
-            richColors={true}
-            theme="system"
-            closeButton={true}
-            expand={true}
-            visibleToasts={3}
-            style={{ zIndex: 9999 }}
-          />
           <SheetHeader>
             <SheetTitle className="text-popover-foreground">
               Add New Asset
@@ -152,7 +150,9 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
               is required.
             </SheetDescription>
           </SheetHeader>
+
           <form onSubmit={handleSubmit} className="grid gap-6 py-4">
+            {/* Serial Number */}
             <div className="grid gap-2">
               <Label htmlFor="serialNo">Serial Number *</Label>
               <Input
@@ -161,8 +161,11 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                 value={formData.serialNo}
                 onChange={handleInputChange}
                 placeholder="Enter serial number"
+                required
               />
             </div>
+
+            {/* Asset Tag */}
             <div className="grid gap-2">
               <Label htmlFor="assetTag">Asset Tag</Label>
               <Input
@@ -173,6 +176,8 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                 placeholder="Enter asset Tag"
               />
             </div>
+
+            {/* Asset Type */}
             <div className="grid gap-2">
               <Label htmlFor="type">Asset Type</Label>
               <Select
@@ -212,6 +217,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
               </Select>
             </div>
 
+            {/* Custom Type (conditionally rendered) */}
             {formData.type === "Other" && (
               <div className="grid gap-2">
                 <Label htmlFor="customType">Other Asset *</Label>
@@ -219,13 +225,14 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                   id="customType"
                   name="customType"
                   value={formData.customType}
-                  onChange={handleCustomTypeChange}
+                  onChange={handleInputChange}
                   placeholder="Enter custom asset type"
                   required
                 />
               </div>
             )}
 
+            {/* Location */}
             <div className="grid gap-2">
               <Label htmlFor="location">Location</Label>
               <Input
@@ -237,6 +244,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
               />
             </div>
 
+            {/* Assigned Employee */}
             <div className="grid gap-2">
               <Label htmlFor="employeeId">Assigned Employee</Label>
               <Select onValueChange={handleEmployeeChange}>
@@ -255,6 +263,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
               </Select>
             </div>
 
+            {/* Date Added */}
             <div className="grid gap-2">
               <Label htmlFor="dateAdded">Date Added</Label>
               <Popover>
@@ -280,6 +289,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
               </Popover>
             </div>
 
+            {/* Status */}
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>
               <Select
@@ -298,6 +308,8 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Action buttons */}
             <SheetFooter>
               <SheetClose asChild>
                 <Button type="button" className="bg-teal-950 text-foreground">
