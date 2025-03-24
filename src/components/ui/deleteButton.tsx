@@ -72,8 +72,9 @@ const StyledWrapper = styled.div`
     height: 2.3rem;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 3px 2px rgba(255, 0, 0, 0.8);
+    box-shadow: 0 2px 2px rgba(255, 0, 0, 0.8);
     transition-duration: 0.3s;
+    margin-left: 0.3em;
   }
   .bin-bottom {
     width: 15px;

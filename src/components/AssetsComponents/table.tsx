@@ -41,6 +41,7 @@ import { Card } from "../ui/card";
 import TableLoader from "@/Animation/TableLoader";
 import { BulkDeleteComponent } from "./BulkDeleteDialog";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { UploadFile } from "./UploadFile";
 
 type NewType = {
   id: string;
@@ -152,10 +153,10 @@ export function DataTable() {
           onChange={(event) =>
             table.getColumn("assetTag")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
         />
         {/* columns dropdown */}
-        <div className="flex items-center space-x-2 max-sm:space-x-1">
+        <div className="flex items-center space-x-1 max-sm:space-x-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -194,6 +195,15 @@ export function DataTable() {
               }
             }}
             userEmail={userEmail}
+          />
+          <UploadFile
+            onAssetsAdded={() => {
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (user) {
+                fetchAssets(user.uid);
+              }
+            }}
           />
 
           {/* Bulk Delete */}

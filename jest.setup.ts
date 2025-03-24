@@ -31,6 +31,37 @@ Object.defineProperty(globalThis, "ResizeObserver", {
   value: MockResizeObserver,
 });
 
+class MockFileReader {
+  onload: ((this: FileReader, ev: unknown) => unknown) | null = null;
+
+  readAsText(): void {}
+
+  abort() {}
+  addEventListener() {}
+  removeEventListener() {}
+  dispatchEvent() {
+    return true;
+  }
+
+  // Include static getters
+  static get EMPTY() {
+    return 0;
+  }
+  static get LOADING() {
+    return 1;
+  }
+  static get DONE() {
+    return 2;
+  }
+}
+
+// Replace the global FileReader with our mock
+Object.defineProperty(globalThis, "FileReader", {
+  configurable: true,
+  writable: true,
+  value: MockFileReader,
+});
+
 jest.mock("lucide-react", () => ({
   Check: () => "MockedCheckIcon",
 }));

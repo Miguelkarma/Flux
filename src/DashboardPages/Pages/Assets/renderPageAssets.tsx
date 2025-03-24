@@ -31,15 +31,15 @@ export default function Dashboard() {
       {/* Display the loader if loading */}
       {isLoading && <Loader />}
 
-      <div className="container mx-auto p-4 relative z-10">
+      <div className="container mx-auto p-4 relative z-10 ">
         <Header />
 
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-3 lg:col-span-3">
+        <div className="grid grid-cols-12 gap-2">
+          <div className="col-span-12 md:col-span-3 lg:col-span-3 ">
             <Sidebar />
           </div>
 
-          <div className="col-span-12 md:col-span-9 lg:col-span-9 p-3">
+          <div className="col-span-12 md:col-span-9 lg:col-span-9 p-2">
             <div className="grid gap-6">
               <DataTable />
             </div>
