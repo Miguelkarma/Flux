@@ -1,137 +1,153 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { UploadFile } from "@/components/sharedComponent/UploadFile";
-import { collection, addDoc } from "firebase/firestore";
-
-import Papa from "papaparse";
+import { renderHook, act } from "@testing-library/react";
+import { useUploadFile } from "@/hooks/tableHooks/use-upload-hook";
+import { getAuth } from "firebase/auth";
+import { addDoc } from "firebase/firestore";
 import { toast } from "sonner";
 
-interface UploadFileProps {
-  onAssetsAdded: () => void;
-}
-
-//mock UploadFile component
-jest.mock("@/components/AssetsComponents/UploadFile", () => ({
-  UploadFile: ({ onAssetsAdded }: UploadFileProps) => {
-    const handleClick = () => {
-      // Simulate the dialog opening behavior
-      document.body.innerHTML += `
-        <div>
-          <div>Bulk Add Assets</div>
-          <div>Only CSV and JSON files are supported</div>
-          <input aria-label="file" type="file" />
-          <button data-testid="dialog-upload-button">Upload</button>
-        </div>
-      `;
-
-      const uploadBtn = screen.getByTestId("dialog-upload-button");
-      uploadBtn.addEventListener("click", () => {
-        setTimeout(() => {
-          toast.success("Upload successful!");
-          onAssetsAdded();
-        }, 10);
-      });
-    };
-
-    return (
-      <div>
-        <button onClick={handleClick}>Upload File</button>
-        <div data-testid="upload-icon">Upload Icon</div>
-      </div>
-    );
-  },
-}));
-
-jest.mock("lucide-react", () => ({
-  FileText: () => <div data-testid="file-text-icon">FileText Icon</div>,
-  Upload: () => <div data-testid="upload-icon">Upload Icon</div>,
-}));
-
-jest.mock("firebase/firestore", () => ({
-  collection: jest.fn(),
-  addDoc: jest.fn(),
-}));
-
-jest.mock("firebase/auth", () => ({
-  getAuth: jest.fn(() => ({
-    currentUser: { uid: "test-user-id" },
-  })),
-  onAuthStateChanged: jest.fn((auth, callback) => {
-    callback(auth.currentUser);
-    return jest.fn();
-  }),
-}));
-
-jest.mock("papaparse", () => ({
-  parse: jest.fn(),
-}));
-
+// mock dependencies
+jest.mock("firebase/auth");
+jest.mock("firebase/firestore");
 jest.mock("sonner", () => ({
   toast: {
     success: jest.fn(),
     error: jest.fn(),
   },
 }));
-
-jest.mock("@/firebase/firebase", () => ({
-  db: {},
+jest.mock("papaparse", () => ({
+  parse: jest.fn((_content, _options) => ({
+    data: [{ id: "1", name: "test" }],
+  })),
 }));
 
-describe("@/components/AssetsComponents/UploadFile", () => {
-  const mockOnAssetsAdded = jest.fn();
+// proper filereader mock
+class MockFileReader {
+  static readonly EMPTY = 0;
+  static readonly LOADING = 1;
+  static readonly DONE = 2;
+
+  EMPTY = 0;
+  LOADING = 1;
+  DONE = 2;
+
+  onload: any = null;
+  result: string | null = null;
+  readyState: number = MockFileReader.EMPTY;
+
+  readAsText(_file: Blob) {
+    this.readyState = MockFileReader.LOADING;
+
+    setTimeout(() => {
+      this.readyState = MockFileReader.DONE;
+      this.result = JSON.stringify([{ id: "1", name: "test" }]);
+
+      if (this.onload) {
+        this.onload({ target: this });
+      }
+    }, 0);
+  }
+}
+
+// replace global filereader
+global.FileReader = MockFileReader as any;
+
+describe("useUploadFile hook", () => {
+  const mockConfig = {
+    title: "Test Upload",
+    collectionName: "employees",
+    formatExamples: {
+      csv: "id,name",
+      json: '[{"id":"1","name":"test"}]',
+    },
+    requiredFields: ["id", "name"],
+    uniqueField: "id",
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    document.body.innerHTML = "";
   });
 
-  test("renders upload button and dialog", () => {
-    render(<UploadFile onAssetsAdded={mockOnAssetsAdded} />);
+  test("initializes with default values", () => {
+    // arrange & act
+    const { result } = renderHook(() => useUploadFile(mockConfig));
 
-    const uploadButton = screen.getByText(/Upload File/i);
-    expect(uploadButton).toBeInTheDocument();
-
-    // Open dialog
-    fireEvent.click(uploadButton);
-
-    // Check dialog content is visible
-    expect(screen.getByText(/Bulk Add Assets/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Only CSV and JSON files are supported/i)
-    ).toBeInTheDocument();
+    // assert
+    expect(result.current.file).toBeNull();
+    expect(result.current.loading).toBe(false);
+    expect(result.current.user).toBeTruthy();
   });
 
-  test("handles file upload for CSV files", async () => {
-    // Mock parse result
-    (Papa.parse as jest.Mock).mockReturnValue({
-      data: [{ serialNo: "12345", assetName: "Test Asset" }],
+  test("handles file change", () => {
+    // arrange
+    const { result } = renderHook(() => useUploadFile(mockConfig));
+    const file = new File(["test"], "test.json", { type: "application/json" });
+    const event = {
+      target: { files: [file] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+    // act
+    act(() => {
+      result.current.handleFileChange(event);
     });
 
-    const mockCollectionRef = "assets-collection-ref";
-    (collection as jest.Mock).mockReturnValue(mockCollectionRef);
-
-    render(<UploadFile onAssetsAdded={mockOnAssetsAdded} />);
-
-    fireEvent.click(screen.getByText(/Upload File/i));
-
-    // Upload a file
-    const file = new File(["test-content"], "test.csv", { type: "text/csv" });
-    const fileInput = screen.getByLabelText(/file/i, { selector: "input" });
-    fireEvent.change(fileInput, { target: { files: [file] } });
-
-    const uploadButton = screen.getByTestId("dialog-upload-button");
-    fireEvent.click(uploadButton);
-
-    await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith("Upload successful!");
-      expect(mockOnAssetsAdded).toHaveBeenCalled();
-    });
+    // assert
+    expect(result.current.file).toBe(file);
   });
 
-  test("mocks are properly set up", () => {
-    expect(collection).toBeDefined();
-    expect(addDoc).toBeDefined();
-    expect(toast.success).toBeDefined();
-    expect(Papa.parse).toBeDefined();
+  test("validates data correctly", async () => {
+    // arrange
+    const { result } = renderHook(() => useUploadFile(mockConfig));
+    const mockOnSuccess = jest.fn();
+    const file = new File(["test"], "test.json", { type: "application/json" });
+
+    // act - set file and trigger upload
+    act(() => {
+      result.current.handleFileChange({ target: { files: [file] } } as any);
+    });
+
+    await act(async () => {
+      await result.current.handleUpload(mockOnSuccess);
+    });
+
+    // assert
+    expect(addDoc).toHaveBeenCalled();
+    expect(toast.success).toHaveBeenCalled();
+    expect(mockOnSuccess).toHaveBeenCalled();
+  });
+
+  test("handles upload with no file", async () => {
+    // arrange
+    const { result } = renderHook(() => useUploadFile(mockConfig));
+    const mockOnSuccess = jest.fn();
+
+    // act
+    await act(async () => {
+      await result.current.handleUpload(mockOnSuccess);
+    });
+
+    // assert
+    expect(addDoc).not.toHaveBeenCalled();
+    expect(mockOnSuccess).not.toHaveBeenCalled();
+  });
+
+  test("handles upload with no user", async () => {
+    // arrange
+    (getAuth as jest.Mock).mockReturnValueOnce({ currentUser: null });
+    const { result } = renderHook(() => useUploadFile(mockConfig));
+    const mockOnSuccess = jest.fn();
+    const file = new File(["test"], "test.json", { type: "application/json" });
+
+    // act
+    act(() => {
+      result.current.handleFileChange({ target: { files: [file] } } as any);
+    });
+
+    await act(async () => {
+      await result.current.handleUpload(mockOnSuccess);
+    });
+
+    // assert
+    expect(toast.error).toHaveBeenCalled();
+    expect(addDoc).not.toHaveBeenCalled();
+    expect(mockOnSuccess).not.toHaveBeenCalled();
   });
 });
