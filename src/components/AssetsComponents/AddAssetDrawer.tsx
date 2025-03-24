@@ -45,7 +45,7 @@ import {
 } from "lucide-react";
 
 // Form handling
-import { useForm, submitAddAssetForm } from "@/hooks/assetHook/add-form-hook";
+import { useForm, submitAddAssetForm } from "@/hooks/tableHooks/add-form-hook";
 
 // Types
 interface Asset {

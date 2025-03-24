@@ -37,7 +37,7 @@ import { Toaster } from "sonner";
 import {
   useFormState,
   submitAssetForm,
-} from "@/hooks/assetHook/edit-form-hook";
+} from "@/hooks/tableHooks/edit-form-hook";
 
 interface EditAssetDrawerProps {
   asset: {

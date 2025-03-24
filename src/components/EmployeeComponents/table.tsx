@@ -39,7 +39,7 @@ import {
   BulkDeleteDialog,
   BulkDeleteTrigger,
 } from "@/components/sharedComponent/BulkDeleteDialog";
-import { useBulkDelete } from "@/hooks/assetHook/use-bulk-delete-hook";
+import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 import { UploadFile } from "@/components/sharedComponent/UploadFile";
 
 import { db } from "@/firebase/firebase";
@@ -173,6 +173,7 @@ export function EmployeeTable() {
       "email",
       "department",
     ],
+    uniqueField: "employeeId",
   };
 
   return (

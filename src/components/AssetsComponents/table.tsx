@@ -38,7 +38,7 @@ import {
   BulkDeleteTrigger,
 } from "../sharedComponent/BulkDeleteDialog";
 import { UploadFile } from "../sharedComponent/UploadFile";
-import { useBulkDelete } from "@/hooks/assetHook/use-bulk-delete-hook";
+import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 
 import { db } from "@/firebase/firebase";
 import {
@@ -178,6 +178,7 @@ export function DataTable() {
       json: '[{"serialNo":"12345","assetTag":"LAP-001","type":"Laptop","location":"Office","status":"Active"},\n{"serialNo":"67890","assetTag":"MON-002","type":"Monitor","location":"Remote","status":"Active"}]',
     },
     requiredFields: ["serialNo", "assetTag", "type", "location", "status"],
+    uniqueField: "serialNo",
   };
 
   return (

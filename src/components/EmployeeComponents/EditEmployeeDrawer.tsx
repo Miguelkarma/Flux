@@ -35,7 +35,7 @@ import type { EmployeeData } from "./columns";
 import {
   useFormState,
   submitEmployeeForm,
-} from "@/hooks/assetHook/edit-form-hook";
+} from "@/hooks/tableHooks/edit-form-hook";
 
 interface EditEmployeeDrawerProps {
   employee: EmployeeData;
@@ -118,7 +118,10 @@ export function EditEmployeeDrawer({
               email are required.
             </SheetDescription>
           </SheetHeader>
-          <form onSubmit={handleSubmit} className="grid gap-6 py-4 max-sm:py-1 max-sm:gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="grid gap-6 py-4 max-sm:py-1 max-sm:gap-2"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="employeeId">Employee ID</Label>

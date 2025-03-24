@@ -7,13 +7,13 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const Sheet = SheetPrimitive.Root;
+const Sheet = SheetPrimitive.Root
 
-const SheetTrigger = SheetPrimitive.Trigger;
+const SheetTrigger = SheetPrimitive.Trigger
 
-const SheetClose = SheetPrimitive.Close;
+const SheetClose = SheetPrimitive.Close
 
-const SheetPortal = SheetPrimitive.Portal;
+const SheetPortal = SheetPrimitive.Portal
 
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
@@ -27,7 +27,7 @@ const SheetOverlay = React.forwardRef<
     {...props}
     ref={ref}
   />
-));
+))
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
@@ -99,7 +99,7 @@ const SheetFooter = ({
     )}
     {...props}
   />
-);
+)
 SheetFooter.displayName = "SheetFooter"
 
 const SheetTitle = React.forwardRef<
@@ -111,7 +111,7 @@ const SheetTitle = React.forwardRef<
     className={cn("text-lg font-semibold text-foreground", className)}
     {...props}
   />
-));
+))
 SheetTitle.displayName = SheetPrimitive.Title.displayName
 
 const SheetDescription = React.forwardRef<
@@ -123,7 +123,7 @@ const SheetDescription = React.forwardRef<
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
-));
+))
 SheetDescription.displayName = SheetPrimitive.Description.displayName
 
 export {

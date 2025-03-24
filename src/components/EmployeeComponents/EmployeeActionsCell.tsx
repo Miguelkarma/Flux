@@ -46,6 +46,7 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
 
     try {
       setIsDeleting(true);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       const employeeRef = doc(db, "employees", employee.id);
       await deleteDoc(employeeRef);
       toast.success(

@@ -7,6 +7,7 @@ import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import Loader from "@/Animation/SmallLoader";
 import { useTheme } from "@/hooks/ThemeProvider"; // Import theme hook
+import { Toaster } from "sonner";
 
 export default function Dashboard() {
   const { theme } = useTheme(); // Get the actual theme state
@@ -21,31 +22,44 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden ${
-        theme === "dark" ? "dark" : ""
-      }`}
-    >
-      <DashboardParticles />
+    <>
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors={true}
+        theme="dark"
+        closeButton={true}
+        expand={true}
+        visibleToasts={3}
+        style={{ zIndex: 100000 }}
+      />
 
-      {/* Display the loader if loading */}
-      {isLoading && <Loader />}
+      <div
+        className={`min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden ${
+          theme === "dark" ? "dark" : ""
+        }`}
+      >
+        <DashboardParticles />
 
-      <div className="container mx-auto p-4 relative z-10 ">
-        <Header />
+        {/* Display the loader if loading */}
+        {isLoading && <Loader />}
 
-        <div className="grid grid-cols-12 gap-2">
-          <div className="col-span-12 md:col-span-3 lg:col-span-3 ">
-            <Sidebar />
-          </div>
+        <div className="container mx-auto p-4 relative z-10 ">
+          <Header />
 
-          <div className="col-span-12 md:col-span-9 lg:col-span-9 p-2">
-            <div className="grid gap-6">
-              <DataTable />
+          <div className="grid grid-cols-12 gap-2">
+            <div className="col-span-12 md:col-span-3 lg:col-span-3 ">
+              <Sidebar />
+            </div>
+
+            <div className="col-span-12 md:col-span-9 lg:col-span-9 p-2">
+              <div className="grid gap-6">
+                <DataTable />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
