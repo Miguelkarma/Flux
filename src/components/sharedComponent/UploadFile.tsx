@@ -14,6 +14,7 @@ import Papa from "papaparse";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { toast } from "sonner";
 import { FileText, Upload } from "lucide-react";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 interface UploadConfig {
   title: string;
@@ -192,19 +193,24 @@ export function UploadFile({
           {config.requiredFields.join(", ")}
         </div>
         <p className="font-semibold text-primary">Format Example:</p>
-        <div className="bg-card p-2 rounded-md text-sm text-primary overflow-auto">
-          <p className="font-semibold">CSV Format Example:</p>
-          <pre className="whitespace-pre-wrap text-xs">
-            {config.formatExamples.csv}
-          </pre>
-        </div>
-
-        <div className="bg-card p-2 rounded-md text-sm mt-2 text-primary overflow-auto">
-          <p className="font-semibold">JSON Format Example:</p>
-          <pre className="whitespace-pre-wrap text-xs">
-            {config.formatExamples.json}
-          </pre>
-        </div>
+        <ScrollArea className="rounded-md transition">
+          <div className="bg-card p-2 rounded-md text-sm text-primary overflow-auto">
+            <p className="font-semibold">CSV Format Example:</p>
+            <pre className="whitespace-pre-wrap text-xs">
+              {config.formatExamples.csv}
+            </pre>
+          </div>
+          <ScrollBar orientation="horizontal" className="scrollbar" />
+        </ScrollArea>
+        <ScrollArea className="rounded-md transition">
+          <div className="bg-card p-2 rounded-md text-sm mt-2 text-primary overflow-auto">
+            <p className="font-semibold">JSON Format Example:</p>
+            <pre className="whitespace-pre-wrap text-xs">
+              {config.formatExamples.json}
+            </pre>
+          </div>
+          <ScrollBar orientation="horizontal" className="scrollbar" />
+        </ScrollArea>
 
         {!user && (
           <p className="text-red-500">Please log in to upload files.</p>
