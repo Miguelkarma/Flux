@@ -1,4 +1,6 @@
 import "@testing-library/jest-dom";
+import "jest-styled-components";
+
 import { TextEncoder, TextDecoder as NodeTextDecoder } from "util";
 
 globalThis.TextEncoder = TextEncoder as typeof globalThis.TextEncoder;
@@ -17,7 +19,6 @@ globalThis.matchMedia =
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   }));
-
 class MockResizeObserver {
   observe() {}
   unobserve() {}

@@ -304,7 +304,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                   <SelectItem value="Available">Available</SelectItem>
                   <SelectItem value="Maintenance">Maintenance</SelectItem>
                   <SelectItem value="Retired">Retired</SelectItem>
-                  <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
+                  <SelectItem value="Lost">Lost</SelectItem>
                 </SelectContent>
               </Select>
             </div>

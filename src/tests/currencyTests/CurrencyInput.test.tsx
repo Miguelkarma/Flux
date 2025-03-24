@@ -2,23 +2,9 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import CurrencyInput from "@/DashboardPages/Pages/CurrencyExchange/CurrencyInput";
 
-// Mocking the Dialog components to simplify testing
-jest.mock("@/components/ui/dialog", () => ({
-  Dialog: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-  DialogTrigger: ({ children }: { children: React.ReactNode }) => (
-    <button>{children}</button>
-  ),
-  DialogContent: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-  DialogHeader: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
-  DialogTitle: ({ children }: { children: React.ReactNode }) => (
-    <h2>{children}</h2>
-  ),
+// Mock the lucide-react module
+jest.mock("lucide-react", () => ({
+  X: () => <div data-testid="x-icon">X</div>,
 }));
 
 const mockOnChange = jest.fn();
@@ -29,6 +15,11 @@ const mockCurrencies = [
 ];
 
 describe("CurrencyInput Component", () => {
+  beforeEach(() => {
+    // Clear mock calls between tests
+    mockOnChange.mockClear();
+  });
+
   test("renders correctly with select type", () => {
     render(
       <CurrencyInput
@@ -39,48 +30,8 @@ describe("CurrencyInput Component", () => {
         type="select"
       />
     );
-    // Check if the default currency is displayed
-    expect(
-      screen.getAllByText("USD - United States Dollar")[0]
-    ).toBeInTheDocument();
-  });
 
-  test("opens currency selection dialog and filters correctly", () => {
-    render(
-      <CurrencyInput
-        label="From"
-        value=""
-        onChange={mockOnChange}
-        currencies={mockCurrencies}
-        type="select"
-      />
-    );
-
-    // Open the currency selection dialog
-    fireEvent.click(screen.getByText("Select currency"));
-    expect(screen.getByText("Select a currency")).toBeInTheDocument();
-
-    // Filter the currency list
-    fireEvent.change(screen.getByPlaceholderText("Search currency..."), {
-      target: { value: "Euro" },
-    });
-    expect(screen.getByText("EUR - Euro")).toBeInTheDocument();
-  });
-
-  test("selects a currency and triggers onChange", () => {
-    render(
-      <CurrencyInput
-        label="From"
-        value=""
-        onChange={mockOnChange}
-        currencies={mockCurrencies}
-        type="select"
-      />
-    );
-
-    fireEvent.click(screen.getByText("Select currency"));
-    fireEvent.click(screen.getByText("EUR - Euro")); // Select currency
-    expect(mockOnChange).toHaveBeenCalledWith("EUR");
+    expect(screen.getByText("USD - United States Dollar")).toBeInTheDocument();
   });
 
   test("renders input type correctly and allows number input", () => {
@@ -96,7 +47,75 @@ describe("CurrencyInput Component", () => {
     const input = screen.getByPlaceholderText("Enter amount");
     expect(input).toBeInTheDocument();
 
-    fireEvent.change(input, { target: { value: "200" } }); // Simulate input change
+    fireEvent.change(input, { target: { value: "200" } });
     expect(mockOnChange).toHaveBeenCalledWith("200");
+  });
+
+  // Separate the dialog tests to handle potential issues
+  describe("Dialog functionality", () => {
+    test("opens currency selection dialog", () => {
+      render(
+        <CurrencyInput
+          label="From"
+          value=""
+          onChange={mockOnChange}
+          currencies={mockCurrencies}
+          type="select"
+        />
+      );
+
+      // Open the currency selection dialog
+      fireEvent.click(screen.getByText("Select currency"));
+
+      // Check if the dialog title is visible
+      expect(screen.getByText("Select a currency")).toBeInTheDocument();
+    });
+
+    test("filters currencies correctly", () => {
+      render(
+        <CurrencyInput
+          label="From"
+          value=""
+          onChange={mockOnChange}
+          currencies={mockCurrencies}
+          type="select"
+        />
+      );
+
+      // Open the dialog
+      fireEvent.click(screen.getByText("Select currency"));
+
+      // Filter the currency list
+      fireEvent.change(screen.getByPlaceholderText("Search currency..."), {
+        target: { value: "Euro" },
+      });
+
+      // Check if only Euro is visible
+      expect(screen.getByText("EUR - Euro")).toBeInTheDocument();
+      expect(
+        screen.queryByText("USD - United States Dollar")
+      ).not.toBeInTheDocument();
+    });
+
+    test("selects a currency and triggers onChange", () => {
+      render(
+        <CurrencyInput
+          label="From"
+          value=""
+          onChange={mockOnChange}
+          currencies={mockCurrencies}
+          type="select"
+        />
+      );
+
+      // Open the dialog
+      fireEvent.click(screen.getByText("Select currency"));
+
+      // Select currency
+      fireEvent.click(screen.getByText("EUR - Euro"));
+
+      // Check if onChange was called with the right value
+      expect(mockOnChange).toHaveBeenCalledWith("EUR");
+    });
   });
 });

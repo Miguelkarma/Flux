@@ -17,7 +17,8 @@ const config: Config = {
     "^@/assets/(.*)$": "<rootDir>/src/__mocks__/fileMock.js",
     "^@/components/(.*)$": "<rootDir>/src/components/$1",
   },
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts", "jest-styled-components"],
+
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   verbose: true,
 };
