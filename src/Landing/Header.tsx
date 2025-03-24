@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -50,22 +50,56 @@ const sharedTransition = {
 
 const Header = () => {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [activeHoverItem, setActiveHoverItem] = useState<number | null>(null);
 
-  const handleScroll = (
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show navbar when scrolling up, hide when scrolling down
+      if (currentScrollY < lastScrollY || currentScrollY < 50) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  const handleNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
     e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+
+    // Reset hover state
+    setActiveHoverItem(null);
+
+    if (href.startsWith("#")) {
+      const targetId = href.substring(1);
+      const target = document.getElementById(targetId);
+
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate(href);
     }
   };
 
   return (
-    <header
+    <motion.header
       id="header"
-      className="border-b shadow-3xl border-teal-900 h-16 md:h-20 lg:h-22 relative"
+      className="border-b shadow-3xl border-teal-900 h-16 md:h-20 lg:h-22 fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur"
+      initial={{ y: 0 }}
+      animate={{ y: visible ? 0 : -100 }}
+      transition={{ duration: 0.3 }}
     >
       <div className="container mx-auto h-full flex items-center justify-between">
         {/* Logo */}
@@ -79,13 +113,9 @@ const Header = () => {
         </Button>
 
         {/* Desktop Navigation */}
-        <motion.div
-          className="absolute left-1/2 transform -translate-x-1/2 hidden lg:block"
-          initial="initial"
-          whileHover="hover"
-        >
-          <NavigationMenu className="text-sm ">
-            <NavigationMenuList className="flex items-center gap-1 relative z-10 ">
+        <div className="absolute left-1/2 transform -translate-x-1/2 hidden lg:block">
+          <NavigationMenu className="text-sm">
+            <NavigationMenuList className="flex items-center gap-1 relative z-10">
               {navMenu.map(({ href, label, icon }, index) => {
                 const gradients = [
                   "radial-gradient(circle, rgba(153, 233, 242, 0.5) 0%, rgba(102, 204, 214, 0.06) 70%, rgba(77, 182, 194, 0) 80%)",
@@ -94,13 +124,18 @@ const Header = () => {
                 const gradient = gradients[index % gradients.length];
                 const iconColor = iconColors[index % iconColors.length];
 
+                const isHovering = activeHoverItem === index;
+
                 return (
-                  <NavigationMenuItem key={index} className="relative ">
+                  <NavigationMenuItem key={index} className="relative">
                     <motion.div
-                      className="block rounded-xl overflow-visible relative "
+                      className="block rounded-xl overflow-visible relative"
                       style={{ perspective: "600px" }}
-                      whileHover="hover"
                       initial="initial"
+                      animate={isHovering ? "hover" : "initial"}
+                      onHoverStart={() => setActiveHoverItem(index)}
+                      onHoverEnd={() => setActiveHoverItem(null)}
+                      onClick={() => setActiveHoverItem(null)}
                     >
                       {/* Glow effect */}
                       <motion.div
@@ -112,11 +147,12 @@ const Header = () => {
                           borderRadius: "16px",
                         }}
                       />
+
                       {/* Front face */}
                       <motion.a
                         href={href || "#"}
-                        onClick={(e) => handleScroll(e, href || "#")}
-                        className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-foreground  transition-colors rounded-xl font-normal "
+                        onClick={(e) => handleNavigation(e, href || "#")}
+                        className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-foreground transition-colors rounded-xl font-normal"
                         variants={itemVariants}
                         transition={sharedTransition}
                         style={{
@@ -137,7 +173,7 @@ const Header = () => {
                       {/* Back face */}
                       <motion.a
                         href={href || "#"}
-                        onClick={(e) => handleScroll(e, href || "#")}
+                        onClick={(e) => handleNavigation(e, href || "#")}
                         className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-muted-foreground text-teal-500 transition-colors rounded-xl"
                         variants={backVariants}
                         transition={sharedTransition}
@@ -162,10 +198,10 @@ const Header = () => {
               })}
             </NavigationMenuList>
           </NavigationMenu>
-        </motion.div>
+        </div>
 
         {/* Auth Buttons */}
-        <div className="hidden lg:flex gap-2 !rounded-none hover:!rounded-full ">
+        <div className="hidden lg:flex gap-2 !rounded-none hover:!rounded-full">
           <Button
             variant="ghost"
             onClick={() => {
@@ -206,7 +242,7 @@ const Header = () => {
           </Popover>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 };
 

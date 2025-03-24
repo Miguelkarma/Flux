@@ -33,7 +33,7 @@ export default function Hero() {
   );
 
   return (
-    <section ref={sectionRef} className="py-10 md:py-16">
+    <section ref={sectionRef} className="py-10 md:py-16 mt-24">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
