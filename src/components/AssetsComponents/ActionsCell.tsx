@@ -47,7 +47,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
       setIsDeleting(true);
       const assetRef = doc(db, "it-assets", asset.id);
       await deleteDoc(assetRef);
-      toast.success(`${asset.assetName || "Asset"} deleted successfully.`);
+      toast.success(`${asset.assetTag || "Asset"} deleted successfully.`);
       setIsDeleteDialogOpen(false);
       onAssetUpdated(); // Refresh data after deleting
     } catch (error) {
@@ -60,12 +60,12 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
     }
   };
 
-  const handleCopyEmail = async () => {
+  const handleCopyAssetName = async () => {
     try {
-      await navigator.clipboard.writeText(asset.email || "N/A");
-      toast.success("Email copied to clipboard");
+      await navigator.clipboard.writeText(asset.assetTag || "N/A");
+      toast.success("Asset Tag copied to clipboard");
     } catch (error) {
-      toast.error("Failed to copy Email");
+      toast.error("Failed to copy Asset Tag");
     }
   };
 
@@ -107,11 +107,11 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
 
           {/* Copy Emails */}
           <DropdownMenuItem
-            onClick={handleCopyEmail}
+            onClick={handleCopyAssetName}
             className="flex items-center gap-2"
           >
             <Copy className="h-4 w-4" />
-            <span>Copy Email</span>
+            <span>Copy Asset Name</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -45,11 +45,13 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 export type FirestoreData = {
   id: string;
   serialNo: string;
-  assetName: string;
+  assetTag: string;
+  type: string;
+  customType?: string;
+  location: string;
   email: string;
   assignedEmployee: string;
   status: string;
-  userId: string;
   dateAdded: string;
 };
 

@@ -6,10 +6,10 @@ import { DataTable } from "../../../components/AssetsComponents/table";
 import Header from "@/components/DashboardComponents/Header";
 import Sidebar from "@/components/Sidebar";
 import Loader from "@/Animation/SmallLoader";
-import { useTheme } from "@/hooks/ThemeProvider";
+import { useTheme } from "@/hooks/ThemeProvider"; // Import theme hook
 
 export default function Dashboard() {
-  const { theme } = useTheme();
+  const { theme } = useTheme(); // Get the actual theme state
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +22,9 @@ export default function Dashboard() {
 
   return (
     <div
-      className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
+      className={`min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden ${
+        theme === "dark" ? "dark" : ""
+      }`}
     >
       <DashboardParticles />
 
