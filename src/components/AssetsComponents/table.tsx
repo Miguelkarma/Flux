@@ -42,7 +42,7 @@ import TableLoader from "@/Animation/TableLoader";
 import { BulkDeleteComponent } from "./BulkDeleteDialog";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
-export type FirestoreData = {
+type NewType = {
   id: string;
   serialNo: string;
   assetTag: string;
@@ -54,6 +54,8 @@ export type FirestoreData = {
   status: string;
   dateAdded: string;
 };
+
+export type FirestoreData = NewType;
 
 export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([
