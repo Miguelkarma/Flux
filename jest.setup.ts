@@ -17,7 +17,6 @@ globalThis.matchMedia =
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   }));
-
 class MockResizeObserver {
   observe() {}
   unobserve() {}
