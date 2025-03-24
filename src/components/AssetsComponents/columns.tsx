@@ -1,23 +1,39 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+
+import {
+  ArrowUpDown,
+  Laptop,
+  Server,
+  Monitor,
+  Keyboard,
+  Mouse,
+  Printer,
+  Computer,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ActionsCell from "./ActionsCell";
 
 export type FirestoreData = {
   id: string;
   serialNo: string;
-  assetName: string;
+  assetTag: string;
+  type: string;
+  customType?: string;
+  location: string;
   email: string;
   assignedEmployee: string;
   status: string;
   dateAdded: string;
 };
 
-export const columns: ColumnDef<FirestoreData>[] = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const columns: ColumnDef<FirestoreData, any>[] = [
   {
     id: "select",
+
+    accessorFn: (row) => row.id,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -48,11 +64,66 @@ export const columns: ColumnDef<FirestoreData>[] = [
     ),
   },
   {
-    accessorKey: "assetName",
-    header: "Asset Name",
+    accessorKey: "assetTag",
+    header: "Asset Tag",
     cell: ({ row }) => (
       <div className="capitalize text-center text-secondary-foreground">
-        {row.getValue<string>("assetName") || "N/A"}
+        {row.getValue<string>("assetTag") || "N/A"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => {
+      const type = row.getValue<string>("type") || "N/A";
+
+      const typeStyles: Record<string, string> = {
+        Laptop: "shadow-teal-500",
+        Computer: "shadow-blue-500",
+        Server: "shadow-green-500",
+        Monitor: "shadow-purple-500",
+        Keyboard: "shadow-orange-500",
+        Mouse: "shadow-yellow-500",
+        Printer: "shadow-pink-500",
+        Other: "shadow-gray-500",
+      };
+
+      const icon =
+        type === "Laptop" ? (
+          <Laptop size={18} />
+        ) : type === "Computer" ? (
+          <Computer size={18} />
+        ) : type === "Server" ? (
+          <Server size={18} />
+        ) : type === "Monitor" ? (
+          <Monitor size={18} />
+        ) : type === "Keyboard" ? (
+          <Keyboard size={18} />
+        ) : type === "Mouse" ? (
+          <Mouse size={18} />
+        ) : type === "Printer" ? (
+          <Printer size={18} />
+        ) : null;
+
+      return (
+        <div className="flex items-center space-x-2">
+          <div
+            className={`p-2 bg-primary-foreground rounded-lg shadow-md ${typeStyles[type]}`}
+          >
+            {icon}
+          </div>
+          <span className={`font-medium ${typeStyles[type]}`}>{type}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
+    cell: ({ row }) => (
+      <div className="capitalize text-center text-secondary-foreground">
+        {row.getValue<string>("location") || "N/A"}
       </div>
     ),
   },
@@ -68,7 +139,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="lowercase text-secondary-foreground">
+      <div className="text-secondary-foreground">
         {row.getValue<string>("email") || "N/A"}
       </div>
     ),
@@ -86,7 +157,7 @@ export const columns: ColumnDef<FirestoreData>[] = [
     accessorKey: "dateAdded",
     header: ({ column }) => (
       <Button
-        className="font-extrabold "
+        className="font-extrabold"
         variant="ghost"
         onClick={() => column.toggleSorting()}
       >
@@ -118,25 +189,21 @@ export const columns: ColumnDef<FirestoreData>[] = [
 
       const statusColors: Record<string, string> = {
         Active:
-          "text-white bg-gradient-to-b from-black via-red-700 to-red-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-green-500 rounded-lg",
         Maintenance:
-          "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
         Retired:
-          "text-white bg-gradient-to-b from-black/80 via-yellow-700 to-yellow-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-purple-500 rounded-lg",
         Available:
-          "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
-        "Lost/Stolen":
-        "text-white bg-gradient-to-b from-black/80 via-teal-700 to-teal-900 border-0 text-sm font-medium",
+          "text-secondary-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
+        Lost: "text-secondary-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
       };
 
       const badgeClass =
         statusColors[status] || "bg-gray-500 text-secondary-foreground";
 
       return (
-        <Badge
-          variant="outline"
-          className={`capitalize text-center ${badgeClass}`}
-        >
+        <Badge className={`capitalize text-center ${badgeClass}`}>
           {status}
         </Badge>
       );
@@ -144,12 +211,15 @@ export const columns: ColumnDef<FirestoreData>[] = [
   },
   {
     id: "actions",
-    enableHiding: false,
+
+    accessorFn: (row) => row.id,
+    header: "Actions",
     cell: ({ row }) => (
       <ActionsCell
         asset={row.original}
         onAssetUpdated={() => console.log("Asset updated!")}
       />
     ),
+    enableHiding: false,
   },
 ];
