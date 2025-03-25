@@ -44,10 +44,10 @@ export function UploadFile({
 
   const getDuplicateWarning = () => {
     if (config.collectionName === "employees") {
-      return "Duplicate employee IDs will not upload.";
+      return "Duplicated employee IDs will not upload.";
     }
     if (config.collectionName === "it-assets") {
-      return "Duplicated Serial No. will not upload..";
+      return "Duplicated Serial No. will not upload.";
     }
   };
 
