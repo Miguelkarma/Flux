@@ -13,7 +13,7 @@ interface UploadConfig {
     json: string;
   };
   requiredFields: string[];
-  uniqueField?: string; // Field to check for duplicates (e.g., 'employeeId' or 'serialNo')
+  uniqueField?: string;
 }
 
 export const useUploadFile = (config: UploadConfig) => {
