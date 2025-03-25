@@ -53,7 +53,7 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
         `${employee.firstName} ${employee.lastName} deleted successfully.`
       );
       setIsDeleteDialogOpen(false);
-      onEmployeeUpdated(); // Refresh data after deleting
+      onEmployeeUpdated(); // refresh data after deleting
     } catch (error) {
       console.error("Delete error:", error);
       toast.error("Failed to delete employee. ");
