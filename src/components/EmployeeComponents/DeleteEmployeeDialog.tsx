@@ -28,6 +28,7 @@ const DeleteEmployeeDialog: React.FC<DeleteEmployeeDialogProps> = ({
   onDelete,
   isDeleting,
 }) => {
+ 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>

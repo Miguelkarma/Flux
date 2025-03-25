@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/popover";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { Toaster } from "sonner";
 
 // Icons
 import {
@@ -111,17 +110,6 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        duration={3000}
-        richColors={true}
-        theme="system"
-        closeButton={true}
-        expand={true}
-        visibleToasts={3}
-        style={{ zIndex: 9999 }}
-      />
-
       <Sheet open={open} onOpenChange={setOpen}>
         {/* Trigger button */}
         <SheetTrigger asChild>

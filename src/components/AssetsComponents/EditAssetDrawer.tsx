@@ -33,7 +33,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
-import { Toaster } from "sonner";
+
 import {
   useFormState,
   submitAssetForm,
@@ -124,16 +124,6 @@ export function EditAssetDrawer({
         side="bottom"
         className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
       >
-        <Toaster
-          position="top-right"
-          duration={3000}
-          richColors={true}
-          theme="system"
-          closeButton={true}
-          expand={true}
-          visibleToasts={3}
-          style={{ zIndex: 9999 }}
-        />
         <SheetHeader>
           <SheetTitle>Edit Asset</SheetTitle>
           <SheetDescription>Update the asset details below.</SheetDescription>
