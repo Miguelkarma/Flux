@@ -31,15 +31,18 @@ export type EmployeeData = {
   location: string;
 };
 
-export const columns: ColumnDef<EmployeeData, any>[] = [
+export const columns: ColumnDef<EmployeeData>[] = [
   {
     id: "select",
     accessorFn: (row) => row.id,
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -240,7 +243,6 @@ export const columns: ColumnDef<EmployeeData, any>[] = [
   },
   {
     id: "actions",
-    accessorFn: (row) => row.id,
     header: "Actions",
     cell: ({ row }) => (
       <EmployeeActionsCell

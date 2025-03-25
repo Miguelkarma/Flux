@@ -47,11 +47,8 @@ export function UploadFile({
       return "Duplicate employee IDs or emails will be skipped.";
     }
     if (config.collectionName === "assets") {
-      return "Duplicate serial numbers will be skipped.";
+      return "Duplicate serial numbers will not upload.";
     }
-    return config.uniqueField
-      ? `Duplicate ${config.uniqueField} values will be skipped.`
-      : null;
   };
 
   return (
