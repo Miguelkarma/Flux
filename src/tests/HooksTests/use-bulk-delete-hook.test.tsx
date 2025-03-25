@@ -5,9 +5,7 @@ import { toast } from "sonner";
 
 // mock entire firebase module
 jest.mock("@/firebase/firebase", () => ({
-  db: {
-    // provide a mock implementation of Firestore methods if needed
-  },
+  db: {},
 }));
 
 jest.mock("firebase/firestore", () => ({
