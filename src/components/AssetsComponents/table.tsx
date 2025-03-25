@@ -175,12 +175,10 @@ export function DataTable() {
     collectionName: "it-assets",
     formatExamples: {
       csv: "serialNo,assetTag,type,location,status\n12345,LAP-001,Laptop,Office,Active\n67890,MON-002,Monitor,Remote,Active",
-      json: '[{"serialNo":"12345","assetTag":"LAP-001","type":"Laptop","location":"Office","status":"Active"},\n{"serialNo":"67890","assetTag":"MON-002","type":"Monitor","location":"Remote","status":"Active"}]',
     },
     requiredFields: ["serialNo", "assetTag", "type", "location", "status"],
     uniqueField: "serialNo",
   };
-
   return (
     <>
       <div className="flex items-center justify-between">

@@ -163,9 +163,7 @@ export function EmployeeTable() {
     collectionName: "employees",
     formatExamples: {
       csv: "employeeId,firstName,lastName,email,department,position,status,hireDate,location\nEMP001,John,Doe,john.doe@example.com,IT,Developer,Active,2023-01-15,Remote",
-      json: '[{"employeeId":"EMP001","firstName":"John","lastName":"Doe","email":"john.doe@example.com","department":"IT","position":"Developer","status":"Active","hireDate":"2023-01-15","location":"Remote"},{"employeeId":"EMP002","firstName":"Jane","lastName":"Smith","email":"jane.smith@example.com","department":"Marketing","position":"Specialist","status":"Active","hireDate":"2023-02-20","location":"New York"}]',
     },
-
     requiredFields: [
       "employeeId",
       "firstName",
