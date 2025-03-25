@@ -10,7 +10,6 @@ interface UploadConfig {
   collectionName: string;
   formatExamples: {
     csv: string;
-    json: string;
   };
   requiredFields: string[];
   uniqueField?: string;
@@ -42,7 +41,13 @@ export const useUploadFile = (config: UploadConfig) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setFile(event.target.files[0]);
+      const selectedFile = event.target.files[0];
+      if (selectedFile.name.endsWith(".csv")) {
+        setFile(selectedFile);
+      } else {
+        toast.error("Only CSV files are supported");
+        setFile(null);
+      }
     }
   };
 
@@ -130,21 +135,12 @@ export const useUploadFile = (config: UploadConfig) => {
     reader.onload = async (e) => {
       if (!e.target?.result) return;
 
-      let data;
       try {
-        if (file.name.endsWith(".csv")) {
-          const parseResult = Papa.parse(e.target.result as string, {
-            header: true,
-            skipEmptyLines: true,
-          });
-          data = parseResult.data;
-        } else {
-          data = JSON.parse(e.target.result as string);
-        }
-
-        if (!Array.isArray(data)) {
-          data = [data];
-        }
+        const parseResult = Papa.parse(e.target.result as string, {
+          header: true,
+          skipEmptyLines: true,
+        });
+        const data = parseResult.data as any[];
 
         const validation = validateData(data);
         if (!validation.valid) {
@@ -160,7 +156,8 @@ export const useUploadFile = (config: UploadConfig) => {
           if (config.uniqueField) {
             const existing = existingItems.some(
               (existingItem) =>
-                existingItem[config.uniqueField!] === item[config.uniqueField!]
+                existingItem[config.uniqueField!] ===
+                (item as any)[config.uniqueField!]
             );
             if (existing) continue;
           }
@@ -196,7 +193,7 @@ export const useUploadFile = (config: UploadConfig) => {
         onSuccess();
       } catch (error) {
         console.error("Upload error:", error);
-        toast.error("Upload failed. Please check your file and try again.");
+        toast.error("Upload failed. Please check your CSV file and try again.");
       } finally {
         setLoading(false);
       }

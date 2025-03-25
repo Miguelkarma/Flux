@@ -17,7 +17,6 @@ interface UploadConfig {
   collectionName: string;
   formatExamples: {
     csv: string;
-    json: string;
   };
   requiredFields: string[];
   uniqueField?: string;
@@ -71,8 +70,7 @@ export function UploadFile({
       <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogTitle className="text-primary">{config.title}</DialogTitle>
         <DialogDescription>
-          Only CSV and JSON files are supported. Files must include all required
-          fields.
+          Only CSV files are supported. Files must include all required fields.
           {getDuplicateWarning() && (
             <span className="block mt-1 text-red-500">
               {getDuplicateWarning()}
@@ -96,16 +94,6 @@ export function UploadFile({
           <ScrollBar orientation="horizontal" className="scrollbar" />
         </ScrollArea>
 
-        <ScrollArea className="rounded-md transition">
-          <div className="bg-card p-2 rounded-md text-sm mt-2 text-primary overflow-auto">
-            <p className="font-semibold">JSON Format Example:</p>
-            <pre className="whitespace-pre-wrap text-xs">
-              {config.formatExamples.json}
-            </pre>
-          </div>
-          <ScrollBar orientation="horizontal" className="scrollbar" />
-        </ScrollArea>
-
         {!user && (
           <p className="text-red-500">Please log in to upload files.</p>
         )}
@@ -113,7 +101,7 @@ export function UploadFile({
         <div className="relative">
           <Input
             type="file"
-            accept=".csv,.json"
+            accept=".csv"
             onChange={handleFileChange}
             disabled={!user}
             className="text-primary"
@@ -133,4 +121,3 @@ export function UploadFile({
     </Dialog>
   );
 }
-  
