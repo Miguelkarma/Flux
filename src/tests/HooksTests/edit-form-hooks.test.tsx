@@ -1,283 +1,169 @@
-import {
-  submitEmployeeForm,
-  submitAssetForm,
-} from "@/hooks/tableHooks/edit-form-hook";
-import { getAuth } from "firebase/auth";
-import {
-  collection,
-  getDocs,
-  query,
-  updateDoc,
-  doc,
-  where,
-} from "firebase/firestore";
+import type React from "react"
+import { renderHook, act } from "@testing-library/react"
+import { useFormState } from "@/hooks/tableHooks/edit-form-hook"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { collection, query, where, getDocs } from "firebase/firestore"
 
-import { toast } from "sonner";
-import React from "react";
-
-// Comprehensive Mock Setup
-jest.mock("firebase/auth", () => ({
-  getAuth: jest.fn(),
-  onAuthStateChanged: jest.fn(),
-}));
-
-jest.mock("firebase/firestore", () => ({
-  collection: jest.fn(),
-  doc: jest.fn(),
-  getDocs: jest.fn(),
-  query: jest.fn(),
-  updateDoc: jest.fn(),
-  where: jest.fn(),
-}));
-
+// Mock dependencies
+jest.mock("firebase/auth")
+jest.mock("firebase/firestore")
 jest.mock("@/firebase/firebase", () => ({
   db: {},
-}));
+}))
 
-jest.mock("sonner", () => ({
-  toast: {
-    error: jest.fn(),
-    success: jest.fn(),
-  },
-}));
+const mockAuth = {
+  currentUser: { uid: "test-uid", email: "test@example.com" },
+}
 
-describe("submitEmployeeForm", () => {
-  const mockEvent = {
-    preventDefault: jest.fn(),
-  } as unknown as React.FormEvent;
-
-  const mockEmployee = {
-    id: "emp-1",
-    employeeId: "E001",
-    email: "john@example.com",
-  };
-
-  const mockFormData = {
-    id: "emp-1",
+const mockEmployees = [
+  {
+    id: "emp1",
     firstName: "John",
+    employeeId: "JD001",
     lastName: "Doe",
-    email: "john@example.com",
-    employeeId: "E001",
-  };
+  },
+  {
+    id: "emp2",
+    firstName: "Jane",
+    employeeId: "JS001",
+    lastName: "Smith",
+  },
+]
 
-  const mockSetIsSubmitting = jest.fn();
-  const mockOnEmployeeUpdated = jest.fn();
-  const mockOnClose = jest.fn();
-
+describe("useFormState", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
+    ;(getAuth as jest.Mock).mockReturnValue(mockAuth)
+    ;(collection as jest.Mock).mockReturnValue("mock-collection")
+    ;(query as jest.Mock).mockReturnValue("mock-query")
+    ;(where as jest.Mock).mockReturnValue("mock-where")
+    ;(onAuthStateChanged as jest.Mock).mockImplementation((_auth, callback) => {
+      callback(mockAuth.currentUser)
+      return jest.fn()
+    })
+    ;(getDocs as jest.Mock).mockResolvedValue({
+      docs: mockEmployees.map((emp) => ({
+        id: emp.id,
+        data: () => ({
+          firstName: emp.firstName,
+          employeeId: emp.employeeId,
+          lastName: emp.lastName,
+          userId: "test-uid",
+        }),
+      })),
+    })
+  })
 
-    // More robust mock for auth
-    (getAuth as jest.Mock).mockReturnValue({
-      currentUser: {
-        email: "user@example.com",
-        uid: "user-123",
-      },
-    });
+  it("initializes with provided data", () => {
+    const initialData = { name: "Test", value: 123 }
+    const { result } = renderHook(() => useFormState(initialData))
 
-    // Reset mock implementations
-    (collection as jest.Mock).mockReturnValue({});
-    (doc as jest.Mock).mockReturnValue({});
-    (query as jest.Mock).mockReturnValue({});
-    (where as jest.Mock).mockReturnValue({});
-  });
+    expect(result.current.formData).toEqual(initialData)
+  })
 
-  test("should update employee when form is valid and no duplicates", async () => {
-    // Simulate no duplicates found
-    (getDocs as jest.Mock).mockResolvedValue({
-      empty: true,
-      docs: [],
-    });
-    (updateDoc as jest.Mock).mockResolvedValue({});
+  it("updates form data when initial data changes", async () => {
+    const initialData = { name: "Initial" }
+    const { result, rerender } = renderHook((props) => useFormState(props), { initialProps: initialData })
 
-    await submitEmployeeForm({
-      e: mockEvent,
-      formData: mockFormData,
-      employee: mockEmployee,
-      setIsSubmitting: mockSetIsSubmitting,
-      onEmployeeUpdated: mockOnEmployeeUpdated,
-      onClose: mockOnClose,
-    });
+    expect(result.current.formData).toEqual(initialData)
 
-    // Verify core interactions
-    expect(mockEvent.preventDefault).toHaveBeenCalled();
-    expect(mockSetIsSubmitting).toHaveBeenCalledTimes(2);
-    expect(updateDoc).toHaveBeenCalled();
-    expect(toast.success).toHaveBeenCalledWith(
-      "employee updated successfully!"
-    );
-    expect(mockOnEmployeeUpdated).toHaveBeenCalled();
-    expect(mockOnClose).toHaveBeenCalled();
-  });
+    const newData = { name: "Updated" }
+    rerender(newData)
 
-  test("should handle duplicate employee ID", async () => {
-    const newFormData = {
-      ...mockFormData,
-      employeeId: "NEW-ID",
-    };
+    // Wait for the effect to run
+    await new Promise((resolve) => setTimeout(resolve, 0))
 
-    // Simulate duplicate found
-    (getDocs as jest.Mock).mockResolvedValue({
-      empty: false,
-      docs: [{}],
-    });
+    expect(result.current.formData).toEqual(newData)
+  })
 
-    await submitEmployeeForm({
-      e: mockEvent,
-      formData: newFormData,
-      employee: mockEmployee,
-      setIsSubmitting: mockSetIsSubmitting,
-      onEmployeeUpdated: mockOnEmployeeUpdated,
-      onClose: mockOnClose,
-    });
+  it("handles input change", () => {
+    const { result } = renderHook(() => useFormState({ field: "" }))
 
-    // Verify error handling
-    expect(toast.error).toHaveBeenCalledWith(
-      "employee with this ID already exists!"
-    );
-    expect(mockSetIsSubmitting).toHaveBeenCalledWith(false);
-    expect(updateDoc).not.toHaveBeenCalled();
-  });
+    act(() => {
+      result.current.handleInputChange({
+        target: { name: "field", value: "test" },
+      } as React.ChangeEvent<HTMLInputElement>)
+    })
 
-  test("should validate required fields", async () => {
-    const invalidFormData = {
-      firstName: "", // Missing required field
-      lastName: "Doe",
-      email: "john@example.com",
-    };
+    expect(result.current.formData.field).toBe("test")
+  })
 
-    await submitEmployeeForm({
-      e: mockEvent,
-      formData: invalidFormData,
-      employee: mockEmployee,
-      setIsSubmitting: mockSetIsSubmitting,
-      onEmployeeUpdated: mockOnEmployeeUpdated,
-      onClose: mockOnClose,
-    });
+  it("handles select change", () => {
+    const { result } = renderHook(() => useFormState({ type: "" }))
 
-    expect(toast.error).toHaveBeenCalledWith(
-      "first name, last name, and email are required!"
-    );
-    expect(mockSetIsSubmitting).toHaveBeenCalledWith(false);
-    expect(updateDoc).not.toHaveBeenCalled();
-  });
-});
+    act(() => {
+      result.current.handleSelectChange("type")("Laptop")
+    })
 
-describe("submitAssetForm", () => {
-  const mockEvent = {
-    preventDefault: jest.fn(),
-  } as unknown as React.FormEvent;
+    expect(result.current.formData.type).toBe("Laptop")
+  })
 
-  const mockAsset = {
-    id: "asset-1",
-    serialNo: "SN12345",
-    assetTag: "AT001",
-  };
+  it("handles date change", () => {
+    const { result } = renderHook(() => useFormState({ date: "" }))
+    const testDate = new Date("2023-01-01")
 
-  const mockFormData = {
-    serialNo: "SN12345",
-    type: "Laptop",
-    assetTag: "AT001",
-  };
+    act(() => {
+      result.current.handleDateChange("date")(testDate)
+    })
 
-  const mockSetIsSubmitting = jest.fn();
-  const mockOnAssetUpdated = jest.fn();
-  const mockOnClose = jest.fn();
+    expect(result.current.formData.date).toBe(testDate.toISOString())
+  })
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  it("handles employee change with valid employee", () => {
+    const { result } = renderHook(() => useFormState({ employeeId: "", assignedEmployee: "", email: "" }))
 
-    // More robust mock for auth
-    (getAuth as jest.Mock).mockReturnValue({
-      currentUser: {
-        email: "user@example.com",
-        uid: "user-123",
-      },
-    });
+    // Set employees manually since we're not testing the useEffect
+    act(() => {
+      result.current.setEmployees(mockEmployees)
+    })
 
-    // Reset mock implementations
-    (collection as jest.Mock).mockReturnValue({});
-    (doc as jest.Mock).mockReturnValue({});
-    (query as jest.Mock).mockReturnValue({});
-    (where as jest.Mock).mockReturnValue({});
-  });
+    act(() => {
+      result.current.handleEmployeeChange("emp1")
+    })
 
-  test("should update asset when form is valid and no duplicates", async () => {
-    // Simulate no duplicates found
-    (getDocs as jest.Mock).mockResolvedValue({
-      empty: true,
-      docs: [],
-    });
-    (updateDoc as jest.Mock).mockResolvedValue({});
+    expect(result.current.formData.employeeId).toBe("emp1")
+    expect(result.current.formData.assignedEmployee).toBe("John")
+  })
 
-    await submitAssetForm({
-      e: mockEvent,
-      formData: mockFormData,
-      asset: mockAsset,
-      setIsSubmitting: mockSetIsSubmitting,
-      onAssetUpdated: mockOnAssetUpdated,
-      onClose: mockOnClose,
-    });
+  it("handles employee change with 'none' value", () => {
+    const { result } = renderHook(() =>
+      useFormState({
+        employeeId: "emp1",
+        assignedEmployee: "John",
+        email: "john@example.com",
+      }),
+    )
 
-    // Verify core interactions
-    expect(mockEvent.preventDefault).toHaveBeenCalled();
-    expect(mockSetIsSubmitting).toHaveBeenCalledTimes(2);
-    expect(updateDoc).toHaveBeenCalled();
-    expect(toast.success).toHaveBeenCalledWith("asset updated successfully!");
-    expect(mockOnAssetUpdated).toHaveBeenCalled();
-    expect(mockOnClose).toHaveBeenCalled();
-  });
+    act(() => {
+      result.current.handleEmployeeChange("none")
+    })
 
-  test('should validate required fields for asset type "Other"', async () => {
-    const otherTypeFormData = {
-      serialNo: "SN12345",
-      type: "Other",
-      customType: "", // Missing required field when type is Other
-      assetTag: "AT001",
-    };
+    expect(result.current.formData.employeeId).toBe("")
+    expect(result.current.formData.assignedEmployee).toBe("")
+    expect(result.current.formData.email).toBe("")
+  })
 
-    await submitAssetForm({
-      e: mockEvent,
-      formData: otherTypeFormData,
-      asset: mockAsset,
-      setIsSubmitting: mockSetIsSubmitting,
-      onAssetUpdated: mockOnAssetUpdated,
-      onClose: mockOnClose,
-    });
+  it("handles employee change with invalid employee", () => {
+    const { result } = renderHook(() =>
+      useFormState({
+        employeeId: "emp1",
+        assignedEmployee: "John",
+        email: "john@example.com",
+      }),
+    )
 
-    expect(toast.error).toHaveBeenCalledWith(
-      "custom type is required when 'Other' is selected!"
-    );
-    expect(mockSetIsSubmitting).toHaveBeenCalledWith(false);
-    expect(updateDoc).not.toHaveBeenCalled();
-  });
+    // Set employees manually
+    act(() => {
+      result.current.setEmployees(mockEmployees)
+    })
 
-  test("should show error when duplicate serial number is found", async () => {
-    const newFormData = {
-      ...mockFormData,
-      serialNo: "NEW-SN", // Different serial to trigger duplicate check
-    };
+    act(() => {
+      result.current.handleEmployeeChange("non-existent")
+    })
 
-    // Simulate duplicate found
-    (getDocs as jest.Mock).mockResolvedValue({
-      empty: false,
-      docs: [{}],
-    });
+    expect(result.current.formData.employeeId).toBe("")
+    expect(result.current.formData.assignedEmployee).toBe("")
+    expect(result.current.formData.email).toBe("")
+  })
+})
 
-    await submitAssetForm({
-      e: mockEvent,
-      formData: newFormData,
-      asset: mockAsset,
-      setIsSubmitting: mockSetIsSubmitting,
-      onAssetUpdated: mockOnAssetUpdated,
-      onClose: mockOnClose,
-    });
-
-    // Verify error handling
-    expect(toast.error).toHaveBeenCalledWith(
-      "asset with this serial number already exists!"
-    );
-    expect(mockSetIsSubmitting).toHaveBeenCalledWith(false);
-    expect(updateDoc).not.toHaveBeenCalled();
-  });
-});

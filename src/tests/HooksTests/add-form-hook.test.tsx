@@ -1,3 +1,4 @@
+import type React from "react";
 import { renderHook, act } from "@testing-library/react";
 import {
   useForm,
@@ -19,42 +20,27 @@ import { toast } from "sonner";
 jest.mock("firebase/auth");
 jest.mock("firebase/firestore");
 jest.mock("sonner");
+jest.mock("@/firebase/firebase", () => ({
+  db: {},
+}));
 
 const mockAuth = {
   currentUser: { uid: "test-uid", email: "test@example.com" },
 };
-const mockEmployees = [
-  { id: "emp1", firstName: "John", employeeId: "JD001", lastName: "Doe" },
-];
-
-beforeEach(() => {
-  jest.clearAllMocks();
-  (getAuth as jest.Mock).mockReturnValue(mockAuth);
-  (collection as jest.Mock).mockReturnValue("mock-collection");
-  (query as jest.Mock).mockReturnValue("mock-query");
-  (where as jest.Mock).mockReturnValue("mock-where");
-
-  (onAuthStateChanged as jest.Mock).mockImplementation((_auth, callback) => {
-    callback(mockAuth.currentUser);
-    return jest.fn();
-  });
-
-  (onSnapshot as jest.Mock).mockImplementation((_query, onNext) => {
-    onNext({
-      docs: mockEmployees.map((e) => ({
-        id: e.id,
-        data: () => ({
-          firstName: e.firstName,
-          employeeId: e.employeeId,
-          lastName: e.lastName,
-        }),
-      })),
-    });
-    return jest.fn();
-  });
-});
 
 describe("useForm", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getAuth as jest.Mock).mockReturnValue(mockAuth);
+    (collection as jest.Mock).mockReturnValue("mock-collection");
+    (query as jest.Mock).mockReturnValue("mock-query");
+    (where as jest.Mock).mockReturnValue("mock-where");
+    (onAuthStateChanged as jest.Mock).mockImplementation((_auth, callback) => {
+      callback(mockAuth.currentUser);
+      return jest.fn();
+    });
+  });
+
   it("manages form state correctly", () => {
     const { result } = renderHook(() => useForm({ field: "" }));
 
@@ -80,12 +66,74 @@ describe("useForm", () => {
     expect(result.current.employees).toHaveLength(1);
     expect(result.current.employees[0].firstName).toBe("John");
   });
+
+  it("handles select change", () => {
+    const { result } = renderHook(() => useForm({ type: "" }));
+
+    act(() => {
+      result.current.handleSelectChange("type")("Laptop");
+    });
+
+    expect(result.current.formData.type).toBe("Laptop");
+  });
+
+  it("handles date change", () => {
+    const { result } = renderHook(() => useForm({ date: "" }));
+    const testDate = new Date("2023-01-01");
+
+    act(() => {
+      result.current.handleDateChange("date")(testDate);
+    });
+
+    expect(result.current.formData.date).toBe(testDate.toISOString());
+  });
+
+  it("handles employee change", () => {
+    const { result } = renderHook(() =>
+      useForm({ employeeId: "", assignedEmployee: "", email: "" })
+    );
+
+    // Mock employees data is set in the onSnapshot mock
+
+    act(() => {
+      result.current.handleEmployeeChange("emp1");
+    });
+
+    expect(result.current.formData.employeeId).toBe("emp1");
+    expect(result.current.formData.assignedEmployee).toBe("John");
+  });
+
+  it("handles type change for assets", () => {
+    const { result } = renderHook(() =>
+      useForm({ type: "", customType: "Old Custom" })
+    );
+
+    act(() => {
+      result.current.handleTypeChange("Laptop");
+    });
+
+    expect(result.current.formData.type).toBe("Laptop");
+    expect(result.current.formData.customType).toBe("Old Custom");
+
+    act(() => {
+      result.current.handleTypeChange("Other");
+    });
+
+    expect(result.current.formData.type).toBe("Other");
+    expect(result.current.formData.customType).toBe("");
+  });
 });
 
 describe("submitAddEmployeeForm", () => {
-  it("validates required fields", async () => {
-    (getDocs as jest.Mock).mockResolvedValue({ empty: true });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getAuth as jest.Mock).mockReturnValue(mockAuth);
+    (collection as jest.Mock).mockReturnValue("mock-collection");
+    (query as jest.Mock).mockReturnValue("mock-query");
+    (where as jest.Mock).mockReturnValue("mock-where");
+  });
 
+  it("validates required fields", async () => {
     await submitAddEmployeeForm({
       e: { preventDefault: jest.fn() } as any,
       formData: { firstName: "", lastName: "", email: "" },
@@ -129,21 +177,36 @@ describe("submitAddEmployeeForm", () => {
     (addDoc as jest.Mock).mockResolvedValue({});
 
     const setIsSubmitting = jest.fn();
+    const onEmployeeAdded = jest.fn();
+    const onClose = jest.fn();
+    const resetForm = jest.fn();
+
     await submitAddEmployeeForm({
       e: { preventDefault: jest.fn() } as any,
       formData: { firstName: "John", lastName: "Doe", email: "john@doe.com" },
       setIsSubmitting,
-      onEmployeeAdded: jest.fn(),
-      onClose: jest.fn(),
-      resetForm: jest.fn(),
+      onEmployeeAdded,
+      onClose,
+      resetForm,
     });
 
     expect(setIsSubmitting).toHaveBeenCalledWith(false);
     expect(toast.success).toHaveBeenCalled();
+    expect(onEmployeeAdded).toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalled();
+    expect(resetForm).toHaveBeenCalled();
   });
 });
 
 describe("submitAddAssetForm", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getAuth as jest.Mock).mockReturnValue(mockAuth);
+    (collection as jest.Mock).mockReturnValue("mock-collection");
+    (query as jest.Mock).mockReturnValue("mock-query");
+    (where as jest.Mock).mockReturnValue("mock-where");
+  });
+
   it("validates required fields", async () => {
     await submitAddAssetForm({
       e: { preventDefault: jest.fn() } as any,
@@ -156,6 +219,21 @@ describe("submitAddAssetForm", () => {
 
     expect(toast.error).toHaveBeenCalledWith(
       "serial number and asset type are required!"
+    );
+  });
+
+  it("validates custom type when 'Other' is selected", async () => {
+    await submitAddAssetForm({
+      e: { preventDefault: jest.fn() } as any,
+      formData: { serialNo: "SN123", type: "Other", customType: "" },
+      setIsSubmitting: jest.fn(),
+      onAssetAdded: jest.fn(),
+      onClose: jest.fn(),
+      resetForm: jest.fn(),
+    });
+
+    expect(toast.error).toHaveBeenCalledWith(
+      "custom type is required when 'Other' is selected!"
     );
   });
 
@@ -195,12 +273,42 @@ describe("submitAddAssetForm", () => {
     );
   });
 
-  it("handles custom type", async () => {
+  it("submits valid form with standard type", async () => {
     (getDocs as jest.Mock).mockResolvedValue({ empty: true });
+    (addDoc as jest.Mock).mockResolvedValue({});
+
+    const setIsSubmitting = jest.fn();
+    const onAssetAdded = jest.fn();
+    const onClose = jest.fn();
+    const resetForm = jest.fn();
 
     await submitAddAssetForm({
       e: { preventDefault: jest.fn() } as any,
-      formData: { serialNo: "123", type: "Other", customType: "Custom" },
+      formData: { serialNo: "SN123", type: "Laptop" },
+      setIsSubmitting,
+      onAssetAdded,
+      onClose,
+      resetForm,
+    });
+
+    expect(addDoc).toHaveBeenCalled();
+    expect(toast.success).toHaveBeenCalled();
+    expect(onAssetAdded).toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalled();
+    expect(resetForm).toHaveBeenCalled();
+  });
+
+  it("handles custom type", async () => {
+    (getDocs as jest.Mock).mockResolvedValue({ empty: true });
+    (addDoc as jest.Mock).mockResolvedValue({});
+
+    await submitAddAssetForm({
+      e: { preventDefault: jest.fn() } as any,
+      formData: {
+        serialNo: "SN123",
+        type: "Other",
+        customType: "Custom Device",
+      },
       setIsSubmitting: jest.fn(),
       onAssetAdded: jest.fn(),
       onClose: jest.fn(),
@@ -209,7 +317,7 @@ describe("submitAddAssetForm", () => {
 
     expect(addDoc).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ type: "Custom" })
+      expect.objectContaining({ type: "Custom Device" })
     );
   });
 });
