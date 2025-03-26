@@ -19,25 +19,15 @@ export const useUploadFile = (config: UploadConfig) => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(() => getAuth().currentUser);
-  const [, setExistingItems] = useState<any[]>([]);
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
-      if (firebaseUser && config.collectionName) {
-        const q = query(
-          collection(db, config.collectionName),
-          where("userId", "==", firebaseUser.uid)
-        );
-        const querySnapshot = await getDocs(q);
-        const items = querySnapshot.docs.map((doc) => doc.data());
-        setExistingItems(items);
-      }
     });
 
     return () => unsubscribe();
-  }, [config.collectionName]);
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -62,7 +52,6 @@ export const useUploadFile = (config: UploadConfig) => {
     const chunkSize = 10; // Firestore 'in' query limit
 
     try {
-      // Process in chunks of 10
       for (let i = 0; i < idsToCheck.length; i += chunkSize) {
         const chunk = idsToCheck.slice(i, i + chunkSize);
         const q = query(
@@ -94,6 +83,9 @@ export const useUploadFile = (config: UploadConfig) => {
       return { valid: false, message: "No data found in the file" };
     }
 
+    // Predefined required fields in the expected order
+    const expectedFields = config.requiredFields;
+
     // Normalize data by trimming strings
     const normalizedData = data.map((item) => {
       const normalized: any = {};
@@ -104,16 +96,25 @@ export const useUploadFile = (config: UploadConfig) => {
       return normalized;
     });
 
-    // Check required fields
     const firstItem = normalizedData[0];
-    const missingFields = config.requiredFields.filter(
-      (field) => !Object.keys(firstItem).includes(field)
+    const actualFields = Object.keys(firstItem);
+
+    // Check for extra or missing fields
+    const missingFields = expectedFields.filter(
+      (field) => !actualFields.includes(field)
     );
 
-    if (missingFields.length > 0) {
+    const extraFields = actualFields.filter(
+      (field) => !expectedFields.includes(field)
+    );
+
+    // Generate a detailed error message
+    if (missingFields.length > 0 || extraFields.length > 0) {
+      let errorMessage = "CSV format is incorrect";
+
       return {
         valid: false,
-        message: `Missing required fields: ${missingFields.join(", ")}`,
+        message: errorMessage,
       };
     }
 
@@ -156,7 +157,7 @@ export const useUploadFile = (config: UploadConfig) => {
           valid: false,
           message: `Found ${allDuplicates.length} duplicate ${
             config.uniqueField
-          }(s).  ${allDuplicates.slice(0, 5).join(", ")}${
+          }(s). ${allDuplicates.slice(0, 5).join(", ")}${
             allDuplicates.length > 5 ? "..." : ""
           }`,
           duplicates: {
