@@ -12,7 +12,7 @@ import {
   VisibilityState,
   RowSelectionState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -185,6 +185,7 @@ export function EmployeeTable() {
           onChange={(event) =>
             table.getColumn("employeeId")?.setFilterValue(event.target.value)
           }
+          icon={Filter}
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
         />
 
