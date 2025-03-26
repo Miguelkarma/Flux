@@ -1,5 +1,6 @@
+"use client";
+
 import * as React from "react";
-import { getAuth } from "firebase/auth";
 import {
   Sheet,
   SheetClose,
@@ -20,16 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { toast, Toaster } from "sonner";
-import {
   Laptop2,
   Monitor,
   Mouse,
@@ -43,13 +34,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 
+import {
+  useFormState,
+  submitAssetForm,
+} from "@/hooks/tableHooks/edit-form-hook";
+
 interface EditAssetDrawerProps {
   asset: {
     id: string;
     serialNo: string;
     assetTag: string;
     assignedEmployee: string;
-    email: string;
+    employeeId?: string;
     status: string;
     dateAdded: string;
     type: string;
@@ -67,13 +63,23 @@ export function EditAssetDrawer({
   onClose,
   onAssetUpdated,
 }: EditAssetDrawerProps) {
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [formData, setFormData] = React.useState({
+  // Initialize the form state using the useFormState hook
+  const {
+    formData,
+    employees,
+    handleEmployeeChange,
+    setFormData,
+    isSubmitting,
+    setIsSubmitting,
+    handleInputChange,
+    handleSelectChange,
+    handleDateChange,
+  } = useFormState({
     id: asset.id,
     serialNo: asset.serialNo ?? "",
     assetTag: asset.assetTag ?? "",
     assignedEmployee: asset.assignedEmployee ?? "",
-    email: asset.email ?? "",
+    employeeId: asset.employeeId ?? "",
     status: asset.status ?? "Available",
     type: asset.type ?? "",
     customType: asset.customType ?? "",
@@ -88,127 +94,28 @@ export function EditAssetDrawer({
       serialNo: asset.serialNo ?? "",
       assetTag: asset.assetTag ?? "",
       assignedEmployee: asset.assignedEmployee ?? "",
-      email: asset.email ?? "",
+      employeeId: asset.employeeId ?? "",
       status: asset.status ?? "Available",
       type: asset.type ?? "",
       customType: asset.customType ?? "",
       location: asset.location ?? "",
       dateAdded: asset.dateAdded ?? new Date().toISOString(),
     });
-  }, [asset]);
+  }, [asset, setFormData]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleAssetDateChange = (date: Date | undefined) => {
+    handleDateChange("dateAdded")(date);
   };
 
-  const handleTypeChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      type: value,
-    }));
-  };
-
-  const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      customType: e.target.value,
-    }));
-  };
-
-  // Add the missing handleDateChange function
-  const handleDateChange = (date: Date | undefined) => {
-    setFormData((prev) => ({
-      ...prev,
-      dateAdded: date ? date.toISOString() : new Date().toISOString(),
-    }));
-  };
-
-  const handleStatusChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      status: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const userEmail = user?.email; // Get logged-in user's email
-
-    if (!userEmail) {
-      toast.error("You must be logged in to update an asset!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.serialNo || !formData.type) {
-      toast.error("Serial number and asset type are required!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const assetsRef = collection(db, "it-assets");
-      const serialQuery = query(
-        assetsRef,
-        where("serialNo", "==", formData.serialNo),
-        where("userId", "==", user.uid),
-        where("__name__", "!=", asset.id)
-      );
-      const serialSnapshot = await getDocs(serialQuery);
-
-      // Check for duplicate asset tag (if asset tag is provided)
-      let tagSnapshot = { empty: true };
-      if (formData.assetTag) {
-        const tagQuery = query(
-          assetsRef,
-          where("assetTag", "==", formData.assetTag),
-          where("userId", "==", user.uid),
-          where("__name__", "!=", asset.id)
-        );
-        tagSnapshot = await getDocs(tagQuery);
-      }
-
-      if (!serialSnapshot.empty) {
-        toast.error("Asset with this Serial Number already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (!tagSnapshot.empty) {
-        toast.error("Asset with this Asset Tag already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (formData.type === "Other" && !formData.customType) {
-        toast.error("Custom type is required when 'Other' is selected!");
-        setIsSubmitting(false);
-        return;
-      }
-      const assetRef = doc(db, "it-assets", asset.id);
-      await updateDoc(assetRef, {
-        ...formData,
-        dateUpdated: new Date().toISOString(),
-        updatedBy: userEmail, // Track who updated the asset
-      });
-
-      toast.success("Asset updated successfully!");
-      onAssetUpdated();
-      onClose();
-    } catch (error) {
-      console.error("Error updating asset:", error);
-      toast.error("Failed to update asset");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    submitAssetForm({
+      e,
+      formData,
+      asset,
+      setIsSubmitting,
+      onAssetUpdated,
+      onClose,
+    });
   };
 
   return (
@@ -217,16 +124,6 @@ export function EditAssetDrawer({
         side="bottom"
         className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
       >
-        <Toaster
-          position="top-right"
-          duration={3000}
-          richColors={true}
-          theme="system"
-          closeButton={true}
-          expand={true}
-          visibleToasts={3}
-          style={{ zIndex: 9999 }}
-        />
         <SheetHeader>
           <SheetTitle>Edit Asset</SheetTitle>
           <SheetDescription>Update the asset details below.</SheetDescription>
@@ -243,7 +140,7 @@ export function EditAssetDrawer({
               placeholder="Enter serial number"
             />
           </div>
-          {/* Asset Name */}
+          {/* Asset Tag */}
           <div className="grid gap-2">
             <Label htmlFor="assetTag">Asset Tag</Label>
             <Input
@@ -260,7 +157,7 @@ export function EditAssetDrawer({
             <Label htmlFor="type">Asset Type</Label>
             <Select
               value={formData.type}
-              onValueChange={handleTypeChange}
+              onValueChange={handleSelectChange("type")}
               required
             >
               <SelectTrigger>
@@ -299,7 +196,7 @@ export function EditAssetDrawer({
                 id="customType"
                 name="customType"
                 value={formData.customType}
-                onChange={handleCustomTypeChange}
+                onChange={handleInputChange}
                 placeholder="Enter custom asset type"
                 required
               />
@@ -318,27 +215,26 @@ export function EditAssetDrawer({
           </div>
           {/* Assigned Employee */}
           <div className="grid gap-2">
-            <Label htmlFor="assignedEmployee">Assigned Employee</Label>
-            <Input
-              id="assignedEmployee"
-              name="assignedEmployee"
-              value={formData.assignedEmployee}
-              onChange={handleInputChange}
-              placeholder="Enter employee name"
-            />
+            <Label htmlFor="employeeId">Assigned Employee</Label>
+            <Select
+              value={formData.employeeId || "none"}
+              onValueChange={handleEmployeeChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select an employee" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                {employees.map((employee) => (
+                  <SelectItem key={employee.id} value={employee.id}>
+                    {employee.employeeId} - {employee.firstName}{" "}
+                    {employee.lastName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          {/* Email */}
-          <div className="grid gap-2">
-            <Label htmlFor="email">Employee Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter employee email"
-            />
-          </div>
+
           {/* Date Added */}
           <div className="grid gap-2">
             <Label htmlFor="dateAdded">Date Added</Label>
@@ -358,7 +254,7 @@ export function EditAssetDrawer({
                 <Calendar
                   mode="single"
                   selected={new Date(formData.dateAdded)}
-                  onSelect={handleDateChange}
+                  onSelect={handleAssetDateChange}
                   initialFocus
                 />
               </PopoverContent>
@@ -368,7 +264,10 @@ export function EditAssetDrawer({
           {/* Status */}
           <div className="grid gap-2">
             <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={handleStatusChange}>
+            <Select
+              value={formData.status}
+              onValueChange={handleSelectChange("status")}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
