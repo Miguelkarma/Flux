@@ -71,7 +71,7 @@ export const onSnapshot = jest.fn(
         },
       ],
     });
-    return jest.fn(); // Return unsubscribe function
+    return jest.fn(); 
   }
 );
 

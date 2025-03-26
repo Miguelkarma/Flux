@@ -13,9 +13,6 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
-/**
- * custom hook for managing add form state
- */
 export function useForm<T extends Record<string, any>>(initialValues: T) {
   const [formData, setFormData] = React.useState<T>(initialValues);
   const [isSubmitting, setIsSubmitting] = React.useState(false);

@@ -65,4 +65,3 @@ Object.defineProperty(globalThis, "FileReader", {
 jest.mock("lucide-react", () => ({
   Check: () => "MockedCheckIcon",
 }));
-
