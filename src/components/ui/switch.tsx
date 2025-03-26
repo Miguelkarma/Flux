@@ -23,10 +23,10 @@ const Sparkle: React.FC<SparkleProps> = ({ width, deg, duration }) => {
   );
 };
 
-// Add interface for component props
+// interface for component props
 interface SwitchProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-// Implement forwardRef
+// implement forwardRef
 const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => {
   const { theme, toggleTheme } = useTheme();
   const [isChecked, setIsChecked] = useState(theme === "light");
@@ -96,10 +96,6 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => {
     </StyledWrapper>
   );
 });
-
-// Add display name for debugging purposes
-Switch.displayName = "Switch";
-
 
 const StyledWrapper = styled.div`
   .toggle-cont {
