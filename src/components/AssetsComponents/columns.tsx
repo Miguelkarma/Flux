@@ -126,7 +126,6 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
       </div>
     ),
   },
-
   {
     accessorKey: "assignedEmployee",
     header: "Assigned Employee",
