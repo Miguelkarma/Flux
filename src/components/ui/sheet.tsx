@@ -77,7 +77,7 @@ const SheetContent = React.forwardRef<
     </SheetPrimitive.Content>
   </SheetPortal>
 ));
-SheetContent.displayName = SheetPrimitive.Content.displayName
+SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({
   className,
@@ -91,7 +91,7 @@ const SheetHeader = ({
     {...props}
   />
 );
-SheetHeader.displayName = "SheetHeader"
+SheetHeader.displayName = "SheetHeader";
 
 const SheetFooter = ({
   className,
