@@ -41,6 +41,9 @@ import {
   Mouse,
   Printer,
   Computer,
+  Tag,
+  Hash,
+  MapPin,
 } from "lucide-react";
 
 // Form handling
@@ -150,6 +153,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                 onChange={handleInputChange}
                 placeholder="Enter serial number"
                 required
+                icon={Hash}
               />
             </div>
 
@@ -162,6 +166,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                 value={formData.assetTag}
                 onChange={handleInputChange}
                 placeholder="Enter asset Tag"
+                icon={Tag}
               />
             </div>
 
@@ -229,6 +234,7 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
                 value={formData.location}
                 onChange={handleInputChange}
                 placeholder="Enter location (e.g., IT Department, Accounting)"
+                icon={MapPin}
               />
             </div>
 
@@ -300,7 +306,10 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
             {/* Action buttons */}
             <SheetFooter>
               <SheetClose asChild>
-                <Button type="button" className="bg-teal-950 text-foreground">
+                <Button
+                  type="button"
+                  className="bg-teal-950 text-foreground hover:bg-slate-900"
+                >
                   Cancel
                 </Button>
               </SheetClose>

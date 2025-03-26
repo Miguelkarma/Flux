@@ -10,7 +10,7 @@ import {
   RowSelectionState,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -190,6 +190,7 @@ export function DataTable() {
           onChange={(event) =>
             table.getColumn("assetTag")?.setFilterValue(event.target.value)
           }
+          icon={Filter}
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
         />
 
@@ -199,7 +200,7 @@ export function DataTable() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
+                className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground mr-1"
               >
                 <span className="max-sm:hidden">Columns</span>
                 <ChevronDown />

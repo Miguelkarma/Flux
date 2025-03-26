@@ -29,6 +29,9 @@ import {
   Server,
   CalendarIcon,
   Computer,
+  Tag,
+  Hash,
+  MapPin,
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
@@ -125,7 +128,9 @@ export function EditAssetDrawer({
         className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
       >
         <SheetHeader>
-          <SheetTitle>Edit Asset</SheetTitle>
+          <SheetTitle className="text-popover-foreground">
+            Edit Asset
+          </SheetTitle>
           <SheetDescription>Update the asset details below.</SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="grid gap-6 py-4">
@@ -138,6 +143,7 @@ export function EditAssetDrawer({
               value={formData.serialNo}
               onChange={handleInputChange}
               placeholder="Enter serial number"
+              icon={Hash}
             />
           </div>
           {/* Asset Tag */}
@@ -150,6 +156,7 @@ export function EditAssetDrawer({
               onChange={handleInputChange}
               placeholder="Enter asset Tag"
               required
+              icon={Tag}
             />
           </div>
           {/* Type */}
@@ -211,6 +218,7 @@ export function EditAssetDrawer({
               value={formData.location}
               onChange={handleInputChange}
               placeholder="Enter asset location"
+              icon={MapPin}
             />
           </div>
           {/* Assigned Employee */}
@@ -276,14 +284,17 @@ export function EditAssetDrawer({
                 <SelectItem value="Available">Available</SelectItem>
                 <SelectItem value="Maintenance">Maintenance</SelectItem>
                 <SelectItem value="Retired">Retired</SelectItem>
-                <SelectItem value="Lost/Stolen">Lost/Stolen</SelectItem>
+                <SelectItem value="Lost">Lost</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="button" variant="outline" className="bg-teal-950">
+              <Button
+                type="button"
+                className="bg-teal-950 hover:bg-slate-900 text-foreground"
+              >
                 Cancel
               </Button>
             </SheetClose>
