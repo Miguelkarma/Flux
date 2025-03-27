@@ -1,4 +1,3 @@
-"use client";
 
 import {
   Dialog,
@@ -21,7 +20,7 @@ export function AssetDetailsDialog({
   isOpen,
   onOpenChange,
 }: AssetDetailsDialogProps) {
-  // status badge styling
+  // status badge
   const getStatusBadgeClass = (status: string) => {
     const statusColors: Record<string, string> = {
       Active: "shadow-green-500",
@@ -37,6 +36,7 @@ export function AssetDetailsDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-card text-popover-foreground">
+        
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
