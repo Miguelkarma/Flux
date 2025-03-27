@@ -16,6 +16,11 @@ const config: Config = {
     "\\.(css|less|sass|scss)$": "identity-obj-proxy",
     "^@/assets/(.*)$": "<rootDir>/src/__mocks__/fileMock.js",
     "^@/components/(.*)$": "<rootDir>/src/components/$1",
+    "^firebase/firestore$": "<rootDir>/__mocks__/firestore.ts",
+    "^firebase/auth$": "<rootDir>/__mocks__/auth.ts",
+    "^@/firebase/firebase$": "<rootDir>/__mocks__/app.ts",
+    "^papaparse$": "<rootDir>/__mocks__/papaparse.ts",
+    "^sonner$": "<rootDir>/__mocks__/sonner.ts",
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts", "jest-styled-components"],
 

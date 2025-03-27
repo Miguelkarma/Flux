@@ -93,6 +93,7 @@ export function EmployeeTable() {
   // authentication effect
   React.useEffect(() => {
     const auth = getAuth();
+    setLoading(true); // Set loading to true initially
 
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -102,6 +103,7 @@ export function EmployeeTable() {
       } else {
         setUserEmail(null);
         setFirebaseData([]);
+        setLoading(false);
       }
     });
 
