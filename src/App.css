@@ -100,7 +100,7 @@
   .active-state-alt {
     @apply transition rounded-full text-teal-900 z-[32] dark:text-teal-400;
     /* Dark Mode */
-    @apply p-[2px] rounded-full border-2 border-transparent 
+    @apply p-2 rounded-full border border-transparent 
     dark:bg-gradient-to-r from-[#27ffc9] via-[#ffffffe3] to-transparent 
     dark:bg-clip-border;
 
@@ -109,13 +109,13 @@
       linear-gradient(90deg, #12c29693, #fff, transparent);
     background-origin: border-box;
     background-clip: padding-box, border-box;
-    border: 2px solid transparent;
+
     box-shadow: 2em 0 2em 0em inset rgba(116, 126, 125, 0.411);
   }
 
   .active-state-alt::before {
     content: "";
-    @apply absolute inset-0 z-[-1] dark:bg-gradient-to-r from-[#0c1722] to-[#334658] rounded-full;
+    @apply absolute inset-0 z-[-1] dark:bg-gradient-to-r from-card to-card rounded-full;
   }
 
   .hover-active-state-alt:hover {
