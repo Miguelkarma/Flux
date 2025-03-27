@@ -93,7 +93,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
             className="flex items-center gap-2"
           >
             <Info className="h-4 w-4" />
-            <span>Details</span>
+            <span> Details</span>
           </DropdownMenuItem>
 
           {/* Open Edit Drawer */}

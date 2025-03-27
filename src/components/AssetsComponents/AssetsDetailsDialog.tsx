@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
-import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 
 interface AssetDetailsDialogProps {
@@ -22,11 +21,6 @@ export function AssetDetailsDialog({
   isOpen,
   onOpenChange,
 }: AssetDetailsDialogProps) {
-  // format date
-  const formattedDate = asset.dateAdded
-    ? format(new Date(asset.dateAdded), "PPP")
-    : "N/A";
-
   // status badge styling
   const getStatusBadgeClass = (status: string) => {
     const statusColors: Record<string, string> = {
@@ -63,7 +57,6 @@ export function AssetDetailsDialog({
         />
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* left column */}
             <div className="space-y-3">
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">
@@ -93,34 +86,6 @@ export function AssetDetailsDialog({
                     asset.type === "Other" &&
                     ` (${asset.customType})`}
                 </p>
-              </div>
-            </div>
-
-            {/* right column */}
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Location
-                </h3>
-                <p className="text-base font-semibold">
-                  {asset.location || "N/A"}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Assigned To
-                </h3>
-                <p className="text-base font-semibold">
-                  {asset.assignedEmployee || "Unassigned"}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">
-                  Date Added
-                </h3>
-                <p className="text-base font-semibold">{formattedDate}</p>
               </div>
             </div>
           </div>
