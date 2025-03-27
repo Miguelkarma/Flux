@@ -20,19 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Laptop2,
-  Monitor,
-  Mouse,
-  Keyboard,
-  Printer,
-  Server,
-  CalendarIcon,
-  Computer,
-  Tag,
-  Hash,
-  MapPin,
-} from "lucide-react";
+import { CalendarIcon, Tag, Hash, MapPin, Search } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
@@ -41,6 +29,8 @@ import {
   useFormState,
   submitAssetForm,
 } from "@/hooks/tableHooks/edit-form-hook";
+import ElectronicsSearch from "@/components/MarketComponents/ProductsSearch";
+import { generateUniqueSerialNumber } from "@/api/electronicProductsAPI";
 
 interface EditAssetDrawerProps {
   asset: {
@@ -54,6 +44,7 @@ interface EditAssetDrawerProps {
     type: string;
     customType?: string;
     location: string;
+    productDetails?: any;
   };
   isOpen: boolean;
   onClose: () => void;
@@ -66,7 +57,7 @@ export function EditAssetDrawer({
   onClose,
   onAssetUpdated,
 }: EditAssetDrawerProps) {
-  // Initialize the form state using the useFormState hook
+  // initialize the form state
   const {
     formData,
     employees,
@@ -90,7 +81,46 @@ export function EditAssetDrawer({
     dateAdded: asset.dateAdded ?? new Date().toISOString(),
   });
 
-  // Update state when asset changes
+  // state for product search dialog
+  const [isProductSearchOpen, setIsProductSearchOpen] = React.useState(false);
+
+  const handleProductSelect = (product: {
+    id: any;
+    title: string;
+    category: string;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      serialNo: generateUniqueSerialNumber(`SN-${product.id}`),
+      assetTag: product.title.substring(0, 20),
+      type: getProductType(product.category),
+      customType: product.category,
+      productDetails: product,
+    }));
+    setIsProductSearchOpen(false);
+  };
+  // Helper function to map product categories to asset types
+  const getProductType = (category: string) => {
+    const categoryMap = {
+      computers: "Computer",
+      monitor: "Monitor",
+      laptops: "Laptop",
+      keyboards: "Keyboard",
+      mouse: "Mouse",
+      server: "Server",
+      printer: "Printer",
+      accessories: "Other",
+    };
+
+    // Find the best match or default to 'Other'
+    return Object.keys(categoryMap).find((key) =>
+      category.toLowerCase().includes(key)
+    )
+      ? categoryMap[category.toLowerCase() as keyof typeof categoryMap]
+      : "Other";
+  };
+
+  // update state when asset changes
   React.useEffect(() => {
     setFormData({
       id: asset.id,
@@ -159,43 +189,50 @@ export function EditAssetDrawer({
               icon={Tag}
             />
           </div>
-          {/* Type */}
+          {/* Asset Type section - modified to include product search */}
           <div className="grid gap-2">
             <Label htmlFor="type">Asset Type</Label>
-            <Select
-              value={formData.type}
-              onValueChange={handleSelectChange("type")}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select asset type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Laptop">
-                  <Laptop2 className="inline-block w-4 h-4 mr-2" /> Laptop
-                </SelectItem>
-                <SelectItem value="Computer">
-                  <Computer className="inline-block w-4 h-4 mr-2" /> Computer
-                </SelectItem>
-                <SelectItem value="Server">
-                  <Server className="inline-block w-4 h-4 mr-2" /> Server
-                </SelectItem>
-                <SelectItem value="Monitor">
-                  <Monitor className="inline-block w-4 h-4 mr-2" /> Monitor
-                </SelectItem>
-                <SelectItem value="Keyboard">
-                  <Keyboard className="inline-block w-4 h-4 mr-2" /> Keyboard
-                </SelectItem>
-                <SelectItem value="Mouse">
-                  <Mouse className="inline-block w-4 h-4 mr-2" /> Mouse
-                </SelectItem>
-                <SelectItem value="Printer">
-                  <Printer className="inline-block w-4 h-4 mr-2" /> Printer
-                </SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center space-x-2">
+              <Select
+                value={formData.type}
+                onValueChange={handleSelectChange("type")}
+                required
+              >
+                <SelectTrigger className="flex-grow">
+                  <SelectValue placeholder="Select asset type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Computer">Computer</SelectItem>
+                  <SelectItem value="Laptop">Laptop</SelectItem>
+                  <SelectItem value="Monitor">Monitor</SelectItem>
+                  <SelectItem value="Server">Server</SelectItem>
+                  <SelectItem value="Mouse">Mouse</SelectItem>
+                  <SelectItem value="Keyboard">Keyboard</SelectItem>
+                  <SelectItem value="Printer">Printer</SelectItem>
+                  <SelectItem value="Peripheral">Peripheral</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Product Search Button */}
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => setIsProductSearchOpen(true)}
+                title="Search Products"
+              >
+                <Search className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
+          {/* Product Search Dialog */}
+          <ElectronicsSearch
+            isOpen={isProductSearchOpen}
+            onClose={() => setIsProductSearchOpen(false)}
+            onProductSelect={handleProductSelect}
+          />
+
           {formData.type === "Other" && (
             <div className="grid gap-2">
               <Label htmlFor="customType">Other Asset *</Label>

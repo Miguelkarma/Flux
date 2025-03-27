@@ -112,7 +112,9 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
           >
             {icon}
           </div>
-          <span className={`font-medium ${typeStyles[type]}`}>{type}</span>
+          <span className={`font-medium ${typeStyles[type]}`}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </span>
         </div>
       );
     },

@@ -30,26 +30,21 @@ import {
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 
-// Icons
+// icons
 import {
   Plus,
   Calendar as CalendarIcon,
-  Laptop,
-  Server,
-  Monitor,
-  Keyboard,
-  Mouse,
-  Printer,
-  Computer,
+  Search,
   Tag,
   Hash,
   MapPin,
 } from "lucide-react";
 
-// Form handling
+// form handling
 import { useForm, submitAddAssetForm } from "@/hooks/tableHooks/add-form-hook";
-
-// Types
+import { ElectronicsSearch } from "@/components/MarketComponents/ProductsSearch";
+import { generateUniqueSerialNumber } from "@/api/electronicProductsAPI";
+// types
 interface Asset {
   serialNo: string;
   assetTag: string;
@@ -61,21 +56,25 @@ interface Asset {
   customType: string;
   location: string;
   dateAdded: string;
+  productDetails?: any;
 }
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
-  userEmail: string | null;
+  userEmail?: string | null;
 }
 
-export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
-  // Initial form values
+export function AddAssetDrawer({
+  onAssetAdded,
+  userEmail,
+}: AddAssetDrawerProps) {
+  //initial form values
   const initialValues: Asset = {
     serialNo: "",
     assetTag: "",
     assignedEmployee: "",
     employeeId: "",
-    email: "",
+    email: userEmail || "",
     status: "Available",
     type: "",
     customType: "",
@@ -83,7 +82,10 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
     dateAdded: new Date().toISOString(),
   };
 
-  // Form state and handlers from custom hook
+  // state for product search dialog
+  const [isProductSearchOpen, setIsProductSearchOpen] = React.useState(false);
+
+  // form state and handlers from custom hook
   const {
     formData,
     isSubmitting,
@@ -97,7 +99,44 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
     handleTypeChange,
     handleEmployeeChange,
     resetForm,
+    setFormData,
   } = useForm<Asset>(initialValues);
+
+  const handleProductSelect = (product: {
+    id: any;
+    title: string;
+    category: string;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      serialNo: generateUniqueSerialNumber(`SN-${product.id}`),
+      assetTag: product.title.substring(0, 20),
+      type: getProductType(product.category),
+      customType: product.category,
+      productDetails: product,
+    }));
+    setIsProductSearchOpen(false);
+  };
+  // Helper function to map product categories to asset types
+  const getProductType = (category: string) => {
+    const categoryMap = {
+      computers: "Computer",
+      monitor: "Monitor",
+      laptops: "Laptop",
+      keyboards: "Keyboard",
+      mouse: "Mouse",
+      server: "Server",
+      printer: "Printer",
+      accessories: "Other",
+    };
+
+    // Find the best match or default to 'Other'
+    return Object.keys(categoryMap).find((key) =>
+      category.toLowerCase().includes(key)
+    )
+      ? categoryMap[category.toLowerCase() as keyof typeof categoryMap]
+      : "Other";
+  };
 
   // Form submission handler
   const handleSubmit = (e: React.FormEvent) => {
@@ -170,45 +209,50 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
               />
             </div>
 
-            {/* Asset Type */}
+            {/* Asset Type section - modified to include product search */}
             <div className="grid gap-2">
               <Label htmlFor="type">Asset Type</Label>
-              <Select
-                value={formData.type}
-                onValueChange={handleTypeChange}
-                required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select asset type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Laptop">
-                    <Laptop className="inline-block w-4 h-4 mr-2" /> Laptop
-                  </SelectItem>
-                  <SelectItem value="Computer">
-                    <Computer className="inline-block w-4 h-4 mr-2" /> Computer
-                  </SelectItem>
-                  <SelectItem value="Server">
-                    <Server className="inline-block w-4 h-4 mr-2" /> Server
-                  </SelectItem>
-                  <SelectItem value="Monitor">
-                    <Monitor className="inline-block w-4 h-4 mr-2" /> Monitor
-                  </SelectItem>
-                  <SelectItem value="Keyboard">
-                    <Keyboard className="inline-block w-4 h-4 mr-2" /> Keyboard
-                  </SelectItem>
-                  <SelectItem value="Mouse">
-                    <Mouse className="inline-block w-4 h-4 mr-2" /> Mouse
-                  </SelectItem>
-                  <SelectItem value="Printer">
-                    <Printer className="inline-block w-4 h-4 mr-2" /> Printer
-                  </SelectItem>
-                  <SelectItem value="Other">
-                    <Laptop className="inline-block w-4 h-4 mr-2" /> Other
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center space-x-2">
+                <Select
+                  value={formData.type}
+                  onValueChange={handleTypeChange}
+                  required
+                >
+                  <SelectTrigger className="flex-grow">
+                    <SelectValue placeholder="Select asset type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Computer">Computer</SelectItem>
+                    <SelectItem value="Laptop">Laptop</SelectItem>
+                    <SelectItem value="Monitor">Monitor</SelectItem>
+                    <SelectItem value="Server">Server</SelectItem>
+                    <SelectItem value="Mouse">Mouse</SelectItem>
+                    <SelectItem value="Keyboard">Keyboard</SelectItem>
+                    <SelectItem value="Printer">Printer</SelectItem>
+                    <SelectItem value="Peripheral">Peripheral</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Product Search Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsProductSearchOpen(true)}
+                  title="Search Products"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
+
+            {/* Product Search Dialog */}
+            <ElectronicsSearch
+              isOpen={isProductSearchOpen}
+              onClose={() => setIsProductSearchOpen(false)}
+              onProductSelect={handleProductSelect}
+            />
 
             {/* Custom Type (conditionally rendered) */}
             {formData.type === "Other" && (
@@ -241,7 +285,10 @@ export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
             {/* Assigned Employee */}
             <div className="grid gap-2">
               <Label htmlFor="employeeId">Assigned Employee</Label>
-              <Select onValueChange={handleEmployeeChange}>
+              <Select
+                value={formData.employeeId}
+                onValueChange={handleEmployeeChange}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select an employee" />
                 </SelectTrigger>

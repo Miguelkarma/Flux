@@ -287,22 +287,6 @@ export async function submitAssetForm({
       }
     }
 
-    // check for duplicate asset tag
-    if (formData.assetTag && formData.assetTag !== asset.assetTag) {
-      const tagQuery = query(
-        assetsRef,
-        where("assetTag", "==", formData.assetTag),
-        where("userId", "==", user.uid)
-      );
-      const tagSnapshot = await getDocs(tagQuery);
-
-      if (!tagSnapshot.empty) {
-        toast.error("asset with this asset tag already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-    }
-
     const assetRef = doc(db, "it-assets", asset.id);
     await updateDoc(assetRef, {
       ...formData,
