@@ -82,7 +82,7 @@ export function ElectronicsSearch({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px] max-h-[600px] flex flex-col">
+      <DialogContent className="sm:max-w-[800px] max-h-[600px] flex flex-col text-popover-foreground">
         <DialogHeader>
           <DialogTitle>Electronics Products</DialogTitle>
           <DialogDescription>

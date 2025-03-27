@@ -11,9 +11,17 @@ import {
   Mouse,
   Printer,
   Computer,
+  Usb,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ActionsCell from "./ActionsCell";
+
+export type ProductDetails = {
+  thumbnail?: string;
+  title?: string;
+  description?: string;
+  category?: string;
+};
 
 export type FirestoreData = {
   id: string;
@@ -25,6 +33,7 @@ export type FirestoreData = {
   assignedEmployee: string;
   status: string;
   dateAdded: string;
+  productDetails?: ProductDetails;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -85,6 +94,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
         Keyboard: "shadow-orange-500",
         Mouse: "shadow-yellow-500",
         Printer: "shadow-pink-500",
+        Peripheral: "shadow-indigo-500",
         Other: "shadow-gray-500",
       };
 
@@ -103,6 +113,8 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
           <Mouse size={18} />
         ) : type === "Printer" ? (
           <Printer size={18} />
+        ) : type === "Peripheral" ? (
+          <Usb size={18} />
         ) : null;
 
       return (

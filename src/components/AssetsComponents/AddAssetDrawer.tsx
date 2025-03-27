@@ -117,7 +117,7 @@ export function AddAssetDrawer({
     }));
     setIsProductSearchOpen(false);
   };
-  // Helper function to map product categories to asset types
+  // helper function to map product categories to asset types
   const getProductType = (category: string) => {
     const categoryMap = {
       computers: "Computer",
@@ -127,10 +127,10 @@ export function AddAssetDrawer({
       mouse: "Mouse",
       server: "Server",
       printer: "Printer",
-      accessories: "Other",
+      "mobile-accessories": "Peripheral",
     };
 
-    // Find the best match or default to 'Other'
+    // find the best match or default to 'Other'
     return Object.keys(categoryMap).find((key) =>
       category.toLowerCase().includes(key)
     )
@@ -209,15 +209,11 @@ export function AddAssetDrawer({
               />
             </div>
 
-            {/* Asset Type section - modified to include product search */}
+            {/* Asset Type section */}
             <div className="grid gap-2">
               <Label htmlFor="type">Asset Type</Label>
               <div className="flex items-center space-x-2">
-                <Select
-                  value={formData.type}
-                  onValueChange={handleTypeChange}
-                  required
-                >
+                <Select value={formData.type} onValueChange={handleTypeChange}>
                   <SelectTrigger className="flex-grow">
                     <SelectValue placeholder="Select asset type" />
                   </SelectTrigger>

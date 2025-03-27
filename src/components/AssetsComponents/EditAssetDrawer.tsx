@@ -109,7 +109,7 @@ export function EditAssetDrawer({
       mouse: "Mouse",
       server: "Server",
       printer: "Printer",
-      accessories: "Other",
+      "mobile-accessories": "Peripheral",
     };
 
     // Find the best match or default to 'Other'
@@ -189,14 +189,13 @@ export function EditAssetDrawer({
               icon={Tag}
             />
           </div>
-          {/* Asset Type section - modified to include product search */}
+          {/* Asset Type section */}
           <div className="grid gap-2">
             <Label htmlFor="type">Asset Type</Label>
             <div className="flex items-center space-x-2">
               <Select
                 value={formData.type}
                 onValueChange={handleSelectChange("type")}
-                required
               >
                 <SelectTrigger className="flex-grow">
                   <SelectValue placeholder="Select asset type" />

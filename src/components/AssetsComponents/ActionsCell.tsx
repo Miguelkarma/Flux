@@ -1,6 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Edit, Trash, Copy } from "lucide-react";
+import { MoreHorizontal, Edit, Trash, Copy, Info } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -16,10 +18,10 @@ import { db } from "@/firebase/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { EditAssetDrawer } from "@/components/AssetsComponents/EditAssetDrawer";
+import { AssetDetailsDialog } from "@/components/AssetsComponents/AssetsDetailsDialog";
 
 interface ActionsCellProps {
   asset: FirestoreData;
-
   onAssetUpdated: () => void;
 }
 
@@ -27,6 +29,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
 
   const handleDelete = async () => {
     const auth = getAuth();
@@ -59,12 +62,12 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
     }
   };
 
-  const handleCopyAssetName = async () => {
+  const handleCopySerialNo = async () => {
     try {
-      await navigator.clipboard.writeText(asset.assetTag || "N/A");
-      toast.success("Asset Tag copied to clipboard");
+      await navigator.clipboard.writeText(asset.serialNo || "N/A");
+      toast.success("Asset No. copied to clipboard");
     } catch (error) {
-      toast.error("Failed to copy Asset Tag");
+      toast.error("Failed to copy Asset No.");
     }
   };
 
@@ -82,7 +85,16 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuSeparator className=" h-[1px] bg-teal-300/60" />
+          <DropdownMenuSeparator />
+
+          {/* View Details */}
+          <DropdownMenuItem
+            onClick={() => setIsDetailsDialogOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Info className="h-4 w-4" />
+            <span>Details</span>
+          </DropdownMenuItem>
 
           {/* Open Edit Drawer */}
           <DropdownMenuItem
@@ -104,16 +116,23 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
 
           <DropdownMenuSeparator />
 
-          {/* Copy Emails */}
+          {/* Copy Asset */}
           <DropdownMenuItem
-            onClick={handleCopyAssetName}
+            onClick={handleCopySerialNo}
             className="flex items-center gap-2"
           >
             <Copy className="h-4 w-4" />
-            <span>Copy Asset Name</span>
+            <span>Copy Serial No.</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Asset Details Dialog */}
+      <AssetDetailsDialog
+        asset={asset}
+        isOpen={isDetailsDialogOpen}
+        onOpenChange={setIsDetailsDialogOpen}
+      />
 
       {/* Render EditAssetDrawer */}
       <EditAssetDrawer

@@ -183,12 +183,12 @@ export function DataTable() {
     <>
       <div className="flex items-center justify-between">
         <Input
-          placeholder="Filter Asset Tag"
+          placeholder="Filter Serial No."
           value={
-            (table.getColumn("assetTag")?.getFilterValue() as string) ?? ""
+            (table.getColumn("serialNo")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("assetTag")?.setFilterValue(event.target.value)
+            table.getColumn("serialNo")?.setFilterValue(event.target.value)
           }
           icon={Filter}
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
