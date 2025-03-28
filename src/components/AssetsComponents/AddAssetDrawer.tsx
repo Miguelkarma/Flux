@@ -44,6 +44,7 @@ import {
 import { useForm, submitAddAssetForm } from "@/hooks/tableHooks/add-form-hook";
 import { ElectronicsSearch } from "@/components/SearchComponents/ProductsSearch";
 import { generateUniqueSerialNumber } from "@/api/electronicProductsAPI";
+import { Textarea } from "../ui/textarea";
 // types
 interface Asset {
   serialNo: string;
@@ -57,6 +58,8 @@ interface Asset {
   location: string;
   dateAdded: string;
   productDetails?: any;
+  description?: string;
+  model: string;
 }
 
 interface AddAssetDrawerProps {
@@ -80,6 +83,8 @@ export function AddAssetDrawer({
     customType: "",
     location: "",
     dateAdded: new Date().toISOString(),
+    description: "",
+    model: "",
   };
 
   // state for product search dialog
@@ -110,7 +115,7 @@ export function AddAssetDrawer({
     setFormData((prev) => ({
       ...prev,
       serialNo: generateUniqueSerialNumber(`SN-${product.id}`),
-      assetTag: product.title.substring(0, 20),
+      model: product.title,
       type: getProductType(product.category),
       customType: product.category,
       productDetails: product,
@@ -169,7 +174,7 @@ export function AddAssetDrawer({
         {/* Drawer content */}
         <SheetContent
           side="bottom"
-          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
         >
           <SheetHeader>
             <SheetTitle className="text-popover-foreground">
@@ -181,7 +186,10 @@ export function AddAssetDrawer({
             </SheetDescription>
           </SheetHeader>
 
-          <form onSubmit={handleSubmit} className="grid gap-6 py-4">
+          <form
+            onSubmit={handleSubmit}
+            className="grid gap-6 max-sm:gap-4 py-4 max-sm:py-2"
+          >
             {/* Serial Number */}
             <div className="grid gap-2">
               <Label htmlFor="serialNo">Serial Number *</Label>
@@ -210,11 +218,14 @@ export function AddAssetDrawer({
             </div>
 
             {/* Asset Type section */}
-            <div className="grid gap-2">
-              <Label htmlFor="type">Asset Type</Label>
-              <div className="flex items-center space-x-2">
+            <div className="flex gap-4">
+              {/* Asset Type */}
+              <div className="flex flex-col w-full">
+                <Label htmlFor="type" className="mb-1">
+                  Asset Type
+                </Label>
                 <Select value={formData.type} onValueChange={handleTypeChange}>
-                  <SelectTrigger className="flex-grow">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select asset type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -229,17 +240,33 @@ export function AddAssetDrawer({
                     <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
 
-                {/* Product Search Button */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setIsProductSearchOpen(true)}
-                  title="Search Products"
-                >
-                  <Search className="h-4 w-4" />
-                </Button>
+              {/* Model */}
+              <div className="flex flex-col w-full">
+                <Label htmlFor="model" className="mb-1">
+                  Model
+                </Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="model"
+                    name="model"
+                    value={formData.model}
+                    onChange={handleInputChange}
+                    placeholder="Enter model name"
+                    icon={Hash}
+                    className="w-full"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setIsProductSearchOpen(true)}
+                    title="Search Products"
+                  >
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -325,7 +352,17 @@ export function AddAssetDrawer({
                 </PopoverContent>
               </Popover>
             </div>
-
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Enter asset description"
+                className="max-sm:-h-32"
+              />
+            </div>
             {/* Status */}
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>

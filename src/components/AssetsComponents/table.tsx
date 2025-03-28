@@ -160,9 +160,17 @@ export function DataTable() {
     title: "Upload IT Assets",
     collectionName: "it-assets",
     formatExamples: {
-      csv: "serialNo,assetTag,type,location,status\n12345,LAP-001,Laptop,Office,Active\n67890,MON-002,Monitor,Remote,Active",
+      csv: "serialNo,assetTag,model,type,location,description,status\n123456,AT001,Dell Latitude,Laptop,Office A,Work laptop,Active",
     },
-    requiredFields: ["serialNo", "assetTag", "type", "location", "status"],
+    requiredFields: [
+      "serialNo",
+      "assetTag",
+      "model",
+      "type",
+      "location",
+      "description",
+      "status",
+    ],
     uniqueField: "serialNo",
   };
   return (

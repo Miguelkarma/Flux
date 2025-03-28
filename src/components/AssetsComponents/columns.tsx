@@ -27,10 +27,12 @@ export type FirestoreData = {
   assignedEmployee: string;
   status: string;
   dateAdded: string;
+  description?: string;
   productDetails?: ProductDetails;
+  model: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export const columns: ColumnDef<FirestoreData, any>[] = [
   {
     id: "select",
@@ -71,6 +73,15 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     cell: ({ row }) => (
       <div className="capitalize text-center text-secondary-foreground">
         {row.getValue<string>("assetTag") || "N/A"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "model",
+    header: "Model",
+    cell: ({ row }) => (
+      <div className="text-center text-secondary-foreground">
+        {row.getValue<string>("model") || "N/A"}
       </div>
     ),
   },

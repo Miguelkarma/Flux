@@ -7,7 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
 import { Separator } from "@/components/ui/separator";
-import { Waypoints } from "lucide-react";
+import { Waypoints, FileText } from "lucide-react";
 
 interface AssetDetailsDialogProps {
   asset: FirestoreData;
@@ -35,7 +35,7 @@ export function AssetDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-card text-popover-foreground">
+      <DialogContent className="sm:max-w-md bg-card text-popover-foreground ">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
@@ -58,7 +58,7 @@ export function AssetDetailsDialog({
               className="w-full h-full object-contain"
             />
           ) : (
-            <Waypoints className="w-16 h-16 text-gray-400" />
+            <Waypoints className="w-16 h-16 text-teal-300 " />
           )}
         </div>
 
@@ -102,17 +102,9 @@ export function AssetDetailsDialog({
           {/* Additional details section */}
           {asset.productDetails && (
             <div className="space-y-3">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Product Details
-              </h3>
               {asset.productDetails.title && (
                 <p className="text-base font-semibold">
                   {asset.productDetails.title}
-                </p>
-              )}
-              {asset.productDetails.description && (
-                <p className="text-sm text-muted-foreground">
-                  {asset.productDetails.description}
                 </p>
               )}
               {asset.productDetails.category && (
@@ -122,9 +114,21 @@ export function AssetDetailsDialog({
                     asset.status
                   )} shadow-md text-popover-foreground`}
                 >
-                  {asset.productDetails.category}
+                  {asset.type}
                 </Badge>
               )}
+            </div>
+          )}
+          {/* Description Section */}
+          {(asset.description || asset.productDetails?.description) && (
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <FileText className="w-4 h-4 opacity-70" />
+                Description
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {asset.description || asset.productDetails?.description}
+              </p>
             </div>
           )}
         </div>
