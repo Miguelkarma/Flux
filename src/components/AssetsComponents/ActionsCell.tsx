@@ -18,7 +18,7 @@ import { db } from "@/firebase/firebase";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { EditAssetDrawer } from "@/components/AssetsComponents/EditAssetDrawer";
-import { AssetDetailsDialog } from "@/components/MarketComponents/AssetsDetailsDialog";
+import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
 
 interface ActionsCellProps {
   asset: FirestoreData;

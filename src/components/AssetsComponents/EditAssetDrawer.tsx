@@ -29,7 +29,7 @@ import {
   useFormState,
   submitAssetForm,
 } from "@/hooks/tableHooks/edit-form-hook";
-import ElectronicsSearch from "@/components/MarketComponents/ProductsSearch";
+import ElectronicsSearch from "@/components/SearchComponents/ProductsSearch";
 import { generateUniqueSerialNumber } from "@/api/electronicProductsAPI";
 
 interface EditAssetDrawerProps {
