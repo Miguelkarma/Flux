@@ -193,7 +193,6 @@ export function EditAssetDrawer({
               value={formData.assetTag}
               onChange={handleInputChange}
               placeholder="Enter asset Tag"
-              required
               icon={Tag}
             />
           </div>

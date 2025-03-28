@@ -35,7 +35,7 @@ export function AssetDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-card text-popover-foreground">
+      <DialogContent className="sm:max-w-md bg-card text-popover-foreground ">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
@@ -114,7 +114,7 @@ export function AssetDetailsDialog({
                     asset.status
                   )} shadow-md text-popover-foreground`}
                 >
-                  {asset.productDetails.category}
+                  {asset.type}
                 </Badge>
               )}
             </div>
