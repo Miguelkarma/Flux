@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import { useTheme } from "@/hooks/ThemeProvider";
-import Header from "@/components/DashboardComponents/Header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Card } from "@/components/ui/card";
 import Loader from "@/Animation/SmallLoader";
-import CurrencyConverter from "@/components/ExchangeComponents/currency-converter";
+import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
 import ExchangeRateTable from "@/components/ExchangeComponents/ExchangeRateTable";
 
 export default function Exchange() {

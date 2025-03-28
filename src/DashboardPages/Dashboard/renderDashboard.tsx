@@ -3,16 +3,15 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "@/hooks/ThemeProvider";
 import DashboardParticles from "@/Animation/DashboardParticles";
-import Header from "@/components/DashboardComponents/Header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import SystemTime from "@/components/DashboardComponents/SystemTime";
-import QuickActions from "@/components/DashboardComponents/QuickActions";
 import AssetSummary from "@/components/DashboardComponents/AssetSummary";
 import { toast, Toaster } from "sonner";
+import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
 
 export default function Dashboard() {
   const { theme } = useTheme();
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -45,6 +44,7 @@ export default function Dashboard() {
         expand={true}
         visibleToasts={3}
       />
+
       {/* Background particle effect */}
       <DashboardParticles />
 
@@ -70,24 +70,25 @@ export default function Dashboard() {
         {/* Header */}
         <Header />
 
-        {/* Main content */}
-        <div className="grid grid-cols-12 gap-6">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Sidebar */}
-          <div className="col-span-12 md:col-span-3 lg:col-span-3">
+          <div className="md:col-span-3">
             <Sidebar />
           </div>
 
-          {/* Main dashboard */}
-          <div className="col-span-12 md:col-span-9 lg:col-span-9">
-            <div className="grid gap-6">
-              {/* Asset Summary */}
+          {/* Main Dashboard */}
+          <div className="md:col-span-6">
+            <div className="grid gap-2">
               <AssetSummary />
-              <SystemTime />
-              <QuickActions />
             </div>
           </div>
 
-          {/* Right sidebar */}
+          {/* Right Sidebar */}
+          <div className="md:col-span-3 lg:col-span-3 flex flex-col gap-6 md:order-last">
+            <SystemTime />
+            <CurrencyConverter />
+          </div>
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRightLeft, RefreshCw } from "lucide-react";
 import { useCurrencyConverter } from "@/hooks/converterHook.tsx";
-import CurrencyInput from "@/components/ExchangeComponents/CurrencyInput";
+import CurrencyInput from "@/components/DashboardComponents/CurrencyInput";
 import { useCallback } from "react";
 
 export default function CurrencyConverter() {
