@@ -24,6 +24,7 @@ import { CalendarIcon, Tag, Hash, MapPin, Search } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
+import { Textarea } from "../ui/textarea";
 
 import {
   useFormState,
@@ -44,7 +45,9 @@ interface EditAssetDrawerProps {
     type: string;
     customType?: string;
     location: string;
+    description?: string;
     productDetails?: any;
+    model?: string; // Added optional model field
   };
   isOpen: boolean;
   onClose: () => void;
@@ -79,6 +82,8 @@ export function EditAssetDrawer({
     customType: asset.customType ?? "",
     location: asset.location ?? "",
     dateAdded: asset.dateAdded ?? new Date().toISOString(),
+    description: asset.description ?? "",
+    model: asset.model ?? "", // Added model initialization
   });
 
   // state for product search dialog
@@ -92,13 +97,14 @@ export function EditAssetDrawer({
     setFormData((prev) => ({
       ...prev,
       serialNo: generateUniqueSerialNumber(`SN-${product.id}`),
-      assetTag: product.title.substring(0, 20),
       type: getProductType(product.category),
       customType: product.category,
+      model: product.title,
       productDetails: product,
     }));
     setIsProductSearchOpen(false);
   };
+
   // Helper function to map product categories to asset types
   const getProductType = (category: string) => {
     const categoryMap = {
@@ -133,6 +139,8 @@ export function EditAssetDrawer({
       customType: asset.customType ?? "",
       location: asset.location ?? "",
       dateAdded: asset.dateAdded ?? new Date().toISOString(),
+      description: asset.description ?? "",
+      model: asset.model ?? "",
     });
   }, [asset, setFormData]);
 
@@ -155,7 +163,7 @@ export function EditAssetDrawer({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent
         side="bottom"
-        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
       >
         <SheetHeader>
           <SheetTitle className="text-popover-foreground">
@@ -189,15 +197,18 @@ export function EditAssetDrawer({
               icon={Tag}
             />
           </div>
-          {/* Asset Type section */}
-          <div className="grid gap-2">
-            <Label htmlFor="type">Asset Type</Label>
-            <div className="flex items-center space-x-2">
+          {/* Asset Type and Model section */}
+          <div className="flex gap-4">
+            {/* Asset Type */}
+            <div className="flex flex-col w-full">
+              <Label htmlFor="type" className="mb-1">
+                Asset Type
+              </Label>
               <Select
                 value={formData.type}
                 onValueChange={handleSelectChange("type")}
               >
-                <SelectTrigger className="flex-grow">
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select asset type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -212,19 +223,36 @@ export function EditAssetDrawer({
                   <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
 
-              {/* Product Search Button */}
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => setIsProductSearchOpen(true)}
-                title="Search Products"
-              >
-                <Search className="h-4 w-4" />
-              </Button>
+            {/* Model */}
+            <div className="flex flex-col w-full">
+              <Label htmlFor="model" className="mb-1">
+                Model
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="model"
+                  name="model"
+                  value={formData.model}
+                  onChange={handleInputChange}
+                  placeholder="Enter model name"
+                  icon={Hash}
+                  className="w-full"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsProductSearchOpen(true)}
+                  title="Search Products"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
+
           {/* Product Search Dialog */}
           <ElectronicsSearch
             isOpen={isProductSearchOpen}
@@ -303,6 +331,18 @@ export function EditAssetDrawer({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+
+          {/* Description */}
+          <div className="grid gap-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Enter asset description"
+            />
           </div>
 
           {/* Status */}

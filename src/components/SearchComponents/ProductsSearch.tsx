@@ -12,6 +12,7 @@ import { Search } from "lucide-react";
 
 import { Product, customElectronicProducts } from "@/api/customElectronics";
 import { fetchElectronicsProducts } from "@/api/electronicProductsAPI";
+import TableLoader from "@/Animation/TableLoader";
 
 interface ElectronicsSearchProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export function ElectronicsSearch({
   useEffect(() => {
     const loadElectronics = async () => {
       setIsLoading(true);
+
       try {
         // Fetch electronics from API
         const fetchedProducts = await fetchElectronicsProducts();
@@ -42,15 +44,28 @@ export function ElectronicsSearch({
           ...customElectronicProducts,
         ];
 
-        setProducts(combinedProducts);
-        setFilteredProducts(combinedProducts);
+        const timer = setTimeout(() => {
+          setProducts(combinedProducts);
+          setFilteredProducts(combinedProducts);
+        }, 2000);
+
+        return () => clearTimeout(timer);
       } catch (error) {
         console.error("Error loading products:", error);
+
         // Fall back to custom products if anything goes wrong
-        setProducts(customElectronicProducts);
-        setFilteredProducts(customElectronicProducts);
+        const timer = setTimeout(() => {
+          setProducts(customElectronicProducts);
+          setFilteredProducts(customElectronicProducts);
+        }, 2000);
+
+        return () => clearTimeout(timer);
       } finally {
-        setIsLoading(false);
+        const loadingTimer = setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(loadingTimer);
       }
     };
 
@@ -82,7 +97,7 @@ export function ElectronicsSearch({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px] max-h-[600px] flex flex-col text-popover-foreground">
+      <DialogContent className="sm:max-w-[1000px] max-h-[1000px] flex flex-col text-popover-foreground p-6 bg-card ">
         <DialogHeader>
           <DialogTitle>Electronics Products</DialogTitle>
           <DialogDescription>
@@ -98,8 +113,8 @@ export function ElectronicsSearch({
         />
 
         {isLoading ? (
-          <div className="flex justify-center items-center h-full">
-            Loading electronics products...
+          <div className="flex justify-center items-center h-full p-6 ">
+            <TableLoader />
           </div>
         ) : (
           <ScrollArea className="h-[400px] w-full pr-4">
@@ -107,7 +122,7 @@ export function ElectronicsSearch({
               {filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="border rounded-lg p-4 hover:bg-accent cursor-pointer flex flex-col items-center "
+                  className="border rounded-lg p-4 hover:bg-accent cursor-pointer flex flex-col items-center  "
                   onClick={() => handleProductSelect(product)}
                 >
                   <img
@@ -115,13 +130,12 @@ export function ElectronicsSearch({
                     alt={product.title}
                     className="w-24 h-24 object-contain mb-2 bg-white rounded-lg"
                   />
-                  <h3 className="text-sm font-semibold text-center">
+                  <h3 className="text-sm font-semibold text-center ">
                     {product.title}
                   </h3>
                   <p className="text-xs text-muted-foreground">
                     {product.category}
                   </p>
-                  <p className="text-sm font-bold">${product.price}</p>
                 </div>
               ))}
             </div>

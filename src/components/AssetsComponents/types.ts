@@ -8,6 +8,8 @@ export type FirestoreData = {
   assignedEmployee: string;
   status: string;
   dateAdded: string;
+  model:string;
+  description?:string;
 };
 
 export type ProductDetails = {
