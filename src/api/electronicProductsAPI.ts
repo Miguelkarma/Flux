@@ -14,12 +14,18 @@ export async function fetchElectronicsProducts(): Promise<Product[]> {
         [
           "smartphones",
           "laptops",
-          "computer",
+          "computers",
           "tablet",
           "mobile",
           "tech",
           "gadget",
           "electronic",
+          "keyboards",
+          "monitor",
+          "mouse",
+          "printer",
+          "server",
+          "mobile-accessories",
         ].some((keyword) => product.category.toLowerCase().includes(keyword))
     );
 

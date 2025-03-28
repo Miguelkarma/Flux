@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AssetDetailsDialog } from "@/components/AssetsComponents/AssetsDetailsDialog";
+import { AssetDetailsDialog } from "@/components/MarketComponents/AssetsDetailsDialog";
 
 // Mock UI components
 jest.mock("@/components/ui/dialog", () => ({
