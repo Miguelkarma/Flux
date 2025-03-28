@@ -1,4 +1,3 @@
-// customElectronics.ts
 export interface Product {
   id: number;
   title: string;
@@ -16,7 +15,8 @@ export const customElectronicProducts: Product[] = [
     price: 79.99,
     description: "High-precision wireless gaming mouse with RGB lighting",
     category: "mouse",
-    thumbnail: "/api/placeholder/150/150",
+    thumbnail:
+      "https://gameone.ph/media/catalog/product/cache/d378a0f20f83637cdb1392af8dc032a2/1/_/1_6_2.jpg",
   },
   {
     id: 10002,

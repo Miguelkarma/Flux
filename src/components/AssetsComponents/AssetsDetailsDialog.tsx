@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -8,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
 import { Separator } from "@/components/ui/separator";
+import { Waypoints } from "lucide-react";
 
 interface AssetDetailsDialogProps {
   asset: FirestoreData;
@@ -20,7 +20,7 @@ export function AssetDetailsDialog({
   isOpen,
   onOpenChange,
 }: AssetDetailsDialogProps) {
-  // status badge
+  // Status badge
   const getStatusBadgeClass = (status: string) => {
     const statusColors: Record<string, string> = {
       Active: "shadow-green-500",
@@ -36,7 +36,6 @@ export function AssetDetailsDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-card text-popover-foreground">
-        
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
@@ -50,11 +49,19 @@ export function AssetDetailsDialog({
             </Badge>
           </DialogTitle>
         </DialogHeader>
-        <img
-          src={asset.productDetails?.thumbnail}
-          alt={asset.productDetails?.title || "Product Image"}
-          className="w-full h-[20em] max-md:h-[10em] max-sm:h-[7em] object-contain mb-2 border-2 rounded-lg flex justify-center items-center"
-        />
+
+        <div className="w-full h-[20em] max-md:h-[10em] max-sm:h-[7em] border-2 rounded-lg flex justify-center items-center bg-white ">
+          {asset.productDetails?.thumbnail ? (
+            <img
+              src={asset.productDetails.thumbnail}
+              alt={asset.productDetails?.title || "Product Image"}
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <Waypoints className="w-16 h-16 text-gray-400" />
+          )}
+        </div>
+
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-3">
@@ -92,7 +99,7 @@ export function AssetDetailsDialog({
 
           <Separator />
 
-          {/* additional details section */}
+          {/* Additional details section */}
           {asset.productDetails && (
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-muted-foreground">

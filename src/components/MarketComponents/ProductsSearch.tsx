@@ -107,13 +107,13 @@ export function ElectronicsSearch({
               {filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="border rounded-lg p-4 hover:bg-accent cursor-pointer flex flex-col items-center"
+                  className="border rounded-lg p-4 hover:bg-accent cursor-pointer flex flex-col items-center "
                   onClick={() => handleProductSelect(product)}
                 >
                   <img
                     src={product.thumbnail}
                     alt={product.title}
-                    className="w-24 h-24 object-contain mb-2"
+                    className="w-24 h-24 object-contain mb-2 bg-white rounded-lg"
                   />
                   <h3 className="text-sm font-semibold text-center">
                     {product.title}

@@ -39,7 +39,7 @@ import {
 } from "../sharedComponent/BulkDeleteDialog";
 import { UploadFile } from "../sharedComponent/UploadFile";
 import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
-
+import { FirestoreData } from "@/components/AssetsComponents/types";
 import { db } from "@/firebase/firebase";
 import {
   collection,
@@ -49,20 +49,6 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-// Type definitions
-export type FirestoreData = {
-  id: string;
-  serialNo: string;
-  assetTag: string;
-  type: string;
-  customType?: string;
-  location: string;
-  email: string;
-  assignedEmployee: string;
-  status: string;
-  dateAdded: string;
-};
 
 export function DataTable() {
   // State management

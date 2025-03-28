@@ -15,13 +15,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ActionsCell from "./ActionsCell";
-
-export type ProductDetails = {
-  thumbnail?: string;
-  title?: string;
-  description?: string;
-  category?: string;
-};
+import { ProductDetails } from "@/components/AssetsComponents/types";
 
 export type FirestoreData = {
   id: string;
