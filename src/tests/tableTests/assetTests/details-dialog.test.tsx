@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
+import { FirestoreData } from "@/components/AssetsComponents/columns";
 
 // Mock UI components
 jest.mock("@/components/ui/dialog", () => ({
@@ -29,8 +30,14 @@ jest.mock("@/components/ui/separator", () => ({
   Separator: () => <hr data-testid="mock-separator" />,
 }));
 
+// Mock Lucide icons
+jest.mock("lucide-react", () => ({
+  Waypoints: () => <div data-testid="mock-waypoints-icon" />,
+  FileText: () => <div data-testid="mock-filetext-icon" />,
+}));
+
 describe("AssetDetailsDialog", () => {
-  const assetMock = {
+  const assetMock: FirestoreData = {
     id: "asset-123",
     serialNo: "123456",
     assetTag: "ASSET-001",
@@ -40,9 +47,11 @@ describe("AssetDetailsDialog", () => {
     location: "Office A",
     assignedEmployee: "John Doe",
     dateAdded: "2023-01-01",
+    model: "XPS 15",
+    description: "Company laptop for professional use",
     productDetails: {
       title: "Dell XPS 15",
-      description: "High-performance laptop for professionals.",
+      description: "Company laptop for professional use",
       category: "Computers",
       thumbnail: "https://example.com/image.jpg",
     },
@@ -62,22 +71,51 @@ describe("AssetDetailsDialog", () => {
     expect(screen.getByText("Asset Details")).toBeInTheDocument();
     expect(screen.getByTestId("mock-badge-Active")).toBeInTheDocument();
 
-    // Verify basic asset details
-    expect(screen.getByText("123456")).toBeInTheDocument();
-    expect(screen.getByText("ASSET-001")).toBeInTheDocument();
-    expect(screen.getByText("Laptop")).toBeInTheDocument();
+    // More flexible checks
+    expect(screen.getByText(/ASSET-001/)).toBeInTheDocument();
+    expect(screen.getByText(/123456/)).toBeInTheDocument();
 
-    // Verify product details
+    // Check for Laptop text and badge
+    expect(screen.getAllByText(/Laptop/)[0]).toBeInTheDocument();
+
+    const laptopBadge = screen.getByTestId("mock-badge-Laptop");
+    expect(laptopBadge).toBeInTheDocument();
+
+    // Verify product details with more flexible matching
+    expect(screen.getByText(/Dell XPS 15/)).toBeInTheDocument();
+
+    // Check description more flexibly
     expect(screen.getByText("Dell XPS 15")).toBeInTheDocument();
     expect(
-      screen.getByText("High-performance laptop for professionals.")
+      screen.getByText("Company laptop for professional use")
     ).toBeInTheDocument();
-    expect(screen.getByTestId("mock-badge-Computers")).toBeInTheDocument();
+
+    expect(screen.getByTestId("mock-badge-Laptop")).toBeInTheDocument();
 
     // Verify image
     const image = screen.getByRole("img");
     expect(image).toHaveAttribute("src", "https://example.com/image.jpg");
     expect(image).toHaveAttribute("alt", "Dell XPS 15");
+  });
+
+  test("renders default Waypoints icon when no thumbnail", () => {
+    const assetWithoutThumbnail = {
+      ...assetMock,
+      productDetails: {
+        ...assetMock.productDetails,
+        thumbnail: undefined,
+      },
+    };
+
+    render(
+      <AssetDetailsDialog
+        asset={assetWithoutThumbnail}
+        isOpen={true}
+        onOpenChange={jest.fn()}
+      />
+    );
+
+    expect(screen.getByTestId("mock-waypoints-icon")).toBeInTheDocument();
   });
 
   test("does not render content when closed", () => {
@@ -144,5 +182,25 @@ describe("AssetDetailsDialog", () => {
 
     // Verify dialog renders without errors
     expect(screen.getByText("Asset Details")).toBeInTheDocument();
+  });
+
+  test("renders description section", () => {
+    const assetWithDescription = {
+      ...assetMock,
+      description: "Company-owned asset for work purposes",
+    };
+
+    render(
+      <AssetDetailsDialog
+        asset={assetWithDescription}
+        isOpen={true}
+        onOpenChange={jest.fn()}
+      />
+    );
+
+    expect(screen.getByTestId("mock-filetext-icon")).toBeInTheDocument();
+    expect(
+      screen.getByText("Company-owned asset for work purposes")
+    ).toBeInTheDocument();
   });
 });

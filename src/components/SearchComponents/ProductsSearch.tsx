@@ -31,47 +31,45 @@ export function ElectronicsSearch({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    let timers: NodeJS.Timeout[] = [];
+
     const loadElectronics = async () => {
       setIsLoading(true);
 
       try {
-        // Fetch electronics from API
         const fetchedProducts = await fetchElectronicsProducts();
-
-        // Combine fetched electronics with custom products
         const combinedProducts = [
           ...fetchedProducts,
           ...customElectronicProducts,
         ];
 
-        const timer = setTimeout(() => {
+        const productTimer = setTimeout(() => {
           setProducts(combinedProducts);
           setFilteredProducts(combinedProducts);
         }, 2000);
-
-        return () => clearTimeout(timer);
+        timers.push(productTimer);
       } catch (error) {
         console.error("Error loading products:", error);
-
-        // Fall back to custom products if anything goes wrong
-        const timer = setTimeout(() => {
+        const fallbackTimer = setTimeout(() => {
           setProducts(customElectronicProducts);
           setFilteredProducts(customElectronicProducts);
         }, 2000);
-
-        return () => clearTimeout(timer);
+        timers.push(fallbackTimer);
       } finally {
         const loadingTimer = setTimeout(() => {
           setIsLoading(false);
         }, 1000);
-
-        return () => clearTimeout(loadingTimer);
+        timers.push(loadingTimer);
       }
     };
 
     if (isOpen) {
       loadElectronics();
     }
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
   }, [isOpen]);
 
   useEffect(() => {
