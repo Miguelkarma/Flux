@@ -36,7 +36,7 @@ export function AssetDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full bg-card text-popover-foreground ">
+      <DialogContent className="w-full bg-card text-popover-foreground overflow-y-auto max-h-[calc(100vh-100px)]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
