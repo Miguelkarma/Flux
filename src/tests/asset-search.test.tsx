@@ -17,7 +17,7 @@ jest.mock("lucide-react", () => ({
   Search: () => <div data-testid="search-icon">Search Icon</div>,
 }));
 
-// mock shadcn/ui Dialog components
+
 jest.mock("@/components/ui/dialog", () => ({
   Dialog: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -42,12 +42,11 @@ jest.mock("@/components/ui/dialog", () => ({
   ),
 }));
 
-// mock API
+
 jest.mock("@/api/electronicProductsAPI", () => ({
   fetchElectronicsProducts: jest.fn(),
 }));
 
-// mock custom electronics data
 jest.mock("@/api/customElectronics", () => ({
   customElectronicProducts: [
     {
@@ -70,7 +69,6 @@ jest.mock("@/api/customElectronics", () => ({
 }));
 
 // mock AssetDetailsDialog component
-// Update your AssetDetailsDialog mock in the test file
 jest.mock("@/components/SearchComponents/AssetsDetailsDialog", () => ({
   AssetDetailsDialog: ({ asset, isOpen, onOpenChange }: { asset: any, isOpen: boolean, onOpenChange: (open: boolean) => void }) => {
     return isOpen ? (
@@ -158,22 +156,21 @@ describe("AssetSearch Component", () => {
       await userEvent.type(searchInput, "Test");
     });
 
-    // make sure product appears in search results
+
     const testProduct = await screen.findByText("Test Product 1");
     expect(testProduct).toBeInTheDocument();
 
-    // click on product
+
     fireEvent.click(testProduct);
 
-    // check dialog appears with correct asset
+ 
     expect(screen.getByTestId("asset-dialog")).toBeInTheDocument();
     expect(screen.getByText(/Asset: Test Product 1/i)).toBeInTheDocument();
 
-    // check search input is cleared
     expect(searchInput).toHaveValue("");
   });
 
-  test("handles API fetch error gracefully", async () => {
+  test("handles API fetch error", async () => {
     (fetchElectronicsProducts as jest.Mock).mockRejectedValue(
       new Error("API Error")
     );
