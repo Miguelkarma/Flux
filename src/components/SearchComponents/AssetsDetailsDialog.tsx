@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -49,7 +50,7 @@ export function AssetDetailsDialog({
             </Badge>
           </DialogTitle>
         </DialogHeader>
-
+         <DialogDescription></DialogDescription>
         <div className="w-full h-[20em] max-md:h-[10em] max-sm:h-[7em] border-2 rounded-lg flex justify-center items-center bg-white ">
           {asset.productDetails?.thumbnail ? (
             <img
