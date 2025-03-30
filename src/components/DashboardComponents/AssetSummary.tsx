@@ -56,9 +56,9 @@ function MetricCard({
       case "up":
         return <BarChart3 className="h-4 w-4 text-amber-500" />;
       case "down":
-        return <BarChart3 className="h-4 w-4 rotate-180 text-green-500" />;
+        return <BarChart3 className="h-4 w-4 rotate-180 text-blue-500" />;
       case "stable":
-        return <LineChart className="h-4 w-4 text-blue-500" />;
+        return <LineChart className="h-4 w-4 text-green-500" />;
       default:
         return null;
     }
@@ -207,7 +207,7 @@ export default function AssetSummary() {
             title="Active Employees"
             value={employeesData.active}
             icon={UserCheck}
-            trend="stable"
+            trend="up"
             color="blue"
             detail="Working"
           />
@@ -217,7 +217,7 @@ export default function AssetSummary() {
             title="On Leave"
             value={employeesData.onLeave}
             icon={Users}
-            trend="stable"
+            trend="down"
             color="teal"
             detail="Temporary absence"
           />
