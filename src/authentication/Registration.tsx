@@ -26,8 +26,11 @@ const Registration = () => {
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <RegistrationForm />
+          <div className="w-full max-w-md relative">
+            <div className="absolute -inset-2 bg-teal-500 opacity-30 blur-3xl rounded-full"></div>
+            <div className="relative z-10">
+              <RegistrationForm />
+            </div>
           </div>
         </div>
       </div>
@@ -35,7 +38,7 @@ const Registration = () => {
         <img
           src={back}
           alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="absolute inset-0 h-full w-full object-cover "
         />
       </div>
     </div>
