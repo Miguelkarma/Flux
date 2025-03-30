@@ -4,13 +4,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, CircleDollarSign, RefreshCw } from "lucide-react";
+import { ChevronsUpDown, CircleDollarSign} from "lucide-react";
 import { useCurrencyConverter } from "@/hooks/converterHook.tsx";
 import CurrencyInput from "@/components/DashboardComponents/CurrencyInput";
 import { useCallback } from "react";
@@ -21,7 +20,6 @@ export default function CurrencyConverter() {
     fromCurrency,
     toCurrency,
     convertedAmount,
-    isLoading,
     currencies,
     error,
     setFromCurrency,
@@ -59,10 +57,9 @@ export default function CurrencyConverter() {
             type="number"
             min="0"
             step="0.01"
-            value={amount}
-            onChange={(e) => handleAmountChange(parseFloat(e.target.value))}
+            onChange={(e) => handleAmountChange(e.target.value)}
             placeholder="Enter amount"
-            className="bg-card  h-10"
+            className="bg-card h-10"
             icon={CircleDollarSign}
           />
         </div>
@@ -83,7 +80,6 @@ export default function CurrencyConverter() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white"
               onClick={handleSwapCurrencies}
               title="Swap currencies"
             >
@@ -108,10 +104,10 @@ export default function CurrencyConverter() {
         {/* Conversion Result */}
         {convertedAmount !== null && (
           <div
-            className="p-4 bg-[#00253e] rounded-md text-center"
+            className="p-4 bg-secondary border rounded-md text-center"
             aria-live="polite"
           >
-            <p className="text-sm text-gray-400">Result:</p>
+            <p className="text-sm">Result:</p>
             <p className="text-xl font-bold">
               {amount} {fromCurrency.toUpperCase()} ={" "}
               {convertedAmount.toFixed(4)} {toCurrency.toUpperCase()}
@@ -119,23 +115,6 @@ export default function CurrencyConverter() {
           </div>
         )}
       </CardContent>
-
-      {/* Convert Button */}
-      <CardFooter>
-        <Button
-          className="w-full text-popover-foreground bg-secondary border h-10"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-              Loading...
-            </>
-          ) : (
-            "Convert"
-          )}
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

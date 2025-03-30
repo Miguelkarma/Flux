@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Banknote } from "lucide-react";
 
 interface Currency {
   code: string;
@@ -61,7 +62,7 @@ export default function CurrencyInput({
             </Button>
           </DialogTrigger>
           <DialogDescription></DialogDescription>
-          <DialogContent className="max-h-[400px]">
+          <DialogContent className="max-h-[400px] text-popover-foreground">
             <DialogHeader>
               <DialogTitle>Select a currency</DialogTitle>
             </DialogHeader>
@@ -70,7 +71,7 @@ export default function CurrencyInput({
               placeholder="Search currency..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="mb-2"
+              icon={Banknote}
             />
             <ScrollArea className="max-h-[200px]">
               <div className="grid gap-2">
@@ -78,7 +79,7 @@ export default function CurrencyInput({
                   <Button
                     key={code}
                     variant="ghost"
-                    className="w-full justify-start"
+                    className="w-full justify-start  hover:bg-card"
                     onClick={() => {
                       onChange(code);
                       setOpen(false);
