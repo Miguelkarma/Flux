@@ -35,7 +35,7 @@ export default function SystemTime() {
 
   return (
     <div className="bg-[hsl(var(--card))] border border-slate-700/50 backdrop-blur-sm rounded-lg overflow-hidden">
-      <div className="bg-[hsl(var(--card))]  p-6 border-b border-slate-700/50">
+      <div className="bg-[hsl(var(--secondary))]  p-6 border-b border-slate-700/50">
         <div className="text-center">
           <div className="text-xs text-popover-foreground mb-1 font-mono">
             SYSTEM TIME

@@ -9,7 +9,7 @@ import SystemTime from "@/components/DashboardComponents/SystemTime";
 import AssetSummary from "@/components/DashboardComponents/AssetSummary";
 import { toast, Toaster } from "sonner";
 import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
-import MarketPriceTracker from "@/components/DashboardComponents/PriceChart";
+import MarketPriceTracker from "@/components/DashboardComponents/MarketPrice";
 
 export default function Dashboard() {
   const { theme } = useTheme();
@@ -80,7 +80,7 @@ export default function Dashboard() {
 
           {/* Main Dashboard */}
           <div className="md:col-span-6">
-            <div className="grid gap-16">
+            <div className="grid gap-6">
               <AssetSummary />
               <MarketPriceTracker />
             </div>

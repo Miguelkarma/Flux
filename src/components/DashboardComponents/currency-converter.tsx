@@ -33,7 +33,7 @@ export default function CurrencyConverter() {
   }, [fromCurrency, toCurrency, setFromCurrency, setToCurrency]);
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-card text-popover-foreground border shadow-lg">
+    <Card className="w-full max-w-md mx-auto bg-[hsl(var(--secondary))] text-popover-foreground border shadow-lg">
       <CardHeader className="space-y-1 text-center pb-2">
         <CardTitle className="text-2xl font-bold ">
           Currency Converter
