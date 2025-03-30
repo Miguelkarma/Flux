@@ -36,7 +36,7 @@ export function AssetDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-card text-popover-foreground ">
+      <DialogContent className="w-full bg-card text-popover-foreground ">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
@@ -50,7 +50,7 @@ export function AssetDetailsDialog({
             </Badge>
           </DialogTitle>
         </DialogHeader>
-         <DialogDescription></DialogDescription>
+        <DialogDescription></DialogDescription>
         <div className="w-full h-[20em] max-md:h-[10em] max-sm:h-[7em] border-2 rounded-lg flex justify-center items-center bg-white ">
           {asset.productDetails?.thumbnail ? (
             <img

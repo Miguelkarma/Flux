@@ -87,11 +87,11 @@ export function AssetSearch() {
   return (
     <div className="relative" ref={searchRef}>
       <div className="flex items-center space-x-1 bg-secondary rounded-full px-2 sm:px-3 py-1.5 border border-slate-700/50 backdrop-blur-sm">
-        <Search className="h-4 w-4 text-slate-400" />
+        <Search className="h-4 w-4 text-slate-500" />
         <input
           type="text"
           placeholder="Search assets..."
-          className="bg-transparent border-none focus:outline-none text-xs sm:text-sm w-24 max-sm:w-[5em] sm:w-[12em] md:w-40 placeholder:text-slate-500"
+          className="bg-transparent border-none focus:outline-none text-xs sm:text-sm w-24 max-sm:w-[5em] sm:w-[12em] md:w-40 placeholder:text-slate-500 text-popover-foreground"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => {
@@ -103,7 +103,7 @@ export function AssetSearch() {
       </div>
 
       {showResults && filteredProducts.length > 0 && (
-        <div className="absolute mt-2 w-48 sm:w-56 md:w-64 max-h-80 overflow-y-auto bg-card rounded-md shadow-lg border border-slate-700/50 z-50">
+        <div className="absolute mt-2 w-48 sm:w-56 md:w-64 max-h-80 overflow-y-auto bg-card rounded-md shadow-lg border border-slate-700/50 z-50 text-popover-foreground">
           <ul className="py-1">
             {filteredProducts.map((product) => (
               <li
