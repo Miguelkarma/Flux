@@ -44,7 +44,7 @@ export default function Dashboard() {
         {/* Display the loader if loading */}
         {isLoading && <Loader />}
 
-        <div className="custom-container mx-auto p-4 relative z-10 ">
+        <div className="container mx-auto p-4 relative z-10 ">
           <Header />
 
           <div className="grid grid-cols-12 gap-2">
