@@ -43,7 +43,6 @@ export function AssetSearch() {
     const filtered = products.filter(
       (product) =>
         product.title.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query)
     );
 
