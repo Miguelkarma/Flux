@@ -75,7 +75,7 @@ export const customElectronicProducts: Product[] = [
     price: 49.99,
     description:
       "The Anker USB-C Hub is a compact and powerful connectivity solution for modern laptops and tablets. Featuring a 4-in-1 design with HDMI output, USB 3.0 ports, and an SD card reader, this hub expands your device's versatility. Its portable form factor and robust build quality make it an essential accessory for professionals and students who need flexible, on-the-go connectivity.",
-    category: "mobile-accessories",
+    category: "peripherals",
     thumbnail: "https://anker.ph/cdn/shop/products/A83520A2.jpg?v=1694231402",
   },
 
@@ -235,7 +235,7 @@ export const customElectronicProducts: Product[] = [
     price: 249.99,
     description:
       "The CalDigit TS3 Plus Thunderbolt Dock is a comprehensive connectivity solution for modern professionals and creative users. Featuring 15 versatile ports including Thunderbolt 3, USB-A, DisplayPort, and SD card reader, this dock expands your laptop's capabilities with seamless connectivity. Its robust build, compact design, and high-performance power delivery make it an essential accessory for professionals seeking a single, powerful hub to connect all their devices.",
-    category: "mobile-accessories",
+    category: "peripherals",
     thumbnail:
       "https://www.caldigit.com/wp-content/uploads/2019/11/TS3-Plus_Product-Photography-2.png",
   },

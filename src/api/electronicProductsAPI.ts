@@ -25,10 +25,11 @@ export async function fetchElectronicsProducts(): Promise<Product[]> {
           "mouse",
           "printer",
           "server",
-          "mobile-accessories", // Keep this to match original products
+          "mobile-accessories",
         ].some((keyword) => product.category.toLowerCase().includes(keyword))
     );
 
+    // converting "mobile-accessories" to "peripherals"
     const mappedProducts = electronicsProducts.map(
       (product: { category: string }) => {
         if (product.category === "mobile-accessories") {
