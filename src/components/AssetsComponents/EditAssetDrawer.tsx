@@ -115,7 +115,7 @@ export function EditAssetDrawer({
       mouse: "Mouse",
       server: "Server",
       printer: "Printer",
-      "mobile-accessories": "Peripheral",
+      peripherals: "Peripheral",
     };
 
     // Find the best match or default to 'Other'
