@@ -55,7 +55,7 @@ function Login() {
               className="flex items-center gap-2 font-medium text-xl"
               onClick={(e) => {
                 e.preventDefault();
-                navigate("/Home");
+                navigate("/");
               }}
             >
               <Waypoints className="h-8 w-8 text-teal-300" />
