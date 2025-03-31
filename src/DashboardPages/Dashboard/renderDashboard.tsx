@@ -67,7 +67,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="container mx-auto p-4 relative z-10">
+      <div className="custom-container mx-auto p-4 relative z-10">
         {/* Header */}
         <Header />
 

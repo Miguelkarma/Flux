@@ -112,6 +112,9 @@
 
     box-shadow: 2em 0 2em 0em inset rgba(116, 126, 125, 0.411);
   }
+  .custom-container {
+    @apply w-[1800px] p-[2rem];
+  }
 
   .active-state-alt::before {
     content: "";

@@ -51,7 +51,7 @@ export default function Employee() {
             </div>
           </div>
         )}
-        <div className="container mx-auto p-4 relative z-10 ">
+        <div className="custom-container mx-auto p-4 relative z-10 ">
           <Header />
 
           <div className="grid grid-cols-12 gap-2">
