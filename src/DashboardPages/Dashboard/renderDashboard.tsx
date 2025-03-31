@@ -10,7 +10,7 @@ import AssetSummary from "@/components/DashboardComponents/AssetSummary";
 import { toast, Toaster } from "sonner";
 import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
 import MarketPriceTracker from "@/components/DashboardComponents/MarketPrice";
-import Loader from "@/Animation/Loader";
+import Loader from "@/Animation/SmallLoader";
 
 export default function Dashboard() {
   const { theme } = useTheme();

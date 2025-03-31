@@ -5,7 +5,7 @@ import { EmployeeTable } from "@/components/EmployeeComponents/table";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { useState, useEffect } from "react";
 import { Toaster } from "sonner";
-import Loader from "@/Animation/Loader";
+import Loader from "@/Animation/SmallLoader";
 
 export default function Employee() {
   const { theme } = useTheme();
