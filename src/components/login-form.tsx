@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SmallLoader from "@/Animation/SmallLoader";
-import { Key, Mail } from "lucide-react";
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -59,7 +58,6 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
-              icon={Mail}
             />
           </div>
           <div className="grid gap-2">
@@ -70,7 +68,6 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
-              icon={Key}
             />
           </div>
           <Button
@@ -79,7 +76,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             disabled={loading}
             className="relative w-auto px-6 py-2 text-white bg-black border-white/50 rounded-2xl transition-all hover:bg-black 
             before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-2px] before:w-[85%] before:h-[3px] before:bg-gradient-to-r before:from-transparent before:via-teal-500 before:to-transparent 
-            hover:border-teal-400 before:rounded-xl hover:border border"
+            hover:border-teal-400 before:rounded-xl"
           >
             Login
           </Button>

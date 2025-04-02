@@ -20,6 +20,14 @@ function Login() {
     }
   }, []);
 
+  useEffect(() => {
+    const toastMessage = sessionStorage.getItem("toastMessage");
+    if (toastMessage) {
+      toast.success(toastMessage);
+      sessionStorage.removeItem("toastMessage");
+    }
+  }, []);
+
   const handleLogin = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -29,6 +37,7 @@ function Login() {
       );
       console.log("User Logged In:", userCredential.user);
       sessionStorage.setItem("toastMessage", "Login successful! Welcome back.");
+
       navigate("/Dashboard"); // Redirect to Dashboard on success
     } catch (error) {
       console.error("Login Error:", error);
@@ -55,7 +64,7 @@ function Login() {
               className="flex items-center gap-2 font-medium text-xl"
               onClick={(e) => {
                 e.preventDefault();
-                navigate("/");
+                navigate("/Home");
               }}
             >
               <Waypoints className="h-8 w-8 text-teal-300" />
@@ -65,11 +74,8 @@ function Login() {
             </a>
           </div>
           <div className="flex flex-1 items-center justify-center">
-            <div className="w-full max-w-md relative">
-              <div className="absolute -inset-2 bg-teal-500 opacity-30 blur-3xl rounded-full"></div>
-              <div className="relative z-10">
-                <LoginForm onLogin={handleLogin} />
-              </div>
+            <div className="w-full max-w-xs ">
+              <LoginForm onLogin={handleLogin} />
             </div>
           </div>
         </div>
