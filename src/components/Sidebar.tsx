@@ -188,7 +188,7 @@ export default function Sidebar() {
   return (
     <div
       className={`${theme} bg-sidebar-background border-sidebar-border text-sidebar-foreground
-      backdrop-blur-sm h-full rounded-lg border p-4`}
+      backdrop-blur-sm h-full rounded-lg border p-4 shadow shadow-popover-foreground`}
     >
       <nav className="space-y-2 bg-sidebar-background">
         {items.map((item) => (

@@ -37,15 +37,15 @@ function MetricCard({
       case "cyan":
         return "from-cyan-500 to-blue-500 border-cyan-500/30";
       case "green":
-        return "from-green-500 to-emerald-500 border-green-500/30 shadow shadow-teal-200  ";
+        return "from-green-500 to-emerald-500 border-green-500/30 shadow shadow-popover-foreground  ";
       case "blue":
-        return "from-blue-500 to-indigo-500 border-blue-500/30 shadow shadow-teal-200  ";
+        return "from-blue-500 to-indigo-500 border-blue-500/30 shadow shadow-popover-foreground  ";
       case "purple":
-        return "from-purple-500 to-pink-500 border-purple-500/30 shadow shadow-teal-200  ";
+        return "from-purple-500 to-pink-500 border-purple-500/30 shadow shadow-popover-foreground  ";
       case "amber":
-        return "from-amber-500 to-amber-500 border-amber-500/30 shadow shadow-teal-200 ";
+        return "from-amber-500 to-amber-500 border-amber-500/30 shadow shadow-popover-foreground ";
       case "teal":
-        return "from-teal-600 to-teal-800 border-teal-500/30 shadow shadow-teal-200  ";
+        return "from-teal-600 to-teal-800 border-teal-500/30 shadow shadow-popover-foreground  ";
       default:
         return "from-cyan-500 to-blue-500 border-cyan-500/30";
     }
