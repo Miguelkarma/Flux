@@ -148,8 +148,8 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="email" className="space-y-6 mt-6">
-          <Card>
+        <TabsContent value="email" className="space-y-6 mt-6 ">
+          <Card className="shadow shadow-popover-foreground">
             <CardHeader>
               <CardTitle>Email Address</CardTitle>
               <CardDescription>
@@ -208,7 +208,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="password" className="space-y-6 mt-6">
-          <Card>
+          <Card className="shadow shadow-popover-foreground">
             <CardHeader>
               <CardTitle>Password</CardTitle>
               <CardDescription>
