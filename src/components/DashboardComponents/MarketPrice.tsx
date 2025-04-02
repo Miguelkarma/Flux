@@ -30,7 +30,6 @@ function MarketPriceTracker() {
       const apiProducts = await fetchElectronicsProducts();
       productsData = [...productsData, ...apiProducts];
 
-      // Add price change data to each product
       const productsWithChange = addPriceChangeData(productsData);
       setPrices(productsWithChange);
     } catch (error) {
@@ -47,7 +46,7 @@ function MarketPriceTracker() {
   useEffect(() => {
     loadData();
 
-    // Simulate price updates 
+    // Simulate price updates
     const interval = setInterval(() => {
       setPrices((prev) =>
         prev.map((item) => {
@@ -60,7 +59,7 @@ function MarketPriceTracker() {
             (item.change + (Math.random() * 1 - 0.5)).toFixed(1)
           );
 
-          // Keep change 
+          // Keep change
           const boundedChange = Math.max(Math.min(newChange, 5), -5);
 
           return {
@@ -93,7 +92,7 @@ function MarketPriceTracker() {
   ];
 
   return (
-    <div className="bg-[hsl(var(--secondary))] rounded-lg border p-4 relative overflow-hidden">
+    <div className="bg-[hsl(var(--secondary))] rounded-lg border p-4 relative overflow-hidden shadow-md  shadow-teal-600">
       <div className=" rounded-xl p-4 h-full text-popover-foreground">
         <div className="flex justify-between items-center mb-3 ">
           <h3 className="text-lg font-semibold ">Equipment Market Prices</h3>
@@ -178,9 +177,7 @@ function MarketPriceTracker() {
           </div>
         )}
         <div className="mt-3 pt-2 border-t border-gray-700 flex justify-between items-center">
-          <p className="text-xs text-gray-400">
-           Market data for IT assets
-          </p>
+          <p className="text-xs text-gray-400">Market data for IT assets</p>
           <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-gradient-to-r opacity-20 blur-xl from-cyan-500 to-blue-500"></div>
           <p className="text-xs text-popover-foreground">
             {filteredProducts.length} items
