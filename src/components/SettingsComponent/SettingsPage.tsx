@@ -137,6 +137,7 @@ export default function SettingsPage() {
               <Button
                 onClick={handleUpdateUsername}
                 disabled={loading || newUsername === currentDisplayName}
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-white"
               >
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -195,6 +196,7 @@ export default function SettingsPage() {
                 disabled={
                   loading || newEmail === currentEmail || !currentPassword
                 }
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-white"
               >
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -258,6 +260,7 @@ export default function SettingsPage() {
                   !newPassword ||
                   newPassword !== confirmPassword
                 }
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-white"
               >
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
