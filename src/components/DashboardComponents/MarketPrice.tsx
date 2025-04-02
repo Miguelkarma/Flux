@@ -92,7 +92,7 @@ function MarketPriceTracker() {
   ];
 
   return (
-    <div className="bg-[hsl(var(--secondary))] rounded-lg border p-4 relative overflow-hidden shadow-md  shadow-teal-600">
+    <div className="bg-[hsl(var(--secondary))] rounded-lg border p-4 relative overflow-hidden shadow-md shadow-teal-200">
       <div className=" rounded-xl p-4 h-full text-popover-foreground">
         <div className="flex justify-between items-center mb-3 ">
           <h3 className="text-lg font-semibold ">Equipment Market Prices</h3>
