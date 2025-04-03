@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 import Loader from "@/Animation/SmallLoader";
 import SettingsPage from "@/components/SettingsComponent/SettingsPage";
 
-export default function Employee() {
+export default function Settings() {
   const { theme } = useTheme();
 
   const [isLoading, setIsLoading] = useState(true);
