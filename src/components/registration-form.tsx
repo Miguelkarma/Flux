@@ -56,7 +56,7 @@ export function RegistrationForm({
         </div>
       )}
 
-      <div className="mb-8 ">
+      <div className="mb-4 ">
         <div className="text-xs uppercase tracking-wider text-teal-400">
           START FOR FREE
         </div>
@@ -70,7 +70,7 @@ export function RegistrationForm({
         className={cn("flex flex-col gap-6", className)}
         {...props}
       >
-        <div className="grid gap-5">
+        <div className="grid gap-2">
           <div className="grid gap-2">
             <Label htmlFor="username" className="text-sm text-gray-300">
               Username
