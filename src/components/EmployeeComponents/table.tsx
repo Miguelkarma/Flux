@@ -1,17 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  RowSelectionState,
-} from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,105 +28,39 @@ import {
   BulkDeleteDialog,
   BulkDeleteTrigger,
 } from "@/components/sharedComponent/BulkDeleteDialog";
-import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 import { UploadFile } from "@/components/sharedComponent/UploadFile";
-
-import { db } from "@/firebase/firebase";
-import {
-  collection,
-  onSnapshot,
-  query,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
+import { useAuth } from "@/hooks/use-auth";
+import { useDataTable } from "@/hooks/tableHooks/table-hook";
+import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
 
 export function EmployeeTable() {
-  // State management
-  const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "hireDate", desc: true },
-  ]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [firebaseData, setFirebaseData] = React.useState<EmployeeData[]>([]);
-  const [userEmail, setUserEmail] = React.useState<string | null>(null);
-  const [pagination, setPagination] = React.useState({
-    pageSize: 8,
-    pageIndex: 0,
+  // Use our custom hooks
+  const { userId, userEmail, loading: authLoading } = useAuth();
+  
+  const { 
+    data: employees, 
+    loading: dataLoading, 
+    refreshData: refreshEmployees 
+  } = useFirestoreData<EmployeeData>({
+    collectionName: "employees",
+    userId,
+    orderByField: "hireDate",
+    orderDirection: "desc",
   });
-  const [loading, setLoading] = React.useState(true);
 
-  // fetch employees from Firebase
-  const fetchEmployees = React.useCallback((userId: string) => {
-    setLoading(true);
-    const q = query(
-      collection(db, "employees"),
-      where("userId", "==", userId),
-      orderBy("hireDate", "desc")
-    );
-
-    return onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as EmployeeData[];
-      setFirebaseData(data);
-      setLoading(false);
-    });
-  }, []);
-
-  // authentication effect
-  React.useEffect(() => {
-    const auth = getAuth();
-    setLoading(true); // Set loading to true initially
-
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-        const unsubscribeFirestore = fetchEmployees(user.uid);
-        return () => unsubscribeFirestore && unsubscribeFirestore();
-      } else {
-        setUserEmail(null);
-        setFirebaseData([]);
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribeAuth();
-  }, [fetchEmployees]);
-
-  // initialize table
-  const table = useReactTable({
-    data: firebaseData,
+  const { 
+    table, 
+    selectedRowIds, 
+    setRowSelection 
+  } = useDataTable({
+    data: employees,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination,
-    },
+    initialSorting: [{ id: "hireDate", desc: true }],
+    initialPageSize: 8,
   });
 
-  // Get selected row IDs from the table
-  const selectedRowIds = table
-    .getFilteredSelectedRowModel()
-    .rows.map((row) => row.original.id);
-
-  // Use the bulk delete hook directly
+  // Use the bulk delete hook
   const {
     isOpen,
     isDeleting,
@@ -149,15 +72,6 @@ export function EmployeeTable() {
     collectionType: "employees",
     onDeleteSuccess: () => setRowSelection({}),
   });
-
-  // component to trigger refresh of employees
-  const refreshEmployees = () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      fetchEmployees(user.uid);
-    }
-  };
 
   // Upload config for employees
   const uploadConfig = {
@@ -175,6 +89,8 @@ export function EmployeeTable() {
     ],
     uniqueField: "employeeId",
   };
+
+  const loading = authLoading || dataLoading;
 
   return (
     <>
@@ -283,7 +199,7 @@ export function EmployeeTable() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : firebaseData.length > 0 ? (
+              ) : employees.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
@@ -314,28 +230,18 @@ export function EmployeeTable() {
         <div className="flex items-center justify-between px-2 py-2">
           <Button
             variant="outline"
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: Math.max(prev.pageIndex - 1, 0),
-              }))
-            }
+            onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <span>
-            Page <strong>{pagination.pageIndex + 1}</strong> of{" "}
+            Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of{" "}
             <strong>{table.getPageCount()}</strong>
           </span>
           <Button
             variant="outline"
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: prev.pageIndex + 1,
-              }))
-            }
+            onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             Next

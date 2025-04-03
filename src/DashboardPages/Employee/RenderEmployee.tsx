@@ -36,7 +36,7 @@ export default function Employee() {
       >
         <DashboardParticles />
         {/* Loading overlay */}
-               {isLoading && <Loader />}
+        {isLoading && <Loader />}
         <div className="container mx-auto p-4 relative z-10 ">
           <Header />
 

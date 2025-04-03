@@ -2,7 +2,7 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { DataTable } from "@/components/AssetsComponents/table";
+import { DataTable } from "@/components/AssetsComponents/table/table";
 import * as firebaseAuth from "firebase/auth";
 import * as firebaseFirestore from "firebase/firestore";
 

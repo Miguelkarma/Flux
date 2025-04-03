@@ -6,11 +6,24 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth";
 export function useAuth() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      if (!currentUser) navigate("/login");
+
+      if (currentUser) {
+        setUserId(currentUser.uid);
+        setUserEmail(currentUser.email);
+      } else {
+        setUserId(null);
+        setUserEmail(null);
+        navigate("/login");
+      }
+
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -22,5 +35,14 @@ export function useAuth() {
     navigate("/login");
   };
 
-  return useMemo(() => ({ user, handleLogout }), [user]);
+  return useMemo(
+    () => ({
+      user,
+      userId,
+      userEmail,
+      loading,
+      handleLogout,
+    }),
+    [user, userId, userEmail, loading]
+  );
 }
