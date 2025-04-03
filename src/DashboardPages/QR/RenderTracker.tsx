@@ -1,13 +1,12 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import DashboardParticles from "@/Animation/DashboardParticles";
-import { EmployeeTable } from "@/components/EmployeeComponents/table";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { useState, useEffect } from "react";
 import { Toaster } from "sonner";
 import Loader from "@/Animation/SmallLoader";
 
-export default function Employee() {
+export default function QRcode() {
   const { theme } = useTheme();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +35,7 @@ export default function Employee() {
       >
         <DashboardParticles />
         {/* Loading overlay */}
-               {isLoading && <Loader />}
+        {isLoading && <Loader />}
         <div className="container mx-auto p-4 relative z-10 ">
           <Header />
 
@@ -46,9 +45,7 @@ export default function Employee() {
             </div>
 
             <div className="col-span-12 md:col-span-9 lg:col-span-9 p-2">
-              <div className="grid gap-6">
-                <EmployeeTable />
-              </div>
+              <div className="grid gap-6"></div>
             </div>
           </div>
         </div>

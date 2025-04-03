@@ -8,6 +8,7 @@ import Dashboard from "@/DashboardPages/Dashboard/renderDashboard";
 import Assets from "@/DashboardPages/Assets/renderPageAssets";
 import Employee from "@/DashboardPages/Employee/RenderEmployee";
 import Settings from "@/DashboardPages/Settings/Settings";
+import QRcode from "@/DashboardPages/QR/RenderTracker";
 
 const AppRouter = () => {
   return (
@@ -20,6 +21,7 @@ const AppRouter = () => {
         <Route path="/assets" element={<Assets />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/qrcode" element={<QRcode />} />
       </Routes>
     </BrowserRouter>
   );
