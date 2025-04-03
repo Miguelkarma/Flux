@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, KeyRound, Mail } from "lucide-react";
 import SmallLoader from "@/Animation/SmallLoader";
 
 interface LoginFormProps {
@@ -37,12 +37,12 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
     <div className="relative">
       {/* Loader Overlay */}
       {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
           <SmallLoader />
         </div>
       )}
 
-      <div className="mb-8">
+      <div className="mb-8 ">
         <div className="text-xs uppercase tracking-wider text-teal-400">
           START FOR FREE
         </div>
@@ -69,7 +69,8 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
-                className="bg-gray-800/50 border-gray-700 text-white focus:border-teal-400 focus:ring-teal-400/20"
+                className="bg-gray-800/50 border-gray-700 text-white  focus:ring-none focus:border-none"
+                icon={Mail}
               />
             </div>
           </div>
@@ -85,7 +86,8 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                className="bg-gray-800/50 border-gray-700 text-white pr-10 focus:border-teal-400 focus:ring-teal-400/20"
+                className="bg-gray-800/50 border-gray-700 text-white  focus:ring-none focus:border-none"
+                icon={KeyRound}
               />
 
               <button
@@ -103,43 +105,34 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               <input
                 type="checkbox"
                 id="remember"
-                className="rounded bg-gray-800 border-gray-700 text-teal-400 focus:ring-teal-400/20 mr-2"
+                className="rounded bg-gray-800 border-gray-700 text-teal-700 focus:ring-teal-400/20 mr-2"
               />
               <label htmlFor="remember" className="text-sm text-gray-300">
                 Remember me
               </label>
             </div>
-
-            <a
-              href="#"
-              className="text-teal-400"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/Registration");
-              }}
-            >
+            <div className="ml-auto flex gap-1">
               <span className="text-white pointer-events-none">
-                Already a member?
+                Dont have an account?
               </span>{" "}
-              Sign up
-            </a>
+              <a
+                href="#"
+                className="text-teal-400"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/Registration");
+                }}
+              >
+                Sign up
+              </a>
+            </div>
           </div>
 
-          <div className="flex gap-4 mt-2">
-            <Button
-              type="button"
-              variant="outline"
-              disabled={loading}
-              className="flex-1 bg-gray-700/50 hover:bg-gray-700 text-white border-gray-600"
-              onClick={() => navigate("/")}
-            >
-              Change method
-            </Button>
-
+          <div className="flex mt-1 justify-self-end ">
             <Button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-teal-500 hover:bg-teal-600 text-white border-none"
+              className="flex-2 bg-teal-500 hover:bg-teal-600 text-white border-none"
             >
               Login
             </Button>

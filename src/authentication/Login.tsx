@@ -8,7 +8,7 @@ import { Toaster } from "sonner";
 import "../styles/LoginReg.css";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Waypoints } from "lucide-react";
+import { ArrowLeftCircle, Waypoints } from "lucide-react";
 
 function Login() {
   const navigate = useNavigate();
@@ -56,35 +56,46 @@ function Login() {
         expand={true}
         visibleToasts={3}
       />
+      <div className="flex items-center justify-center min-h-screen bg-teal-950/50">
+        <div className="bg-gradient-to-r from-gray-800 via-teal-900 to-teal-700 rounded-lg shadow-lg shadow-teal-900 overflow-hidden w-full max-w-7xl h-[40em] grid grid-cols-1 lg:grid-cols-2">
+          {/* Left Side - Login Form */}
+          <div className="p-10 flex flex-col justify-center relative">
+            <a
+              className="absolute top-4 left-4 text-gray-300 hover:text-gray-700"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/");
+              }}
+            >
+              <ArrowLeftCircle className="w-6 h-6" />
+            </a>
+            {/* Logo & Title */}
+            <div className="flex items-center gap-2 mb-6 ">
+              <Waypoints className="h-8 w-8 text-teal-300" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent">
+                Flux
+              </span>
+            </div>
 
-      <div className="bg-gradient-to-r from-gray-900 via-teal-950 to-teal-900 shadow-xl rounded-lg overflow-hidden w-screen h-screen grid grid-cols-1 lg:grid-cols-2">
-        {/* Left Side - Login Form */}
-        <div className="p-10 flex flex-col justify-center ">
-          {/* Logo & Title */}
-          <div className="flex items-center gap-2 mb-6 ">
-            <Waypoints className="h-8 w-8 text-teal-300" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent">
-              Flux
-            </span>
+            <h2 className="text-2xl font-semibold text-white">Welcome back!</h2>
+            <p className="text-gray-400 text-sm mb-6">
+              Enter your details below.
+            </p>
+
+            {/* Login Form */}
+            <LoginForm onLogin={handleLogin} />
           </div>
 
-          <h2 className="text-2xl font-semibold text-white">Welcome back!</h2>
-          <p className="text-gray-500 text-sm mb-6">
-            Enter your details below.
-          </p>
-
-          {/* Login Form */}
-          <LoginForm onLogin={handleLogin} />
-        </div>
-
-        {/* Right Side - Image */}
-        <div className="hidden lg:block relative bg-mask opacity-100">
-          <img
-            src={back}
-            alt="Login Illustration"
-            className="absolute w-full h-full object-cover "
-            style={{ backgroundPosition: "left bottom" }}
-          />
+          {/* Right Side - Image */}
+          <div className="hidden lg:block relative bg-mask opacity-100">
+            <img
+              src={back}
+              alt="Login Illustration"
+              className="absolute w-full h-full object-cover "
+              style={{ backgroundPosition: "left bottom" }}
+            />
+          </div>
         </div>
       </div>
     </>

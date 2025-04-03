@@ -129,11 +129,10 @@
 }
 
 .bg-mask {
-  filter: invert(0) sepia(1) saturate(4) hue-rotate(120deg);
   mask-image: linear-gradient(
     to left,
-    rgba(0, 0, 0, 1) -10%,
-    rgba(0, 0, 0, -1) 85%
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, -1) 100%
   );
 }
 
