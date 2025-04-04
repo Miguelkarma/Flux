@@ -17,7 +17,6 @@ interface UseDataTableProps<TData> {
   columns: ColumnDef<TData>[];
   initialSorting?: SortingState;
   initialPageSize?: number;
-  
 }
 
 export function useDataTable<TData>({
@@ -26,7 +25,7 @@ export function useDataTable<TData>({
   initialSorting = [],
   initialPageSize = 8,
 }: UseDataTableProps<TData>) {
-  // State management
+  // state management
   const [sorting, setSorting] = React.useState<SortingState>(initialSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -39,7 +38,36 @@ export function useDataTable<TData>({
     pageIndex: 0,
   });
 
-  // Initialize table
+  // refs for stable references
+  const dataRef = React.useRef(data);
+  const paginationRef = React.useRef(pagination);
+  const rowSelectionRef = React.useRef(rowSelection);
+
+  // update refs when props/state change
+  React.useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  React.useEffect(() => {
+    paginationRef.current = pagination;
+  }, [pagination]);
+
+  React.useEffect(() => {
+    rowSelectionRef.current = rowSelection;
+  }, [rowSelection]);
+
+  // reset pagination when needed
+  React.useEffect(() => {
+    const pageCount = Math.ceil(data.length / pagination.pageSize);
+    if (pagination.pageIndex >= pageCount && pageCount > 0) {
+      setPagination((prev) => ({
+        ...prev,
+        pageIndex: pageCount - 1,
+      }));
+    }
+  }, [data.length, pagination.pageSize, pagination.pageIndex]);
+
+  // memoize table instance
   const table = useReactTable({
     data,
     columns,
@@ -59,14 +87,29 @@ export function useDataTable<TData>({
       rowSelection,
       pagination,
     },
+    // ensure consistent behavior with checkboxes
+    enableRowSelection: true,
+    // use same page index even if pages change
+    manualPagination: false,
   });
 
-  // Get selected row IDs from the table
+  // preserve row selection on page changes
+  React.useEffect(() => {
+    if (Object.keys(rowSelectionRef.current).length > 0) {
+      setRowSelection(rowSelectionRef.current);
+    }
+  }, [data]);
+
+  // get selected row ids from all rows
   const selectedRowIds = React.useMemo(() => {
-    return table
-      .getFilteredSelectedRowModel()
-      .rows.map((row) => row.original.id);
-  }, [table]);
+    return Object.keys(rowSelection)
+      .map((index) => {
+        const allRows = table.getPrePaginationRowModel().rows;
+        const row = allRows.find((r) => r.id === index);
+        return row ? (row.original as any).id : null;
+      })
+      .filter(Boolean);
+  }, [table, rowSelection]);
 
   return {
     table,

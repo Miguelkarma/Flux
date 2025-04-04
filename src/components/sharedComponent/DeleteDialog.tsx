@@ -1,0 +1,149 @@
+// DeleteDialog.tsx
+"use client";
+
+import type React from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import type { FirestoreData } from "@/components/AssetsComponents/columns";
+import type { EmployeeData } from "@/components/EmployeeComponents/columns";
+import { doc, deleteDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { db } from "@/firebase/firebase";
+import { toast } from "sonner";
+import { useState } from "react";
+
+type ItemType =
+  | {
+      type: "asset";
+      data: FirestoreData;
+    }
+  | {
+      type: "employee";
+      data: EmployeeData;
+    };
+
+interface DeleteDialogProps {
+  item: ItemType;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  onAssetUpdated?: () => void; // Add this for refreshing the list
+  isDeleting?: boolean; // Make this optional so we can manage it internally
+}
+
+const DeleteDialog: React.FC<DeleteDialogProps> = ({
+  item,
+  isOpen,
+  setIsOpen,
+  onAssetUpdated,
+  isDeleting: externalIsDeleting,
+}) => {
+  // Internal state for delete operation
+  const [internalIsDeleting, setInternalIsDeleting] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const isDeleting =
+    externalIsDeleting !== undefined ? externalIsDeleting : internalIsDeleting;
+
+  // Generate title based on item type
+  const title =
+    item.type === "asset"
+      ? `Delete ${item.data.assetTag}?`
+      : `Delete ${item.data.firstName} ${item.data.lastName}?`;
+
+  const handleDelete = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      toast.error("You must be logged in to delete items.");
+      return;
+    }
+
+    if (item.type === "asset") {
+      if (!item.data.id) {
+        toast.error("Error: Asset ID is missing");
+        return;
+      }
+
+      try {
+        setInternalIsDeleting(true);
+        const assetRef = doc(db, "it-assets", item.data.id);
+        await deleteDoc(assetRef);
+        toast.success(`${item.data.assetTag || "Asset"} deleted successfully.`);
+        setIsOpen(false);
+        if (onAssetUpdated) onAssetUpdated(); // Refresh data after deleting
+      } catch (error) {
+        console.error("Delete error:", error);
+        toast.error(
+          "Failed to delete asset. Check Firestore rules and authentication."
+        );
+      } finally {
+        setInternalIsDeleting(false);
+      }
+    } else if (item.type === "employee") {
+      if (!item.data.id) {
+        toast.error("Error: Employee ID is missing");
+        return;
+      }
+
+      try {
+        setInternalIsDeleting(true);
+        const employeeRef = doc(db, "employees", item.data.id);
+        await deleteDoc(employeeRef);
+        toast.success(
+          `${item.data.firstName} ${
+            item.data.lastName || "Employee"
+          } deleted successfully.`
+        );
+        setIsOpen(false);
+        if (onAssetUpdated) onAssetUpdated(); // Refresh data after deleting
+      } catch (error) {
+        console.error("Delete error:", error);
+        toast.error(
+          "Failed to delete employee. Check Firestore rules and authentication."
+        );
+      } finally {
+        setInternalIsDeleting(false);
+      }
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this {item.type}? This action cannot
+            be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            onClick={() => setIsOpen(false)}
+            variant="outline"
+            className="bg-teal-950"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDelete}
+            className="text-white bg-gradient-to-b from-gray-900 via-red-700 to-red-600 border-0"
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default DeleteDialog;

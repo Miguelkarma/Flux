@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
-interface UseFirestoreDataProps<T> {
+interface UseFirestoreDataProps {
   collectionName: string;
   userId: string | null;
   orderByField?: string;
@@ -23,20 +23,24 @@ export function useFirestoreData<T>({
   orderByField = "dateAdded",
   orderDirection = "desc",
   additionalConstraints = [],
-}: UseFirestoreDataProps<T>) {
+}: UseFirestoreDataProps) {
   const [data, setData] = React.useState<T[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  // ref to avoid stale closures
+  const dataRef = React.useRef<T[]>([]);
 
   React.useEffect(() => {
     if (!userId) {
       setData([]);
+      dataRef.current = [];
       setLoading(false);
       return;
     }
 
     setLoading(true);
 
-    // Build query constraints
+    // build query constraints
     const constraints: QueryConstraint[] = [
       where("userId", "==", userId),
       orderBy(orderByField, orderDirection),
@@ -45,7 +49,7 @@ export function useFirestoreData<T>({
 
     const q = query(collection(db, collectionName), ...constraints);
 
-    // Subscribe to the query
+    // subscribe to the query
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -53,24 +57,26 @@ export function useFirestoreData<T>({
       })) as T[];
 
       setData(fetchedData);
+      dataRef.current = fetchedData;
       setLoading(false);
     });
 
-    // Cleanup function
+    // cleanup function
     return () => unsubscribe();
   }, [
     collectionName,
     userId,
     orderByField,
     orderDirection,
-    additionalConstraints,
+    // stable dependency for constraints
+    JSON.stringify(additionalConstraints),
   ]);
 
-  // Function to manually refresh data
+  // manual refresh function
   const refreshData = React.useCallback(() => {
     if (userId) {
       setLoading(true);
-      // Data will be refreshed by the snapshot listener
+      // snapshot listener will handle refresh
     }
   }, [userId]);
 

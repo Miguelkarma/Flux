@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +21,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 import { AddEmployeeDrawer } from "@/components/EmployeeComponents/AddEmployeeDrawer";
-import { columns, EmployeeData } from "./columns";
+import { columns, EmployeeData } from "@/components/EmployeeComponents/columns";
 import TableLoader from "@/Animation/TableLoader";
 import {
   BulkDeleteDialog,
@@ -33,34 +32,36 @@ import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 import { useAuth } from "@/hooks/use-auth";
 import { useDataTable } from "@/hooks/tableHooks/table-hook";
 import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
+import React from "react";
 
 export function EmployeeTable() {
-  // Use our custom hooks
+  // auth hook for user data
   const { userId, userEmail, loading: authLoading } = useAuth();
-  
-  const { 
-    data: employees, 
-    loading: dataLoading, 
-    refreshData: refreshEmployees 
+
+  // firestore data hook
+  const {
+    data: employees,
+    loading: dataLoading,
+    refreshData: refreshEmployees,
   } = useFirestoreData<EmployeeData>({
     collectionName: "employees",
     userId,
-    orderByField: "hireDate",
+    orderByField: "dateAdded",
     orderDirection: "desc",
   });
 
-  const { 
-    table, 
-    selectedRowIds, 
-    setRowSelection 
-  } = useDataTable({
-    data: employees,
+  // memoize to prevent re-renders
+  const memoizedEmployees = React.useMemo(() => employees, [employees]);
+
+  // table hook for state management
+  const { table, selectedRowIds, setRowSelection } = useDataTable({
+    data: memoizedEmployees,
     columns,
-    initialSorting: [{ id: "hireDate", desc: true }],
+    initialSorting: [{ id: "dateAdded", desc: true }],
     initialPageSize: 8,
   });
 
-  // Use the bulk delete hook
+  // bulk delete functionality
   const {
     isOpen,
     isDeleting,
@@ -73,7 +74,7 @@ export function EmployeeTable() {
     onDeleteSuccess: () => setRowSelection({}),
   });
 
-  // Upload config for employees
+  // upload configuration
   const uploadConfig = {
     title: "Upload Employees",
     collectionName: "employees",
@@ -91,6 +92,20 @@ export function EmployeeTable() {
   };
 
   const loading = authLoading || dataLoading;
+
+  // stable refresh callback
+  const handleRefresh = React.useCallback(() => {
+    refreshEmployees();
+  }, [refreshEmployees]);
+
+  // handle bulk delete
+  const memoizedSelectedRowIds = React.useMemo(
+    () => selectedRowIds,
+    [selectedRowIds]
+  );
+  const handleOpenDelete = React.useCallback(() => {
+    openDeleteDialog(memoizedSelectedRowIds);
+  }, [openDeleteDialog, memoizedSelectedRowIds]);
 
   return (
     <>
@@ -139,28 +154,28 @@ export function EmployeeTable() {
 
           {/* employee management buttons */}
           <AddEmployeeDrawer
-            onEmployeeAdded={refreshEmployees}
+            onEmployeeAdded={handleRefresh}
             userEmail={userEmail}
           />
           <UploadFile
-            onDataAdded={refreshEmployees}
+            onDataAdded={handleRefresh}
             config={uploadConfig}
             buttonLabel="Import"
           />
 
           {/* bulk delete button and dialog */}
-          {selectedRowIds.length > 0 && (
+          {memoizedSelectedRowIds.length > 0 && (
             <>
               <BulkDeleteTrigger
-                selectedCount={selectedRowIds.length}
-                onClick={() => openDeleteDialog(selectedRowIds)}
+                selectedCount={memoizedSelectedRowIds.length}
+                onClick={handleOpenDelete}
               />
               <BulkDeleteDialog
                 isOpen={isOpen}
                 onOpenChange={closeDeleteDialog}
                 onDelete={handleBulkDelete}
                 isDeleting={isDeleting}
-                selectedCount={selectedRowIds.length}
+                selectedCount={memoizedSelectedRowIds.length}
                 itemType={itemTypeLabel}
               />
             </>
@@ -199,9 +214,12 @@ export function EmployeeTable() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : employees.length > 0 ? (
+              ) : memoizedEmployees.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() ? "selected" : undefined}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {typeof cell.column.columnDef.cell === "function"
@@ -237,7 +255,7 @@ export function EmployeeTable() {
           </Button>
           <span>
             Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of{" "}
-            <strong>{table.getPageCount()}</strong>
+            <strong>{table.getPageCount() || 1}</strong>
           </span>
           <Button
             variant="outline"

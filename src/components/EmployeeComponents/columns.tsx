@@ -27,7 +27,7 @@ export type EmployeeData = {
   department: string;
   position: string;
   status: string;
-  hireDate: string;
+  dateAdded: string;
   location: string;
 };
 
@@ -185,7 +185,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
     ),
   },
   {
-    accessorKey: "hireDate",
+    accessorKey: "dateAdded",
     header: ({ column }) => (
       <Button
         className="font-extrabold"
@@ -196,7 +196,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const dateValue = row.getValue<string>("hireDate");
+      const dateValue = row.getValue<string>("dateAdded");
       const formattedDate = dateValue
         ? new Date(dateValue).toLocaleDateString()
         : "N/A";
@@ -209,7 +209,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
     sortingFn: (rowA, rowB, columnId) => {
       const dateA = new Date(rowA.getValue(columnId)).getTime();
       const dateB = new Date(rowB.getValue(columnId)).getTime();
-      return dateB - dateA;
+      return dateA - dateB;
     },
   },
   {
