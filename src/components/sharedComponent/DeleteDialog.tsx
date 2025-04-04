@@ -1,4 +1,3 @@
-// DeleteDialog.tsx
 "use client";
 
 import type React from "react";
@@ -33,8 +32,9 @@ interface DeleteDialogProps {
   item: ItemType;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  onAssetUpdated?: () => void; // Add this for refreshing the list
-  isDeleting?: boolean; // Make this optional so we can manage it internally
+  onAssetUpdated?: () => void;
+  onEmployeeUpdated?: () => void;
+  isDeleting?: boolean;
 }
 
 const DeleteDialog: React.FC<DeleteDialogProps> = ({
@@ -42,16 +42,17 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
   isOpen,
   setIsOpen,
   onAssetUpdated,
+  onEmployeeUpdated,
   isDeleting: externalIsDeleting,
 }) => {
-  // Internal state for delete operation
+  // internal state to manage delete status
   const [internalIsDeleting, setInternalIsDeleting] = useState(false);
 
-  // Use external state if provided, otherwise use internal state
+  // determine delete status based on external or internal state
   const isDeleting =
     externalIsDeleting !== undefined ? externalIsDeleting : internalIsDeleting;
 
-  // Generate title based on item type
+  // generate title based on item type
   const title =
     item.type === "asset"
       ? `Delete ${item.data.assetTag}?`
@@ -78,7 +79,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
         await deleteDoc(assetRef);
         toast.success(`${item.data.assetTag || "Asset"} deleted successfully.`);
         setIsOpen(false);
-        if (onAssetUpdated) onAssetUpdated(); // Refresh data after deleting
+        if (onAssetUpdated) onAssetUpdated(); // refresh after delete
       } catch (error) {
         console.error("Delete error:", error);
         toast.error(
@@ -103,7 +104,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
           } deleted successfully.`
         );
         setIsOpen(false);
-        if (onAssetUpdated) onAssetUpdated(); // Refresh data after deleting
+        if (onEmployeeUpdated) onEmployeeUpdated(); // refresh after delete
       } catch (error) {
         console.error("Delete error:", error);
         toast.error(
