@@ -6,7 +6,9 @@ describe("Button Component", () => {
     render(<Button>Default Button</Button>);
     const buttonElement = screen.getByText("Default Button");
     expect(buttonElement).toBeInTheDocument();
-    expect(buttonElement).toHaveClass("bg-primary text-primary-foreground");
+    expect(buttonElement).toHaveClass(
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
+    );
     expect(buttonElement).toHaveClass("h-9 px-4 py-2");
   });
 
@@ -30,7 +32,9 @@ describe("Button Component", () => {
     render(<Button variant="outline">Outline Button</Button>);
     const buttonElement = screen.getByText("Outline Button");
     expect(buttonElement).toBeInTheDocument();
-    expect(buttonElement).toHaveClass("border border-input bg-background");
+    expect(buttonElement).toHaveClass(
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2"
+    );
   });
 
   test("renders with small size", () => {

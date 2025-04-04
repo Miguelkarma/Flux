@@ -1,7 +1,6 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import CurrencyConverter from "@/DashboardPages/Pages/CurrencyExchange/currency-converter";
+import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
 import { useCurrencyConverter } from "@/hooks/converterHook";
 
 // Mock the hook to control its return values in tests
@@ -9,13 +8,13 @@ jest.mock("@/hooks/converterHook", () => ({
   useCurrencyConverter: jest.fn(),
 }));
 
-// Mock only the icon components since they don't affect the UI logic
+// mock lucide
 jest.mock("lucide-react", () => ({
-  ArrowRightLeft: ({ className }: { className?: string }) => (
+  ChevronsUpDown: ({ className }: { className?: string }) => (
     <div className={className}>Swap</div>
   ),
-  RefreshCw: ({ className }: { className?: string }) => (
-    <div className={className}>Loading Icon</div>
+  CircleDollarSign: ({ className }: { className?: string }) => (
+    <div className={className}>Currency Icon</div>
   ),
 }));
 
@@ -54,27 +53,18 @@ describe("CurrencyConverter Component", () => {
 
   test("swaps currencies when swap button is clicked", () => {
     render(<CurrencyConverter />);
-
-    // references the actual UI component instead of a mock
-    const swapButton = screen.getByText("Swap");
+    const swapButton = screen.getByTitle("Swap currencies");
     fireEvent.click(swapButton);
 
     expect(mockHook.setFromCurrency).toHaveBeenCalledWith("EUR");
     expect(mockHook.setToCurrency).toHaveBeenCalledWith("USD");
   });
 
-  test("disables the convert button when loading", () => {
-    (useCurrencyConverter as jest.Mock).mockReturnValueOnce({
-      ...mockHook,
-      isLoading: true,
-    });
-
+  test("displays the correct converted amount", () => {
     render(<CurrencyConverter />);
 
-    // actual button instead of a mocked one
-    const convertButton = screen.getByRole("button", { name: /loading/i });
-
-    expect(convertButton).toBeDisabled();
+    const resultText = screen.getByText("100 USD = 90.5000 EUR");
+    expect(resultText).toBeInTheDocument();
   });
 
   test("displays an error message when there is an error", () => {

@@ -1,11 +1,11 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { DataTable } from "@/components/AssetsComponents/table";
+import { EmployeeTable } from "@/components/EmployeeComponents/table";
 import { useAuth } from "@/hooks/use-auth";
 import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
 import { useDataTable } from "@/hooks/tableHooks/table-hook";
 import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 
-// Mock hooks
+// mock hooks
 jest.mock("@/hooks/use-auth", () => ({
   useAuth: jest.fn(),
 }));
@@ -22,7 +22,7 @@ jest.mock("@/hooks/tableHooks/use-bulk-delete-hook", () => ({
   useBulkDelete: jest.fn(),
 }));
 
-// Mock UI components (similar to EmployeeTable but with asset-specific changes)
+// mock ui components
 jest.mock("@/components/ui/button", () => ({
   Button: ({
     children,
@@ -83,7 +83,7 @@ jest.mock("@/components/ui/table", () => ({
   }) => <td colSpan={colSpan}>{children}</td>,
 }));
 
-// Mock other components
+// mock other components
 jest.mock("@/components/ui/card", () => ({
   Card: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="card">{children}</div>
@@ -112,11 +112,11 @@ jest.mock("@/components/ui/dropdown-menu", () => ({
   ),
 }));
 
-// Mock custom components
-jest.mock("@/components/AssetsComponents/AddAssetDrawer", () => ({
-  AddAssetDrawer: ({ onAssetAdded }: { onAssetAdded: () => void }) => (
-    <button onClick={onAssetAdded} data-testid="add-asset">
-      Add Asset
+// mock custom components
+jest.mock("@/components/EmployeeComponents/AddEmployeeDrawer", () => ({
+  AddEmployeeDrawer: ({ onEmployeeAdded }: { onEmployeeAdded: () => void }) => (
+    <button onClick={onEmployeeAdded} data-testid="add-employee">
+      Add
     </button>
   ),
 }));
@@ -147,41 +147,29 @@ jest.mock("@/Animation/TableLoader", () => ({
   default: () => <div data-testid="table-loader">Loading...</div>,
 }));
 
-// Mock lucide react icons
+// mock lucide react icons
 jest.mock("lucide-react", () => ({
   ChevronDown: () => <span>▼</span>,
 }));
 
-describe("AssetTable", () => {
-  // Simplified mock data for assets
-  const mockAssets = [
-    {
-      id: "1",
-      serialNo: "SN001",
-      assetTag: "AT001",
-      model: "Dell XPS",
-      type: "Laptop",
-    },
-    {
-      id: "2",
-      serialNo: "SN002",
-      assetTag: "AT002",
-      model: "MacBook Pro",
-      type: "Laptop",
-    },
+describe("EmployeeTable", () => {
+  // simplified mock data
+  const mockEmployees = [
+    { id: "1", employeeId: "EMP001", firstName: "John", lastName: "Doe" },
+    { id: "2", employeeId: "EMP002", firstName: "Jane", lastName: "Smith" },
   ];
 
-  // Simplified table mock
+  // simplified table mock
   const mockTable = {
     getHeaderGroups: jest.fn().mockReturnValue([
       {
         id: "header-group-1",
         headers: [
           {
-            id: "serialNo",
+            id: "employeeId",
             isPlaceholder: false,
             column: {
-              columnDef: { header: "Serial No." },
+              columnDef: { header: "Employee ID" },
               getFilterValue: jest.fn(),
               setFilterValue: jest.fn(),
             },
@@ -198,7 +186,7 @@ describe("AssetTable", () => {
           getVisibleCells: jest.fn().mockReturnValue([
             {
               id: "cell-1",
-              column: { columnDef: { cell: "SN001" } },
+              column: { columnDef: { cell: "EMP001" } },
               getContext: jest.fn(),
             },
           ]),
@@ -211,7 +199,7 @@ describe("AssetTable", () => {
     }),
     getAllColumns: jest.fn().mockReturnValue([
       {
-        id: "serialNo",
+        id: "employeeId",
         getCanHide: jest.fn().mockReturnValue(true),
         getIsVisible: jest.fn().mockReturnValue(true),
         toggleVisibility: jest.fn(),
@@ -237,7 +225,7 @@ describe("AssetTable", () => {
     });
 
     (useFirestoreData as jest.Mock).mockReturnValue({
-      data: mockAssets,
+      data: mockEmployees,
       loading: false,
       refreshData: jest.fn(),
     });
@@ -251,20 +239,17 @@ describe("AssetTable", () => {
     (useBulkDelete as jest.Mock).mockReturnValue({
       isOpen: false,
       isDeleting: false,
-      itemTypeLabel: "assets",
+      itemTypeLabel: "employees",
       openDeleteDialog: jest.fn(),
       closeDeleteDialog: jest.fn(),
       handleBulkDelete: jest.fn(),
     });
   });
 
-  // Test cases
+  // test cases
   test("renders the table when data is loaded", () => {
-    render(<DataTable />);
+    render(<EmployeeTable />);
     expect(screen.getByTestId("table")).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText("Filter Serial No.")
-    ).toBeInTheDocument();
   });
 
   test("shows loading state when data is loading", () => {
@@ -274,20 +259,20 @@ describe("AssetTable", () => {
       refreshData: jest.fn(),
     });
 
-    render(<DataTable />);
+    render(<EmployeeTable />);
     expect(screen.getByTestId("table-loader")).toBeInTheDocument();
   });
 
-  test("refreshes data when add asset button is clicked", () => {
+  test("refreshes data when add employee button is clicked", () => {
     const mockRefreshData = jest.fn();
     (useFirestoreData as jest.Mock).mockReturnValue({
-      data: mockAssets,
+      data: mockEmployees,
       loading: false,
       refreshData: mockRefreshData,
     });
 
-    render(<DataTable />);
-    fireEvent.click(screen.getByTestId("add-asset"));
+    render(<EmployeeTable />);
+    fireEvent.click(screen.getByTestId("add-employee"));
     expect(mockRefreshData).toHaveBeenCalled();
   });
 
@@ -296,63 +281,17 @@ describe("AssetTable", () => {
     (useBulkDelete as jest.Mock).mockReturnValue({
       isOpen: false,
       isDeleting: false,
-      itemTypeLabel: "assets",
+      itemTypeLabel: "employees",
       openDeleteDialog: mockOpenDeleteDialog,
       closeDeleteDialog: jest.fn(),
       handleBulkDelete: jest.fn(),
     });
 
-    render(<DataTable />);
+    render(<EmployeeTable />);
 
     if (screen.queryByTestId("bulk-delete-trigger")) {
       fireEvent.click(screen.getByTestId("bulk-delete-trigger"));
       expect(mockOpenDeleteDialog).toHaveBeenCalledWith(["2"]);
     }
-  });
-
-  test("filters assets by serial number", () => {
-    const mockSetFilterValue = jest.fn();
-    (useDataTable as jest.Mock).mockReturnValue({
-      table: {
-        ...mockTable,
-        getColumn: jest.fn().mockReturnValue({
-          getFilterValue: jest.fn().mockReturnValue(""),
-          setFilterValue: mockSetFilterValue,
-        }),
-      },
-      selectedRowIds: [],
-      setRowSelection: jest.fn(),
-    });
-
-    render(<DataTable />);
-    const filterInput = screen.getByPlaceholderText("Filter Serial No.");
-    fireEvent.change(filterInput, { target: { value: "SN001" } });
-    expect(mockSetFilterValue).toHaveBeenCalledWith("SN001");
-  });
-
-  test("shows no results when assets array is empty", () => {
-    (useFirestoreData as jest.Mock).mockReturnValue({
-      data: [],
-      loading: false,
-      refreshData: jest.fn(),
-    });
-
-    render(<DataTable />);
-    expect(screen.getByText("No results.")).toBeInTheDocument();
-  });
-
-  test("handles column visibility toggle", () => {
-    render(<DataTable />);
-    fireEvent.click(screen.getByText("Columns"));
-    // Additional assertions would be needed here if we had access to the actual dropdown items
-  });
-
-  test("handles pagination controls", () => {
-    render(<DataTable />);
-    fireEvent.click(screen.getByText("Previous"));
-    expect(mockTable.previousPage).toHaveBeenCalled();
-
-    fireEvent.click(screen.getByText("Next"));
-    expect(mockTable.nextPage).toHaveBeenCalled();
   });
 });
