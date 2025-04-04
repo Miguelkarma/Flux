@@ -6,7 +6,7 @@ import DeleteDialog, {
   ItemType,
 } from "@/components/sharedComponent/DeleteDialog";
 
-// Mock the Dialog component from shadcn/ui
+// mock dialog
 jest.mock("@/components/ui/dialog", () => ({
   Dialog: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="mock-dialog">{children}</div>
