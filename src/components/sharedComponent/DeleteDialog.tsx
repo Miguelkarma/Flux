@@ -18,7 +18,7 @@ import { db } from "@/firebase/firebase";
 import { toast } from "sonner";
 import { useState } from "react";
 
-type ItemType =
+export type ItemType =
   | {
       type: "asset";
       data: FirestoreData;
