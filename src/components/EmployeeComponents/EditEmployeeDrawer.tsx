@@ -61,7 +61,7 @@ export function EditEmployeeDrawer({
       department: employee.department ?? "",
       position: employee.position ?? "",
       status: employee.status ?? "Active",
-      hireDate: employee.hireDate ?? new Date().toISOString(),
+      dateAdded: employee.dateAdded ?? new Date().toISOString(),
       location: employee.location ?? "",
     }),
     [employee]
@@ -87,7 +87,7 @@ export function EditEmployeeDrawer({
 
   // Custom handler for date changes that uses the hook's handleDateChange
   const handleHireDateChange = (date: Date | undefined) => {
-    handleDateChange("hireDate")(date);
+    handleDateChange("dateAdded")(date);
   };
 
   // Submit handler that uses the imported submitEmployeeForm function
@@ -143,8 +143,8 @@ export function EditEmployeeDrawer({
                       variant="outline"
                       className="w-full justify-between text-left"
                     >
-                      {formData.hireDate
-                        ? format(new Date(formData.hireDate), "PPP")
+                      {formData.dateAdded
+                        ? format(new Date(formData.dateAdded), "PPP")
                         : "Select a date"}
                       <CalendarIcon className="w-4 h-4 opacity-70" />
                     </Button>
@@ -152,7 +152,7 @@ export function EditEmployeeDrawer({
                   <PopoverContent align="end" className="w-full p-2">
                     <Calendar
                       mode="single"
-                      selected={new Date(formData.hireDate)}
+                      selected={new Date(formData.dateAdded)}
                       onSelect={handleHireDateChange}
                       initialFocus
                     />

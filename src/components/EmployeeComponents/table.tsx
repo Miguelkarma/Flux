@@ -1,17 +1,5 @@
 "use client";
 
-import * as React from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  RowSelectionState,
-} from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,111 +21,47 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 import { AddEmployeeDrawer } from "@/components/EmployeeComponents/AddEmployeeDrawer";
-import { columns, EmployeeData } from "./columns";
+import { columns, EmployeeData } from "@/components/EmployeeComponents/columns";
 import TableLoader from "@/Animation/TableLoader";
 import {
   BulkDeleteDialog,
   BulkDeleteTrigger,
 } from "@/components/sharedComponent/BulkDeleteDialog";
-import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 import { UploadFile } from "@/components/sharedComponent/UploadFile";
-
-import { db } from "@/firebase/firebase";
-import {
-  collection,
-  onSnapshot,
-  query,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
+import { useAuth } from "@/hooks/use-auth";
+import { useDataTable } from "@/hooks/tableHooks/table-hook";
+import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
+import React from "react";
 
 export function EmployeeTable() {
-  // State management
-  const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "hireDate", desc: true },
-  ]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [firebaseData, setFirebaseData] = React.useState<EmployeeData[]>([]);
-  const [userEmail, setUserEmail] = React.useState<string | null>(null);
-  const [pagination, setPagination] = React.useState({
-    pageSize: 8,
-    pageIndex: 0,
+  // auth hook for user data
+  const { userId, userEmail, loading: authLoading } = useAuth();
+
+  // firestore data hook
+  const {
+    data: employees,
+    loading: dataLoading,
+    refreshData: refreshEmployees,
+  } = useFirestoreData<EmployeeData>({
+    collectionName: "employees",
+    userId,
+    orderByField: "dateAdded",
+    orderDirection: "desc",
   });
-  const [loading, setLoading] = React.useState(true);
 
-  // fetch employees from Firebase
-  const fetchEmployees = React.useCallback((userId: string) => {
-    setLoading(true);
-    const q = query(
-      collection(db, "employees"),
-      where("userId", "==", userId),
-      orderBy("hireDate", "desc")
-    );
+  // memoize to prevent re-renders
+  const memoizedEmployees = React.useMemo(() => employees, [employees]);
 
-    return onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as EmployeeData[];
-      setFirebaseData(data);
-      setLoading(false);
-    });
-  }, []);
-
-  // authentication effect
-  React.useEffect(() => {
-    const auth = getAuth();
-    setLoading(true); // Set loading to true initially
-
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-        const unsubscribeFirestore = fetchEmployees(user.uid);
-        return () => unsubscribeFirestore && unsubscribeFirestore();
-      } else {
-        setUserEmail(null);
-        setFirebaseData([]);
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribeAuth();
-  }, [fetchEmployees]);
-
-  // initialize table
-  const table = useReactTable({
-    data: firebaseData,
+  // table hook for state management
+  const { table, selectedRowIds, setRowSelection } = useDataTable({
+    data: memoizedEmployees,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination,
-    },
+    initialSorting: [{ id: "dateAdded", desc: true }],
+    initialPageSize: 8,
   });
 
-  // Get selected row IDs from the table
-  const selectedRowIds = table
-    .getFilteredSelectedRowModel()
-    .rows.map((row) => row.original.id);
-
-  // Use the bulk delete hook directly
+  // bulk delete functionality
   const {
     isOpen,
     isDeleting,
@@ -150,16 +74,7 @@ export function EmployeeTable() {
     onDeleteSuccess: () => setRowSelection({}),
   });
 
-  // component to trigger refresh of employees
-  const refreshEmployees = () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      fetchEmployees(user.uid);
-    }
-  };
-
-  // Upload config for employees
+  // upload configuration
   const uploadConfig = {
     title: "Upload Employees",
     collectionName: "employees",
@@ -175,6 +90,22 @@ export function EmployeeTable() {
     ],
     uniqueField: "employeeId",
   };
+
+  const loading = authLoading || dataLoading;
+
+  // stable refresh callback
+  const handleRefresh = React.useCallback(() => {
+    refreshEmployees();
+  }, [refreshEmployees]);
+
+  // handle bulk delete
+  const memoizedSelectedRowIds = React.useMemo(
+    () => selectedRowIds,
+    [selectedRowIds]
+  );
+  const handleOpenDelete = React.useCallback(() => {
+    openDeleteDialog(memoizedSelectedRowIds);
+  }, [openDeleteDialog, memoizedSelectedRowIds]);
 
   return (
     <>
@@ -223,28 +154,28 @@ export function EmployeeTable() {
 
           {/* employee management buttons */}
           <AddEmployeeDrawer
-            onEmployeeAdded={refreshEmployees}
+            onEmployeeAdded={handleRefresh}
             userEmail={userEmail}
           />
           <UploadFile
-            onDataAdded={refreshEmployees}
+            onDataAdded={handleRefresh}
             config={uploadConfig}
             buttonLabel="Import"
           />
 
           {/* bulk delete button and dialog */}
-          {selectedRowIds.length > 0 && (
+          {memoizedSelectedRowIds.length > 0 && (
             <>
               <BulkDeleteTrigger
-                selectedCount={selectedRowIds.length}
-                onClick={() => openDeleteDialog(selectedRowIds)}
+                selectedCount={memoizedSelectedRowIds.length}
+                onClick={handleOpenDelete}
               />
               <BulkDeleteDialog
                 isOpen={isOpen}
                 onOpenChange={closeDeleteDialog}
                 onDelete={handleBulkDelete}
                 isDeleting={isDeleting}
-                selectedCount={selectedRowIds.length}
+                selectedCount={memoizedSelectedRowIds.length}
                 itemType={itemTypeLabel}
               />
             </>
@@ -283,9 +214,12 @@ export function EmployeeTable() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : firebaseData.length > 0 ? (
+              ) : memoizedEmployees.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() ? "selected" : undefined}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {typeof cell.column.columnDef.cell === "function"
@@ -314,28 +248,18 @@ export function EmployeeTable() {
         <div className="flex items-center justify-between px-2 py-2">
           <Button
             variant="outline"
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: Math.max(prev.pageIndex - 1, 0),
-              }))
-            }
+            onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <span>
-            Page <strong>{pagination.pageIndex + 1}</strong> of{" "}
-            <strong>{table.getPageCount()}</strong>
+            Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of{" "}
+            <strong>{table.getPageCount() || 1}</strong>
           </span>
           <Button
             variant="outline"
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: prev.pageIndex + 1,
-              }))
-            }
+            onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             Next

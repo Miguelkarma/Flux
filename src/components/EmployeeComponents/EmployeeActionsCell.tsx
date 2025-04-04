@@ -9,13 +9,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import DeleteEmployeeDialog from "@/components/EmployeeComponents/DeleteEmployeeDialog";
 import { toast } from "sonner";
 import { EmployeeData } from "./columns";
-import { db } from "@/firebase/firebase";
-import { doc, deleteDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { EditEmployeeDrawer } from "@/components/EmployeeComponents/EditEmployeeDrawer";
+import DeleteDialog from "../sharedComponent/DeleteDialog";
 
 interface EmployeeActionsCellProps {
   employee: EmployeeData;
@@ -27,40 +24,7 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
   onEmployeeUpdated,
 }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-
-  const handleDelete = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast.error("You must be logged in to delete employees.");
-      return;
-    }
-
-    if (!employee.id) {
-      toast.error("Error: Employee ID is missing");
-      return;
-    }
-
-    try {
-      setIsDeleting(true);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      const employeeRef = doc(db, "employees", employee.id);
-      await deleteDoc(employeeRef);
-      toast.success(
-        `${employee.firstName} ${employee.lastName} deleted successfully.`
-      );
-      setIsDeleteDialogOpen(false);
-      onEmployeeUpdated(); // refresh data after deleting
-    } catch (error) {
-      console.error("Delete error:", error);
-      toast.error("Failed to delete employee. ");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const handleCopyId = async () => {
     try {
@@ -127,12 +91,11 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
       />
 
       {/* Render Delete Confirmation Dialog */}
-      <DeleteEmployeeDialog
-        employee={employee}
+      <DeleteDialog
+        item={{ type: "employee", data: employee }}
         isOpen={isDeleteDialogOpen}
         setIsOpen={setIsDeleteDialogOpen}
-        onDelete={handleDelete}
-        isDeleting={isDeleting}
+        onAssetUpdated={onEmployeeUpdated}
       />
     </>
   );
