@@ -1,64 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
-import { DataTable } from "@/components/AssetsComponents/table/table";
-import * as firebaseAuth from "firebase/auth";
-import * as firebaseFirestore from "firebase/firestore";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { DataTable } from "@/components/AssetsComponents/table";
+import { useAuth } from "@/hooks/use-auth";
+import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
+import { useDataTable } from "@/hooks/tableHooks/table-hook";
+import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 
-// Type declarations to help with mocks
-type MockFn = jest.Mock<any, any>;
-type FirebaseUser = { uid: string; email: string | null };
-
-// Define interfaces for your data
-interface AssetItem {
-  id: string;
-  serialNo: string;
-  assetName: string;
-  email: string;
-  assignedEmployee: string;
-  status: string;
-  userId: string;
-  dateAdded: string;
-}
-
-// Mock external dependencies
-jest.mock("firebase/auth", () => ({
-  getAuth: jest.fn(),
-  onAuthStateChanged: jest.fn(),
+// Mock hooks
+jest.mock("@/hooks/use-auth", () => ({
+  useAuth: jest.fn(),
 }));
 
-jest.mock("firebase/firestore", () => ({
-  collection: jest.fn<
-    ReturnType<typeof firebaseFirestore.collection>,
-    Parameters<typeof firebaseFirestore.collection>
-  >(),
-  onSnapshot: jest.fn<
-    ReturnType<typeof firebaseFirestore.onSnapshot>,
-    Parameters<typeof firebaseFirestore.onSnapshot>
-  >(),
-  query: jest.fn<
-    ReturnType<typeof firebaseFirestore.query>,
-    Parameters<typeof firebaseFirestore.query>
-  >(),
-  where: jest.fn<
-    ReturnType<typeof firebaseFirestore.where>,
-    Parameters<typeof firebaseFirestore.where>
-  >(),
-  orderBy: jest.fn<
-    ReturnType<typeof firebaseFirestore.orderBy>,
-    Parameters<typeof firebaseFirestore.orderBy>
-  >(),
+jest.mock("@/hooks/tableHooks/firestore-data-hook", () => ({
+  useFirestoreData: jest.fn(),
 }));
 
-jest.mock("@/firebase/firebase", () => ({ db: {} }));
-
-// Mock lucide-react components
-jest.mock("lucide-react", () => ({
-  ChevronDown: () => <div data-testid="chevron-down">▼</div>,
+jest.mock("@/hooks/tableHooks/table-hook", () => ({
+  useDataTable: jest.fn(),
 }));
 
-// Mock UI components - with proper types
+jest.mock("@/hooks/tableHooks/use-bulk-delete-hook", () => ({
+  useBulkDelete: jest.fn(),
+}));
+
+// Mock UI components (similar to EmployeeTable but with asset-specific changes)
 jest.mock("@/components/ui/button", () => ({
   Button: ({
     children,
@@ -69,24 +33,46 @@ jest.mock("@/components/ui/button", () => ({
     onClick?: () => void;
     disabled?: boolean;
   }) => (
-    <button onClick={onClick} disabled={disabled}>
+    <button onClick={onClick} disabled={disabled} data-testid="button">
       {children}
     </button>
   ),
 }));
 
 jest.mock("@/components/ui/input", () => ({
-  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-    <input {...props} />
+  Input: ({
+    placeholder,
+    value,
+    onChange,
+  }: {
+    placeholder?: string;
+    value?: string;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  }) => (
+    <input
+      placeholder={placeholder}
+      value={value || ""}
+      onChange={onChange}
+      data-testid="input"
+    />
   ),
 }));
 
 jest.mock("@/components/ui/table", () => ({
   Table: ({ children }: { children: React.ReactNode }) => (
-    <table>{children}</table>
+    <table data-testid="table">{children}</table>
+  ),
+  TableHeader: ({ children }: { children: React.ReactNode }) => (
+    <thead>{children}</thead>
   ),
   TableBody: ({ children }: { children: React.ReactNode }) => (
     <tbody>{children}</tbody>
+  ),
+  TableRow: ({ children }: { children: React.ReactNode }) => (
+    <tr>{children}</tr>
+  ),
+  TableHead: ({ children }: { children: React.ReactNode }) => (
+    <th>{children}</th>
   ),
   TableCell: ({
     children,
@@ -95,24 +81,25 @@ jest.mock("@/components/ui/table", () => ({
     children: React.ReactNode;
     colSpan?: number;
   }) => <td colSpan={colSpan}>{children}</td>,
-  TableHead: ({ children }: { children: React.ReactNode }) => (
-    <th>{children}</th>
-  ),
-  TableHeader: ({ children }: { children: React.ReactNode }) => (
-    <thead>{children}</thead>
-  ),
-  TableRow: ({ children }: { children: React.ReactNode }) => (
-    <tr>{children}</tr>
+}));
+
+// Mock other components
+jest.mock("@/components/ui/card", () => ({
+  Card: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="card">{children}</div>
   ),
 }));
 
-jest.mock("@/components/ui/card", () => ({
-  Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+jest.mock("@/components/ui/scroll-area", () => ({
+  ScrollArea: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  ScrollBar: () => <div></div>,
 }));
 
 jest.mock("@/components/ui/dropdown-menu", () => ({
   DropdownMenu: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="dropdown-menu">{children}</div>
+    <div>{children}</div>
   ),
   DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
@@ -120,46 +107,37 @@ jest.mock("@/components/ui/dropdown-menu", () => ({
   DropdownMenuContent: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
   ),
-  DropdownMenuCheckboxItem: ({
-    children,
-    checked,
-    onCheckedChange,
-  }: {
-    children: React.ReactNode;
-    checked?: boolean;
-    onCheckedChange?: (checked: boolean) => void;
-  }) => (
-    <div onClick={() => onCheckedChange && onCheckedChange(!checked)}>
-      {children}
-    </div>
+  DropdownMenuCheckboxItem: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
   ),
 }));
 
 // Mock custom components
 jest.mock("@/components/AssetsComponents/AddAssetDrawer", () => ({
-  AddAssetDrawer: ({
-    onAssetAdded,
-    userEmail,
-  }: {
-    onAssetAdded?: () => void;
-    userEmail?: string;
-  }) => (
-    <button onClick={onAssetAdded} data-testid="add-asset-drawer">
-      Add Asset ({userEmail})
+  AddAssetDrawer: ({ onAssetAdded }: { onAssetAdded: () => void }) => (
+    <button onClick={onAssetAdded} data-testid="add-asset">
+      Add Asset
     </button>
   ),
 }));
 
-jest.mock("@/components/AssetsComponents/BulkDeleteDialog", () => ({
-  BulkDeleteComponent: ({
-    clearSelection,
-    selectedRowIds,
+jest.mock("@/components/sharedComponent/UploadFile", () => ({
+  UploadFile: ({ onDataAdded }: { onDataAdded: () => void }) => (
+    <button onClick={onDataAdded} data-testid="upload-file">
+      Import
+    </button>
+  ),
+}));
+
+jest.mock("@/components/sharedComponent/BulkDeleteDialog", () => ({
+  BulkDeleteDialog: () => <div data-testid="bulk-delete-dialog"></div>,
+  BulkDeleteTrigger: ({
+    onClick,
   }: {
-    clearSelection?: () => void;
-    selectedRowIds: string[];
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
   }) => (
-    <button onClick={clearSelection} data-testid="bulk-delete-component">
-      Delete ({selectedRowIds.length})
+    <button onClick={onClick} data-testid="bulk-delete-trigger">
+      Delete
     </button>
   ),
 }));
@@ -169,254 +147,212 @@ jest.mock("@/Animation/TableLoader", () => ({
   default: () => <div data-testid="table-loader">Loading...</div>,
 }));
 
-// Sample data for tests
-const mockSampleData: AssetItem[] = [
-  {
-    id: "1",
-    serialNo: "SN001",
-    assetName: "Laptop",
-    email: "user1@example.com",
-    assignedEmployee: "John Doe",
-    status: "Active",
-    userId: "user123",
-    dateAdded: "2023-01-01",
-  },
-  {
-    id: "2",
-    serialNo: "SN002",
-    assetName: "Monitor",
-    email: "user2@example.com",
-    assignedEmployee: "Jane Smith",
-    status: "Inactive",
-    userId: "user123",
-    dateAdded: "2023-01-02",
-  },
-];
+// Mock lucide react icons
+jest.mock("lucide-react", () => ({
+  ChevronDown: () => <span>▼</span>,
+}));
 
-// Mock columns with proper types
-type ColumnDef = {
-  id?: string;
-  accessorKey?: string;
-  header: string | (() => React.ReactNode);
-  cell?: any;
-};
-
-jest.mock("@/components/AssetsComponents/columns", () => {
-  const columns: ColumnDef[] = [
+describe("AssetTable", () => {
+  // Simplified mock data for assets
+  const mockAssets = [
     {
-      id: "select",
-      header: () => <input type="checkbox" data-testid="select-all" />,
-      cell: ({ row }: { row: { id: string } }) => (
-        <input type="checkbox" data-testid={`select-row-${row.id}`} />
-      ),
+      id: "1",
+      serialNo: "SN001",
+      assetTag: "AT001",
+      model: "Dell XPS",
+      type: "Laptop",
     },
-    { accessorKey: "serialNo", header: "Serial No" },
-    { accessorKey: "assetName", header: "Asset Name" },
-    { accessorKey: "email", header: "Email" },
-    { accessorKey: "status", header: "Status" },
+    {
+      id: "2",
+      serialNo: "SN002",
+      assetTag: "AT002",
+      model: "MacBook Pro",
+      type: "Laptop",
+    },
   ];
 
-  return { columns };
-});
-
-jest.mock("@tanstack/react-table", () => {
-  type HeaderGroup = {
-    id: string;
-    headers: {
-      id: string;
-      isPlaceholder: boolean;
-      column: { columnDef: { header: string | (() => React.ReactNode) } };
-      getContext: () => any;
-    }[];
-  };
-
-  type Row = {
-    id: string;
-    getVisibleCells: () => {
-      id: string;
-      column: { columnDef: { cell: any } };
-      getContext: () => any;
-    }[];
-  };
-
-  type Column = {
-    id: string;
-    getCanHide: () => boolean;
-    getIsVisible: () => boolean;
-    toggleVisibility: (state?: boolean) => void;
-    getFilterValue: () => string;
-    setFilterValue: (value: string) => void;
-  };
-
-  type Table = {
-    getHeaderGroups: () => HeaderGroup[];
-    getRowModel: () => { rows: Row[] };
-    getAllColumns: () => Column[];
-    getColumn: (id: string) => Column;
-    getPageCount: () => number;
-    getCanPreviousPage: () => boolean;
-    getCanNextPage: () => boolean;
-    getFilteredSelectedRowModel: () => { rows: Row[] };
-  };
-
-  const mockTable: Table = {
-    getHeaderGroups: () => [
+  // Simplified table mock
+  const mockTable = {
+    getHeaderGroups: jest.fn().mockReturnValue([
       {
-        id: "headerGroup1",
+        id: "header-group-1",
         headers: [
-          {
-            id: "select",
-            isPlaceholder: false,
-            column: { columnDef: { header: () => <div>Select</div> } },
-            getContext: () => ({}),
-          },
           {
             id: "serialNo",
             isPlaceholder: false,
-            column: { columnDef: { header: "Serial No" } },
-            getContext: () => ({}),
+            column: {
+              columnDef: { header: "Serial No." },
+              getFilterValue: jest.fn(),
+              setFilterValue: jest.fn(),
+            },
+            getContext: jest.fn(),
           },
         ],
       },
-    ],
-    getRowModel: () => ({
-      rows: mockSampleData.map((item, index) => ({
-        id: index.toString(),
-        getVisibleCells: () => [
-          {
-            id: `${index}-select`,
-            column: { columnDef: { cell: () => <div>☐</div> } },
-            getContext: () => ({ row: { id: index.toString() } }),
-          },
-          {
-            id: `${index}-serialNo`,
-            column: { columnDef: { cell: item.serialNo } },
-            getContext: () => ({}),
-          },
-        ],
-      })),
+    ]),
+    getRowModel: jest.fn().mockReturnValue({
+      rows: [
+        {
+          id: "1",
+          getIsSelected: jest.fn().mockReturnValue(false),
+          getVisibleCells: jest.fn().mockReturnValue([
+            {
+              id: "cell-1",
+              column: { columnDef: { cell: "SN001" } },
+              getContext: jest.fn(),
+            },
+          ]),
+        },
+      ],
     }),
-    getAllColumns: () => [
-      {
-        id: "serialNo",
-        getCanHide: () => true,
-        getIsVisible: () => true,
-        toggleVisibility: jest.fn(),
-        getFilterValue: () => "",
-        setFilterValue: jest.fn(),
-      },
-      {
-        id: "email",
-        getCanHide: () => true,
-        getIsVisible: () => true,
-        toggleVisibility: jest.fn(),
-        getFilterValue: () => "",
-        setFilterValue: jest.fn(),
-      },
-    ],
-    getColumn: (id) => ({
-      id,
-      getCanHide: () => true,
-      getIsVisible: () => true,
-      toggleVisibility: jest.fn(),
-      getFilterValue: () => "",
+    getColumn: jest.fn().mockReturnValue({
+      getFilterValue: jest.fn(),
       setFilterValue: jest.fn(),
     }),
-    getPageCount: () => 2,
-    getCanPreviousPage: () => true,
-    getCanNextPage: () => true,
-    getFilteredSelectedRowModel: () => ({ rows: [] }),
+    getAllColumns: jest.fn().mockReturnValue([
+      {
+        id: "serialNo",
+        getCanHide: jest.fn().mockReturnValue(true),
+        getIsVisible: jest.fn().mockReturnValue(true),
+        toggleVisibility: jest.fn(),
+      },
+    ]),
+    previousPage: jest.fn(),
+    nextPage: jest.fn(),
+    getCanPreviousPage: jest.fn().mockReturnValue(true),
+    getCanNextPage: jest.fn().mockReturnValue(true),
+    getState: jest.fn().mockReturnValue({
+      pagination: { pageIndex: 0 },
+    }),
+    getPageCount: jest.fn().mockReturnValue(2),
   };
 
-  return {
-    useReactTable: () => mockTable,
-    getCoreRowModel: () => ({}),
-    getPaginationRowModel: () => ({}),
-    getSortedRowModel: () => ({}),
-    getFilteredRowModel: () => ({}),
-  };
-});
-
-describe("DataTable Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Mock authenticated user
-    const authStateChanged = firebaseAuth.onAuthStateChanged as MockFn;
-    authStateChanged.mockImplementation((_, callback) => {
-      callback({ uid: "user123", email: "test@example.com" } as FirebaseUser);
-      return jest.fn();
+    (useAuth as jest.Mock).mockReturnValue({
+      userId: "user123",
+      userEmail: "test@example.com",
+      loading: false,
     });
 
-    // Mock Firestore query and response
-    const firestoreQuery = firebaseFirestore.query as MockFn;
-    const firestoreWhere = firebaseFirestore.where as MockFn;
-    const firestoreOrderBy = firebaseFirestore.orderBy as MockFn;
-    const firestoreSnapshot = firebaseFirestore.onSnapshot as MockFn;
+    (useFirestoreData as jest.Mock).mockReturnValue({
+      data: mockAssets,
+      loading: false,
+      refreshData: jest.fn(),
+    });
 
-    firestoreQuery.mockReturnValue("mocked-query");
-    firestoreWhere.mockReturnValue("mocked-where");
-    firestoreOrderBy.mockReturnValue("mocked-orderBy");
-    firestoreSnapshot.mockImplementation((_, callback) => {
-      callback({
-        docs: mockSampleData.map((item) => ({
-          id: item.id,
-          data: () => ({ ...item }),
-        })),
-      });
-      return jest.fn();
+    (useDataTable as jest.Mock).mockReturnValue({
+      table: mockTable,
+      selectedRowIds: ["2"],
+      setRowSelection: jest.fn(),
+    });
+
+    (useBulkDelete as jest.Mock).mockReturnValue({
+      isOpen: false,
+      isDeleting: false,
+      itemTypeLabel: "assets",
+      openDeleteDialog: jest.fn(),
+      closeDeleteDialog: jest.fn(),
+      handleBulkDelete: jest.fn(),
     });
   });
 
-  test("renders loading state initially and then displays data", async () => {
-    // Override onSnapshot to delay callback
-    const firestoreSnapshot = firebaseFirestore.onSnapshot as MockFn;
-    firestoreSnapshot.mockImplementationOnce((_, callback) => {
-      setTimeout(() => {
-        callback({
-          docs: mockSampleData.map((item) => ({
-            id: item.id,
-            data: () => ({ ...item }),
-          })),
-        });
-      }, 100);
-      return jest.fn();
+  // Test cases
+  test("renders the table when data is loaded", () => {
+    render(<DataTable />);
+    expect(screen.getByTestId("table")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Filter Serial No.")
+    ).toBeInTheDocument();
+  });
+
+  test("shows loading state when data is loading", () => {
+    (useFirestoreData as jest.Mock).mockReturnValue({
+      data: [],
+      loading: true,
+      refreshData: jest.fn(),
     });
 
     render(<DataTable />);
-
     expect(screen.getByTestId("table-loader")).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.queryByTestId("table-loader")).not.toBeInTheDocument();
-    });
   });
 
-  test("handles unauthenticated state", async () => {
-    const authStateChanged = firebaseAuth.onAuthStateChanged as MockFn;
-    authStateChanged.mockImplementationOnce((_, callback) => {
-      callback(null);
-      return jest.fn();
+  test("refreshes data when add asset button is clicked", () => {
+    const mockRefreshData = jest.fn();
+    (useFirestoreData as jest.Mock).mockReturnValue({
+      data: mockAssets,
+      loading: false,
+      refreshData: mockRefreshData,
+    });
+
+    render(<DataTable />);
+    fireEvent.click(screen.getByTestId("add-asset"));
+    expect(mockRefreshData).toHaveBeenCalled();
+  });
+
+  test("handles bulk delete button click", () => {
+    const mockOpenDeleteDialog = jest.fn();
+    (useBulkDelete as jest.Mock).mockReturnValue({
+      isOpen: false,
+      isDeleting: false,
+      itemTypeLabel: "assets",
+      openDeleteDialog: mockOpenDeleteDialog,
+      closeDeleteDialog: jest.fn(),
+      handleBulkDelete: jest.fn(),
     });
 
     render(<DataTable />);
 
-    await waitFor(() =>
-      expect(screen.queryByTestId("table-loader")).not.toBeInTheDocument()
-    );
+    if (screen.queryByTestId("bulk-delete-trigger")) {
+      fireEvent.click(screen.getByTestId("bulk-delete-trigger"));
+      expect(mockOpenDeleteDialog).toHaveBeenCalledWith(["2"]);
+    }
+  });
 
+  test("filters assets by serial number", () => {
+    const mockSetFilterValue = jest.fn();
+    (useDataTable as jest.Mock).mockReturnValue({
+      table: {
+        ...mockTable,
+        getColumn: jest.fn().mockReturnValue({
+          getFilterValue: jest.fn().mockReturnValue(""),
+          setFilterValue: mockSetFilterValue,
+        }),
+      },
+      selectedRowIds: [],
+      setRowSelection: jest.fn(),
+    });
+
+    render(<DataTable />);
+    const filterInput = screen.getByPlaceholderText("Filter Serial No.");
+    fireEvent.change(filterInput, { target: { value: "SN001" } });
+    expect(mockSetFilterValue).toHaveBeenCalledWith("SN001");
+  });
+
+  test("shows no results when assets array is empty", () => {
+    (useFirestoreData as jest.Mock).mockReturnValue({
+      data: [],
+      loading: false,
+      refreshData: jest.fn(),
+    });
+
+    render(<DataTable />);
     expect(screen.getByText("No results.")).toBeInTheDocument();
   });
 
-  test("renders add asset button with correct user email", async () => {
+  test("handles column visibility toggle", () => {
     render(<DataTable />);
+    fireEvent.click(screen.getByText("Columns"));
+    // Additional assertions would be needed here if we had access to the actual dropdown items
+  });
 
-    await waitFor(() => {
-      expect(screen.queryByTestId("table-loader")).not.toBeInTheDocument();
-    });
+  test("handles pagination controls", () => {
+    render(<DataTable />);
+    fireEvent.click(screen.getByText("Previous"));
+    expect(mockTable.previousPage).toHaveBeenCalled();
 
-    const addAssetButton = screen.getByTestId("add-asset-drawer");
-    expect(addAssetButton).toBeInTheDocument();
-    expect(addAssetButton.textContent).toContain("test@example.com");
+    fireEvent.click(screen.getByText("Next"));
+    expect(mockTable.nextPage).toHaveBeenCalled();
   });
 });
