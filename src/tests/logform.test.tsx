@@ -3,12 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { LoginForm } from "@/components/login-form";
 import { useNavigate } from "react-router-dom";
 
-// Mock the react-router-dom useNavigate hook
+// mock react-router-dom
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-// Mock the UI components
+// mock ui components
 jest.mock("@/components/ui/button", () => ({
   Button: ({
     children,
@@ -34,7 +34,7 @@ jest.mock("@/components/ui/input", () => ({
   ),
 }));
 
-// Mock lucide-react icons
+// mock icons
 jest.mock("lucide-react", () => ({
   Eye: () => <div data-testid="eye-icon">Eye</div>,
   EyeOff: () => <div data-testid="eye-off-icon">EyeOff</div>,
@@ -42,7 +42,7 @@ jest.mock("lucide-react", () => ({
   Mail: () => <div data-testid="mail-icon">Mail</div>,
 }));
 
-// Mock the SmallLoader component
+// mock loader
 jest.mock("@/Animation/SmallLoader", () => ({
   __esModule: true,
   default: () => <div data-testid="small-loader">Loading...</div>,
@@ -57,10 +57,9 @@ describe("LoginForm", () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  it("renders the login form correctly", () => {
+  it("renders form correctly", () => {
     render(<LoginForm onLogin={mockOnLogin} />);
 
-    // Check if important elements are rendered
     expect(screen.getByText("START FOR FREE")).toBeInTheDocument();
     expect(screen.getByText(/login to your account/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
@@ -68,7 +67,7 @@ describe("LoginForm", () => {
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
 
-  it("updates email and password fields when user types", async () => {
+  it("updates fields on input", async () => {
     render(<LoginForm onLogin={mockOnLogin} />);
 
     const emailInput = screen.getByLabelText(/email/i);
@@ -81,7 +80,7 @@ describe("LoginForm", () => {
     expect(passwordInput).toHaveValue("password123");
   });
 
-  it("calls onLogin with email and password when form is submitted", async () => {
+  it("calls onLogin on submit", async () => {
     mockOnLogin.mockResolvedValueOnce(undefined);
 
     render(<LoginForm onLogin={mockOnLogin} />);
@@ -97,7 +96,7 @@ describe("LoginForm", () => {
     expect(mockOnLogin).toHaveBeenCalledWith("test@example.com", "password123");
   });
 
-  it("shows loader when form is submitting", async () => {
+  it("shows loader during submission", async () => {
     let resolveLogin: () => void;
     const loginPromise = new Promise<void>((resolve) => {
       resolveLogin = resolve;
@@ -115,19 +114,16 @@ describe("LoginForm", () => {
     await userEvent.type(passwordInput, "password123");
     await userEvent.click(submitButton);
 
-    // Loader should be visible
     expect(screen.getByTestId("small-loader")).toBeInTheDocument();
 
-    // Resolve the login promise
     resolveLogin!();
 
-    // Wait for the loader to disappear
     await waitFor(() => {
       expect(screen.queryByTestId("small-loader")).not.toBeInTheDocument();
     });
   });
 
-  it("navigates to registration page when sign up link is clicked", async () => {
+  it("navigates to registration on signup link click", async () => {
     render(<LoginForm onLogin={mockOnLogin} />);
 
     const signUpLink = screen.getByText(/sign up/i);

@@ -5,7 +5,7 @@ import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
 import { useDataTable } from "@/hooks/tableHooks/table-hook";
 import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
 
-// Mock hooks
+// mock hooks
 jest.mock("@/hooks/use-auth", () => ({
   useAuth: jest.fn(),
 }));
@@ -22,7 +22,7 @@ jest.mock("@/hooks/tableHooks/use-bulk-delete-hook", () => ({
   useBulkDelete: jest.fn(),
 }));
 
-// Mock UI components (similar to EmployeeTable but with asset-specific changes)
+// mock UI components
 jest.mock("@/components/ui/button", () => ({
   Button: ({
     children,
@@ -83,7 +83,7 @@ jest.mock("@/components/ui/table", () => ({
   }) => <td colSpan={colSpan}>{children}</td>,
 }));
 
-// Mock other components
+// mock other components
 jest.mock("@/components/ui/card", () => ({
   Card: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="card">{children}</div>
@@ -112,7 +112,7 @@ jest.mock("@/components/ui/dropdown-menu", () => ({
   ),
 }));
 
-// Mock custom components
+// mock custom components
 jest.mock("@/components/AssetsComponents/AddAssetDrawer", () => ({
   AddAssetDrawer: ({ onAssetAdded }: { onAssetAdded: () => void }) => (
     <button onClick={onAssetAdded} data-testid="add-asset">
@@ -147,13 +147,13 @@ jest.mock("@/Animation/TableLoader", () => ({
   default: () => <div data-testid="table-loader">Loading...</div>,
 }));
 
-// Mock lucide react icons
+// mock lucide
 jest.mock("lucide-react", () => ({
   ChevronDown: () => <span>▼</span>,
 }));
 
 describe("AssetTable", () => {
-  // Simplified mock data for assets
+  // mock data for assets
   const mockAssets = [
     {
       id: "1",
@@ -171,7 +171,7 @@ describe("AssetTable", () => {
     },
   ];
 
-  // Simplified table mock
+  // table mock
   const mockTable = {
     getHeaderGroups: jest.fn().mockReturnValue([
       {
@@ -258,7 +258,7 @@ describe("AssetTable", () => {
     });
   });
 
-  // Test cases
+  // test cases
   test("renders the table when data is loaded", () => {
     render(<DataTable />);
     expect(screen.getByTestId("table")).toBeInTheDocument();

@@ -3,12 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { RegistrationForm } from "@/components/registration-form";
 import { useNavigate } from "react-router-dom";
 
-// Mock the react-router-dom useNavigate hook
+// mock react-router-dom useNavigate
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-// Mock the UI components
+// mock ui components
 jest.mock("@/components/ui/button", () => ({
   Button: ({
     children,
@@ -44,7 +44,7 @@ jest.mock("@/components/ui/label", () => ({
   }) => <label {...props}>{children}</label>,
 }));
 
-// Mock lucide-react icons
+// mock lucide-react icons
 jest.mock("lucide-react", () => ({
   Eye: () => <div data-testid="eye-icon">Eye</div>,
   EyeOff: () => <div data-testid="eye-off-icon">EyeOff</div>,
@@ -53,7 +53,7 @@ jest.mock("lucide-react", () => ({
   User: () => <div data-testid="user-icon">User</div>,
 }));
 
-// Mock the SmallLoader component
+// mock smallloader component
 jest.mock("@/Animation/SmallLoader", () => ({
   __esModule: true,
   default: () => <div data-testid="small-loader">Loading...</div>,
@@ -68,10 +68,9 @@ describe("RegistrationForm", () => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  it("renders the registration form correctly", () => {
+  it("renders form correctly", () => {
     render(<RegistrationForm onRegister={mockOnRegister} />);
 
-    // Check if important elements are rendered
     expect(screen.getByText("START FOR FREE")).toBeInTheDocument();
     expect(screen.getByText(/create your account/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
@@ -84,7 +83,7 @@ describe("RegistrationForm", () => {
     expect(screen.getByText(/login/i)).toBeInTheDocument();
   });
 
-  it("updates username, email, and password fields when user types", async () => {
+  it("updates fields on user input", async () => {
     render(<RegistrationForm onRegister={mockOnRegister} />);
 
     const usernameInput = screen.getByLabelText(/username/i);
@@ -100,7 +99,7 @@ describe("RegistrationForm", () => {
     expect(passwordInput).toHaveValue("password123");
   });
 
-  it("calls onRegister with username, email, and password when form is submitted", async () => {
+  it("calls onRegister on form submit", async () => {
     mockOnRegister.mockResolvedValueOnce(undefined);
 
     render(<RegistrationForm onRegister={mockOnRegister} />);
@@ -122,8 +121,7 @@ describe("RegistrationForm", () => {
     );
   });
 
-  it("shows loader when form is submitting", async () => {
-    // Create a promise that we can resolve manually to control the timing
+  it("shows loader during submission", async () => {
     let resolveRegister: () => void;
     const registerPromise = new Promise<void>((resolve) => {
       resolveRegister = resolve;
@@ -143,19 +141,16 @@ describe("RegistrationForm", () => {
     await userEvent.type(passwordInput, "password123");
     await userEvent.click(submitButton);
 
-    // Loader should be visible
     expect(screen.getByTestId("small-loader")).toBeInTheDocument();
 
-    // Resolve the register promise
     resolveRegister!();
 
-    // Wait for the loader to disappear
     await waitFor(() => {
       expect(screen.queryByTestId("small-loader")).not.toBeInTheDocument();
     });
   });
 
-  it("navigates to login page when login link is clicked", async () => {
+  it("navigates to login page on login link click", async () => {
     render(<RegistrationForm onRegister={mockOnRegister} />);
 
     const loginLink = screen.getByText(/login/i);

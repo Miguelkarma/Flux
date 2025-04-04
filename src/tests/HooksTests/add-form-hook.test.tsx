@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { toast } from "sonner";
 
-// Mock dependencies
+// mock dependencies
 jest.mock("firebase/auth");
 jest.mock("firebase/firestore");
 jest.mock("sonner");
@@ -46,7 +46,7 @@ describe("useForm", () => {
   it("manages form state correctly", () => {
     const { result } = renderHook(() => useForm({ field: "" }));
 
-    // Test input change
+    // test input change
     act(() => {
       result.current.handleInputChange({
         target: { name: "field", value: "test" },
@@ -54,7 +54,7 @@ describe("useForm", () => {
     });
     expect(result.current.formData.field).toBe("test");
 
-    // Test reset
+    // test reset
     act(() => result.current.resetForm());
     expect(result.current.formData.field).toBe("");
   });
@@ -95,7 +95,7 @@ describe("useForm", () => {
       useForm({ employeeId: "", assignedEmployee: "", email: "" })
     );
 
-    // Mock employees data is set in the onSnapshot mock
+    // mock employees data is set in the onSnapshot mock
 
     act(() => {
       result.current.handleEmployeeChange("emp1");
