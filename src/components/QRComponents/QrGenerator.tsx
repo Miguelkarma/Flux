@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { QrCode } from "lucide-react";
+import { BadgeInfo, QrCode } from "lucide-react";
 
 interface QRGeneratorProps {
   userId?: string | null;
@@ -19,7 +19,7 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
     // include user id if available
     const qrData = userId ? `${serialNum}|user:${userId}` : serialNum;
 
-    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(
       qrData
     )}`;
     setQrCodeUrl(apiUrl);
@@ -49,38 +49,58 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold flex items-center gap-2">
-          <QrCode className="w-5 h-5" />
-          Generate IT Asset QR Code
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              placeholder="Enter Asset Serial Number"
-              value={serialNum}
-              onChange={(e) => setSerialNum(e.target.value)}
-            />
-            <Button onClick={generateQRCode} className="w-full">
-              Generate QR Code
-            </Button>
-          </div>
-
-          {qrCodeUrl && (
-            <div className="flex flex-col items-center space-y-4">
-              <div className="border p-2 inline-block bg-white">
-                <img src={qrCodeUrl} alt="QR Code" width="200" height="200" />
+    <>
+      <div className="flex items-center h-full text-card-foreground ">
+        <Card className="w-full max-w-6xl mx-auto mt-8 bg-card shadow shadow-popover-foreground ">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold flex items-center gap-3 ">
+              <QrCode className="w-5 h-5" />
+              Generate IT Asset QR Code
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="space-y-6">
+                <Input
+                  placeholder="Enter Asset Serial Number"
+                  value={serialNum}
+                  onChange={(e) => setSerialNum(e.target.value)}
+                  icon={BadgeInfo}
+                />
+                {/* QR Placeholder Box */}
+                <div className="w-[400px] h-[400px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
+                  {qrCodeUrl ? (
+                    <img
+                      src={qrCodeUrl}
+                      alt="QR Code"
+                      width="400"
+                      height="400"
+                    />
+                  ) : (
+                    <span className="text-muted-foreground text-sm">
+                      QR will appear here
+                    </span>
+                  )}
+                </div>
+                <div className="flex justify-center pt-2 gap-4">
+                  <Button
+                    onClick={generateQRCode}
+                    className="shadow shadow-popover-foreground w-full bg-transparent text-card-foreground"
+                  >
+                    Generate QR Code
+                  </Button>
+                  <Button
+                    onClick={downloadQRCode}
+                    className="shadow shadow-popover-foreground w-full bg-transparent text-card-foreground"
+                  >
+                    Download QR Code
+                  </Button>
+                </div>
               </div>
-              <Button variant="outline" onClick={downloadQRCode}>
-                Download QR Code
-              </Button>
             </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }

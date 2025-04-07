@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Loader from "@/Animation/SmallLoader";
 import { QRScanner } from "@/components/QRComponents/QrScanner";
 import { useAuth } from "@/hooks/use-auth";
+import { Toaster } from "sonner";
 
 export default function Scanner() {
   const { theme } = useTheme();
@@ -33,6 +34,16 @@ export default function Scanner() {
 
   return (
     <>
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors={true}
+        theme="dark"
+        closeButton={true}
+        expand={true}
+        visibleToasts={3}
+        style={{ zIndex: 100000 }}
+      />
       <div
         className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
       >

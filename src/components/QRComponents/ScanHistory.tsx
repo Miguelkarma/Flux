@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { History, Search, Trash2, RefreshCw } from "lucide-react";
+import {
+  History,
+  Search,
+  Trash2,
+  RefreshCw,
+  Loader2,
+  ListRestart,
+} from "lucide-react";
 import {
   collection,
   query,
@@ -14,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
+import DeleteDialog from "@/components/sharedComponent/DeleteDialog"; // Import the DeleteDialog
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
 
 interface ScanHistoryProps {
@@ -21,12 +29,12 @@ interface ScanHistoryProps {
   onSelectSerial?: (serialNumber: string) => void;
 }
 
-interface ScanRecord {
+export type ScanRecord = {
   id: string;
-  serialNumber: string;
-  timestamp: any; // Firestore timestamp
+  serialNum: string;
+  timestamp: any;
   found: boolean;
-}
+};
 
 export function ScanHistory({ userId }: ScanHistoryProps) {
   const [history, setHistory] = useState<ScanRecord[]>([]);
@@ -35,6 +43,8 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
     null
   );
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
+  const [selectedRecord, setSelectedRecord] = useState<ScanRecord | null>(null);
 
   const fetchHistory = async () => {
     if (!userId) return;
@@ -56,7 +66,7 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
         const data = doc.data();
         records.push({
           id: doc.id,
-          serialNumber: data.serialNumber,
+          serialNum: data.serialNum,
           timestamp: data.timestamp,
           found: data.found,
         });
@@ -70,23 +80,12 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
     }
   };
 
-  const deleteHistoryItem = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "scan-history", id));
-      setHistory(history.filter((item) => item.id !== id));
-    } catch (error) {
-      console.error("Error deleting history item:", error);
-    }
-  };
-
   const clearAllHistory = async () => {
     try {
-      // Get all history items for this user
       const historyRef = collection(db, "scan-history");
       const q = query(historyRef, where("userId", "==", userId));
       const querySnapshot = await getDocs(q);
 
-      // Delete each item
       querySnapshot.forEach(async (document) => {
         await deleteDoc(doc(db, "scan-history", document.id));
       });
@@ -97,14 +96,14 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
     }
   };
 
-  const fetchAssetBySerialNumber = async (serialNumber: string) => {
+  const fetchAssetBySerialNum = async (serialNum: string) => {
     if (!userId) return null;
 
     try {
       const assetsRef = collection(db, "it-assets");
       const q = query(
         assetsRef,
-        where("serialNo", "==", serialNumber),
+        where("serialNo", "==", serialNum),
         where("userId", "==", userId)
       );
 
@@ -122,17 +121,13 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
     }
   };
 
-  const viewAssetDetails = async (serialNumber: string) => {
-    const asset = await fetchAssetBySerialNumber(serialNumber);
+  const viewAssetDetails = async (serialNum: string) => {
+    const asset = await fetchAssetBySerialNum(serialNum);
     if (asset) {
       setSelectedAsset(asset);
       setIsDialogOpen(true);
     }
   };
-
-  useEffect(() => {
-    fetchHistory();
-  }, [userId]);
 
   const formatDate = (timestamp: any) => {
     if (!timestamp || !timestamp.toDate) {
@@ -148,17 +143,26 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
     }).format(date);
   };
 
+  const handleDeleteDialogOpen = (record: ScanRecord) => {
+    setSelectedRecord(record);
+    setDeleteDialogOpen(true);
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, [userId]);
+
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full max-w-4xl mx-auto shadow shadow-popover-foreground">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl font-bold flex items-center gap-2">
+        <CardTitle className="text-xl font-bold flex items-center gap-2 mt-2">
           <History className="w-5 h-5" />
           Recent Scans
         </CardTitle>
         <div className="flex gap-2">
           <Button
             variant="outline"
-            size="sm"
+            size="lg"
             onClick={fetchHistory}
             disabled={isLoading}
           >
@@ -166,32 +170,32 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="lg"
             onClick={clearAllHistory}
             disabled={isLoading || history.length === 0}
           >
-            <Trash2 className="w-4 h-4" />
+            <ListRestart className="w-4 h-4" /> Clear History
           </Button>
         </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-8 text-muted-foreground">
-            Loading history...
+          <div className="flex justify-center p-4">
+            <Loader2 className="w-6 h-6 animate-spin" />
           </div>
         ) : history.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             No scan history found
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-2 ">
             {history.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-3 rounded-md border bg-background hover:bg-muted/50 transition-colors"
+                className="flex items-center justify-between p-3 rounded-md border bg-background hover:bg-muted/50 transition-colors shadow shadow-popover-foreground"
               >
                 <div className="flex-1">
-                  <div className="font-medium">{item.serialNumber}</div>
+                  <div className="font-medium">{item.serialNum}</div>
                   <div className="text-sm text-muted-foreground">
                     {formatDate(item.timestamp)}
                   </div>
@@ -201,7 +205,7 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => viewAssetDetails(item.serialNumber)}
+                      onClick={() => viewAssetDetails(item.serialNum)}
                     >
                       <Search className="w-4 h-4" />
                     </Button>
@@ -210,7 +214,7 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => deleteHistoryItem(item.id)}
+                    onClick={() => handleDeleteDialogOpen(item)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -226,6 +230,18 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
           asset={selectedAsset}
           isOpen={isDialogOpen}
           onOpenChange={setIsDialogOpen}
+        />
+      )}
+
+      {selectedRecord && (
+        <DeleteDialog
+          item={{
+            type: "scan-history",
+            data: selectedRecord,
+          }}
+          isOpen={deleteDialogOpen}
+          setIsOpen={setDeleteDialogOpen}
+          onHistoryUpdated={fetchHistory}
         />
       )}
     </Card>

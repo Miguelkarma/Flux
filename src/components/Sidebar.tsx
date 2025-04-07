@@ -6,8 +6,8 @@ import {
   Users,
   ChevronDown,
   QrCode,
-  Plus,
-  List,
+  ScanQrCode,
+  History,
 } from "lucide-react";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -69,8 +69,8 @@ const items = [
 // QR Assets submenu items
 const qrSubItems = [
   { title: "Generate QR", url: "/qrcode/generate-qr", icon: QrCode },
-  { title: "Scan QR", url: "/qrcode/scanner-qr", icon: Plus },
-  { title: "QR Logs", url: "/qrcode/qr-logs", icon: List },
+  { title: "Scan QR", url: "/qrcode/scanner-qr", icon: ScanQrCode },
+  { title: "QR Logs", url: "/qrcode/qr-logs", icon: History },
 ];
 
 export default function Sidebar() {
@@ -244,7 +244,7 @@ export default function Sidebar() {
               `relative flex items-center gap-2 p-2 rounded-md transition-all hover:bg-accent/70 ${
                 isActive
                   ? "bg-accent/70 text-accent-foreground "
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-card-foreground"
               }`
             }
           >
@@ -253,14 +253,14 @@ export default function Sidebar() {
           </NavLink>
         ))}
 
-        {/* QR Assets Section - moved right after Assets */}
+        {/* QR Assets Section */}
         <div className="space-y-1">
           <div
             onClick={toggleQrMenu}
             className={`relative flex items-center justify-between p-2 rounded-md transition-all hover:bg-accent/70 cursor-pointer ${
               isQrPathActive()
                 ? "bg-accent/70 text-accent-foreground"
-                : "text-muted-foreground "
+                : "hover:text-card-foreground text-muted-foreground "
             }`}
           >
             <div className="flex items-center gap-2">
@@ -289,7 +289,7 @@ export default function Sidebar() {
                     `flex items-center gap-2 p-2 rounded-md transition-all ${
                       isActive
                         ? " text-accent-foreground"
-                        : "text-muted-foreground hover:text-sidebar-foreground hover:bg-accent/70"
+                        : "text-muted-foreground hover:text-card-foreground hover:bg-accent/70"
                     }`
                   }
                 >
@@ -310,7 +310,7 @@ export default function Sidebar() {
               `relative flex items-center gap-2 p-2 rounded-md transition-all hover:bg-accent/70 ${
                 isActive
                   ? "bg-accent/70 text-accent-foreground"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-card-foreground"
               }`
             }
           >

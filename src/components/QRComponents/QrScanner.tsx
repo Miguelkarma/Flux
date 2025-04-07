@@ -50,7 +50,6 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
     isScanning,
     scanResult,
     isLoading,
-    error,
     fileInputRef,
     videoRef,
     handleFileUpload,
@@ -58,119 +57,123 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
     stopCamera,
     captureFrame,
     resetScan,
+    manualScan,
   } = useQRScanner({ onScanSuccess: handleScanSuccess });
 
   return (
     <>
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold flex items-center gap-2">
-            <Camera className="w-5 h-5" />
-            Scan IT Asset QR Code
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-2">
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-1/2 flex gap-2"
-                disabled={isLoading}
-              >
-                <Upload className="w-4 h-4" />
-                Upload QR Code
-              </Button>
-              <Input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-
-              <Button
-                onClick={isScanning ? stopCamera : startCamera}
-                className={`w-1/2 flex gap-2 ${
-                  isScanning ? "bg-red-500 hover:bg-red-600" : ""
-                }`}
-                disabled={isLoading}
-              >
-                <Camera className="w-4 h-4" />
-                {isScanning ? "Stop Camera" : "Use Camera"}
-              </Button>
-            </div>
-
-            {isScanning && (
-              <div className="space-y-2">
-                <div className="border rounded-md overflow-hidden">
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
+      <div className="flex items-center mt-6 my-auto text-card-foreground  ">
+        <Card className="w-full max-w-6xl  h-full mx-auto shadow shadow-popover-foreground">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <Camera className="w-5 h-5" />
+              Scan IT Asset QR Code
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-8">
+              <div className="flex gap-2">
                 <Button
-                  onClick={captureFrame}
-                  className="w-full"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground"
                   disabled={isLoading}
                 >
-                  Capture and Scan
+                  <Upload className="w-4 h-4" />
+                  Upload QR Code
+                </Button>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+
+                <Button
+                  onClick={isScanning ? stopCamera : startCamera}
+                  className={`w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground ${
+                    isScanning ? "bg-red-500 hover:bg-red-600" : ""
+                  }`}
+                  disabled={isLoading}
+                >
+                  <Camera className="w-4 h-4" />
+                  {isScanning ? "Stop Camera" : "Use Camera"}
                 </Button>
               </div>
-            )}
 
-            {uploadedImage && (
-              <div className="flex flex-col items-center space-y-2">
-                <div className="border p-2 inline-block bg-white">
-                  <img
-                    src={uploadedImage || "/placeholder.svg"}
-                    alt="Uploaded QR Code"
-                    width="200"
-                    height="200"
-                  />
+              {isScanning && (
+                <div className="space-y-2">
+                  <div className=" rounded-md overflow-hidden">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      className="w-full h-64 object-cover"
+                    />
+                  </div>
+                  <Button
+                    onClick={captureFrame}
+                    className="w-full"
+                    disabled={isLoading}
+                  >
+                    Capture and Scan
+                  </Button>
                 </div>
-              </div>
-            )}
+              )}
 
-            {isLoading && (
-              <div className="flex justify-center p-4">
-                <Loader2 className="w-6 h-6 animate-spin" />
-              </div>
-            )}
-
-            {error && (
-              <div className="p-3 border border-red-200 bg-red-50 rounded-md text-red-700">
-                {error}
-              </div>
-            )}
-
-            {scanResult && (
-              <div className="space-y-2">
-                <div className="p-4 border rounded-md bg-muted">
-                  <p className="font-medium">Scan Result:</p>
-                  <p>{scanResult}</p>
+              {uploadedImage ? (
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-[300px] h-[300px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
+                    <img src={uploadedImage} width="300" height="300" />
+                  </div>
                 </div>
+              ) : (
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-[300px] h-[300px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
+                    {/* Placeholder content */}
+                    <span className="text-gray-400">Qr Code</span>
+                  </div>
+                </div>
+              )}
+              {isLoading && (
+                <div className="flex justify-center p-4">
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {scanResult && (
+                  <div className="p-2 rounded-md bg-secondary text-center ">
+                    <p>{scanResult}</p>
+                  </div>
+                )}
                 <Button
                   variant="outline"
                   onClick={resetScan}
-                  className="w-full"
+                  className="w-full shadow shadow-popover-foreground bg-transparent text-card-foreground"
                 >
                   Reset Scan
                 </Button>
+                <Button
+                  className="w-full  shadow shadow-popover-foreground bg-transparent text-card-foreground"
+                  onClick={manualScan}
+                  disabled={isLoading || (!uploadedImage && !isScanning)}
+                >
+                  Scan QR Code
+                </Button>
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-      {selectedAsset && (
-        <AssetDetailsDialog
-          asset={selectedAsset}
-          isOpen={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-        />
-      )}
+        {selectedAsset && (
+          <AssetDetailsDialog
+            asset={selectedAsset}
+            isOpen={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+          />
+        )}
+      </div>
     </>
   );
 }

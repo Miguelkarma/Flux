@@ -1,8 +1,5 @@
-"use client";
-
-import type React from "react";
-
 import { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
 
 interface UseQRScannerOptions {
   onScanSuccess: (result: string) => void;
@@ -30,39 +27,6 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
       setUploadedImage(event.target?.result as string);
     };
     reader.readAsDataURL(file);
-
-    // send to qr decoding api
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await fetch(
-        "https://api.qrserver.com/v1/read-qr-code/",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      const decodedText = data[0]?.symbol[0]?.data;
-
-      if (decodedText) {
-        setScanResult(decodedText);
-        onScanSuccess(decodedText);
-      } else {
-        setScanResult("no qr code found in the image");
-        setError("no qr code found in the image");
-      }
-    } catch (error) {
-      console.error("error scanning qr code:", error);
-      setScanResult("error scanning qr code");
-      setError("error scanning qr code");
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   // start camera for scanning
@@ -77,8 +41,8 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
         setIsScanning(true);
       }
     } catch (error) {
-      console.error("error accessing camera:", error);
-      setError("unable to access camera");
+      console.error("Error accessing camera:", error);
+      toast.error("Unable to access camera");
     }
   };
 
@@ -142,6 +106,49 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
     }
   };
 
+  // trigger scan after file upload or camera capture
+  const manualScan = async () => {
+    if (uploadedImage) {
+      // trigger the scan for uploaded image
+      const formData = new FormData();
+      const response = await fetch(uploadedImage);
+      const blob = await response.blob();
+      const file = new File([blob], "qrcode.png", { type: "image/png" });
+
+      formData.append("file", file);
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await fetch(
+          "https://api.qrserver.com/v1/read-qr-code/",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await response.json();
+        const decodedText = data[0]?.symbol[0]?.data;
+
+        if (decodedText) {
+          setScanResult(decodedText);
+          onScanSuccess(decodedText);
+        } else {
+          setError("no qr code found in the image");
+        }
+      } catch (error) {
+        console.error("error scanning qr code:", error);
+        setError("error scanning qr code");
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (isScanning) {
+      // Capture and scan frame if using camera
+      await captureFrame();
+    }
+  };
+
   // reset scan state
   const resetScan = () => {
     setScanResult(null);
@@ -174,5 +181,6 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
     stopCamera,
     captureFrame,
     resetScan,
+    manualScan,
   };
 }
