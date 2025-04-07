@@ -28,7 +28,7 @@ interface ScanRecord {
   found: boolean;
 }
 
-export function ScanHistory({ userId, onSelectSerial }: ScanHistoryProps) {
+export function ScanHistory({ userId }: ScanHistoryProps) {
   const [history, setHistory] = useState<ScanRecord[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedAsset, setSelectedAsset] = useState<FirestoreData | null>(
@@ -206,15 +206,7 @@ export function ScanHistory({ userId, onSelectSerial }: ScanHistoryProps) {
                       <Search className="w-4 h-4" />
                     </Button>
                   )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      if (onSelectSerial) onSelectSerial(item.serialNumber);
-                    }}
-                  >
-                    <Search className="w-4 h-4" />
-                  </Button>
+
                   <Button
                     variant="ghost"
                     size="sm"

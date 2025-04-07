@@ -9,15 +9,15 @@ interface QRGeneratorProps {
 }
 
 export function QRGenerator({ userId }: QRGeneratorProps) {
-  const [serialNumber, setSerialNumber] = useState<string>("");
+  const [serialNum, setSerialNum] = useState<string>("");
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
 
   // generate qr code using goqr.me api
   const generateQRCode = () => {
-    if (!serialNumber.trim()) return;
+    if (!serialNum.trim()) return;
 
     // include user id if available
-    const qrData = userId ? `${serialNumber}|user:${userId}` : serialNumber;
+    const qrData = userId ? `${serialNum}|user:${userId}` : serialNum;
 
     const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
       qrData
@@ -26,15 +26,26 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
   };
 
   // download qr code
-  const downloadQRCode = () => {
+  const downloadQRCode = async () => {
     if (!qrCodeUrl) return;
 
-    const link = document.createElement("a");
-    link.href = qrCodeUrl;
-    link.download = `QR_${serialNumber}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const response = await fetch(qrCodeUrl, { mode: "cors" });
+      const blob = await response.blob();
+
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `QR_${serialNum}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Revoke blob URL to free up memory
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+    }
   };
 
   return (
@@ -50,8 +61,8 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
           <div className="space-y-2">
             <Input
               placeholder="Enter Asset Serial Number"
-              value={serialNumber}
-              onChange={(e) => setSerialNumber(e.target.value)}
+              value={serialNum}
+              onChange={(e) => setSerialNum(e.target.value)}
             />
             <Button onClick={generateQRCode} className="w-full">
               Generate QR Code

@@ -54,8 +54,8 @@ export function useAssetDetails(userId: string | undefined) {
     }
   };
 
-  const viewAssetDetails = async (serialNumber: string) => {
-    const asset = await fetchAssetBySerialNumber(serialNumber);
+  const viewAssetDetails = async (serialNum: string) => {
+    const asset = await fetchAssetBySerialNumber(serialNum);
     if (asset) {
       setIsDialogOpen(true);
     }

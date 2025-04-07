@@ -1,9 +1,9 @@
 import { db } from "@/firebase/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-// use-qr-history.tsx
+
 export function useScanHistory(userId: string | undefined) {
-  const saveScanHistory = async (serialNumber: string, found: boolean) => {
+  const saveScanHistory = async (serialNum: string, found: boolean) => {
     if (!userId) {
       console.error("User ID is required to save scan history");
       return;
@@ -13,7 +13,7 @@ export function useScanHistory(userId: string | undefined) {
       const historyRef = collection(db, "scan-history");
       await addDoc(historyRef, {
         userId,
-        serialNumber,
+        serialNum,
         timestamp: serverTimestamp(),
         found,
       });

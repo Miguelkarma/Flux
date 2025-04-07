@@ -11,7 +11,7 @@ import { useScanHistory } from "@/hooks/use-qr-history";
 interface QRScannerProps {
   user: any;
   userId: string | undefined;
-  onScanComplete?: (serialNumber: string) => void;
+  onScanComplete?: (serialNo: string) => void;
 }
 
 export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
@@ -24,9 +24,11 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
 
   const { saveScanHistory } = useScanHistory(userId);
 
-  const handleScanSuccess = async (serialNumber: string) => {
+  const handleScanSuccess = async (rawScanResult: string) => {
     try {
+      const serialNumber = rawScanResult.split("|")[0];
       const asset = await fetchAssetBySerialNumber(serialNumber);
+
       if (asset) {
         setIsDialogOpen(true);
       }
@@ -35,10 +37,9 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
         await saveScanHistory(serialNumber, asset !== null);
       } catch (historyError) {
         console.error("Failed to save history (non-critical):", historyError);
-        // Continue even if history fails
       }
 
-      if (onScanComplete) onScanComplete(serialNumber);
+      onScanComplete?.(serialNumber);
     } catch (error) {
       console.error("Error handling scan success:", error);
     }
