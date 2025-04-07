@@ -62,16 +62,15 @@ function StatusItem({ label, value, color }: StatusItemProps) {
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: Command },
   { title: "Assets", url: "/assets", icon: Laptop },
-  // QR Assets is now handled separately in its own section
   { title: "Employee", url: "/employee", icon: Users },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 // QR Assets submenu items
 const qrSubItems = [
-  { title: "View QR Codes", url: "/qrcode", icon: QrCode },
-  { title: "Generate QR", url: "/qrcode/generate", icon: Plus },
-  { title: "Manage QR List", url: "/qrcode/manage", icon: List },
+  { title: "Generate QR", url: "/qrcode/generate-qr", icon: QrCode },
+  { title: "Scan QR", url: "/qrcode/scanner-qr", icon: Plus },
+  { title: "QR Logs", url: "/qrcode/qr-logs", icon: List },
 ];
 
 export default function Sidebar() {
@@ -92,7 +91,6 @@ export default function Sidebar() {
   const collapsibleRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState<number | undefined>(0);
 
-  // Check if any QR code related paths are active
   const isQrPathActive = () => {
     return window.location.pathname.includes("/qrcode");
   };
@@ -290,7 +288,7 @@ export default function Sidebar() {
                   className={({ isActive }) =>
                     `flex items-center gap-2 p-2 rounded-md transition-all ${
                       isActive
-                        ? "bg-accent text-accent-foreground"
+                        ? " text-accent-foreground"
                         : "text-muted-foreground hover:text-sidebar-foreground hover:bg-accent/70"
                     }`
                   }

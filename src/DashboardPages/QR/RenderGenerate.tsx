@@ -3,12 +3,13 @@ import Sidebar from "@/components/Sidebar";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { useState, useEffect } from "react";
-import { Toaster } from "sonner";
 import Loader from "@/Animation/SmallLoader";
+import { QRGenerator } from "@/components/QRComponents/QrGenerator";
+import { useAuth } from "@/hooks/use-auth";
 
-export default function QRcode() {
+export default function Generate() {
   const { theme } = useTheme();
-
+  const { userId } = useAuth(); // Get userId from auth hook
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -18,18 +19,9 @@ export default function QRcode() {
 
     return () => clearTimeout(timer);
   }, []);
+
   return (
     <>
-      <Toaster
-        position="top-right"
-        duration={3000}
-        richColors={true}
-        theme="dark"
-        closeButton={true}
-        expand={true}
-        visibleToasts={3}
-        style={{ zIndex: 100000 }}
-      />
       <div
         className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
       >
@@ -45,7 +37,10 @@ export default function QRcode() {
             </div>
 
             <div className="col-span-12 md:col-span-9 lg:col-span-9 p-2">
-              <div className="grid gap-6"></div>
+              <div className="grid gap-6">
+                {/* Pass userId to QRGenerator */}
+                <QRGenerator userId={userId} />
+              </div>
             </div>
           </div>
         </div>
