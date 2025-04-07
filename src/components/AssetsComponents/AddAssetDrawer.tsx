@@ -211,7 +211,7 @@ export function AddAssetDrawer({
       />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-12 bg-transparent border-0">
+          <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-9 bg-transparent border-0">
             <Button
               variant="outline"
               className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg mr-1"
