@@ -23,6 +23,7 @@ import { db } from "@/firebase/firebase";
 import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
 import DeleteDialog from "@/components/sharedComponent/DeleteDialog"; // Import the DeleteDialog
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
+import { toast } from "sonner";
 
 interface ScanHistoryProps {
   userId: string | undefined;
@@ -77,6 +78,7 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
       console.error("Error fetching scan history:", error);
     } finally {
       setIsLoading(false);
+      toast.success("Fetched history successfully");
     }
   };
 
@@ -91,6 +93,7 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
       });
 
       setHistory([]);
+      toast.success("History cleared successfully");
     } catch (error) {
       console.error("Error clearing history:", error);
     }

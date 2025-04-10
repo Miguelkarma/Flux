@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Loader from "@/Animation/SmallLoader";
 import { QRGenerator } from "@/components/QRComponents/QrGenerator";
 import { useAuth } from "@/hooks/use-auth";
+import { Toaster } from "sonner";
 
 export default function Generate() {
   const { theme } = useTheme();
@@ -25,6 +26,16 @@ export default function Generate() {
       <div
         className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
       >
+        <Toaster
+          position="top-right"
+          duration={3000}
+          richColors={true}
+          theme="system"
+          closeButton={true}
+          expand={true}
+          visibleToasts={3}
+        />
+
         <DashboardParticles />
         {/* Loading overlay */}
         {isLoading && <Loader />}

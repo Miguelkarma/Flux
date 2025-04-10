@@ -1,16 +1,13 @@
-import { QRScannerService } from "@/api/qrApi";
+import { QRService } from "@/api/qrApi";
+import axios from "axios";
+import { toast } from "sonner";
 
-// mock fetch globally
-global.fetch = jest.fn();
+// mock axios globally
+jest.mock("axios");
+jest.mock("sonner");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// proper formdata mock
-global.FormData = jest.fn().mockImplementation(() => ({
-  append: jest.fn(),
-}));
-
-global.File = jest.fn() as any;
-
-describe("QRScannerService", () => {
+describe("QRService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -28,19 +25,19 @@ describe("QRScannerService", () => {
         },
       ];
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
+      mockedAxios.post.mockResolvedValueOnce({
+        data: mockResponse,
       });
 
       const imageBlob = new Blob(["fake image data"], { type: "image/png" });
-      const result = await QRScannerService.scanQRCode(imageBlob);
+      const result = await QRService.scanQRCode(imageBlob);
 
       // fix: don't strictly check the formdata object
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(mockedAxios.post).toHaveBeenCalledWith(
         "https://api.qrserver.com/v1/read-qr-code/",
+        expect.any(FormData),
         expect.objectContaining({
-          method: "POST",
-          body: expect.anything(),
+          headers: { "Content-Type": "multipart/form-data" },
         })
       );
       expect(result).toBe("https://example.com");
@@ -58,24 +55,22 @@ describe("QRScannerService", () => {
         },
       ];
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValueOnce(mockResponse),
+      mockedAxios.post.mockResolvedValueOnce({
+        data: mockResponse,
       });
 
       const imageBlob = new Blob(["fake image data"], { type: "image/png" });
-      const result = await QRScannerService.scanQRCode(imageBlob);
+      const result = await QRService.scanQRCode(imageBlob);
 
       expect(result).toBeNull();
     });
 
     it("should throw an error when API call fails", async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error("Network error")
-      );
+      mockedAxios.post.mockRejectedValueOnce(new Error("Network error"));
 
       const imageBlob = new Blob(["fake image data"], { type: "image/png" });
 
-      await expect(QRScannerService.scanQRCode(imageBlob)).rejects.toThrow(
+      await expect(QRService.scanQRCode(imageBlob)).rejects.toThrow(
         "Failed to scan QR code"
       );
     });
@@ -98,8 +93,8 @@ describe("QRScannerService", () => {
       document.createElement = jest.fn().mockReturnValue(mockCanvas);
 
       const mockBlob = new Blob(["fake blob data"], { type: "image/png" });
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        blob: jest.fn().mockResolvedValueOnce(mockBlob),
+      mockedAxios.get.mockResolvedValueOnce({
+        data: mockBlob,
       });
 
       // create mock video element
@@ -108,9 +103,7 @@ describe("QRScannerService", () => {
         videoHeight: 480,
       } as HTMLVideoElement;
 
-      const result = await QRScannerService.captureFrameFromVideo(
-        mockVideoElement
-      );
+      const result = await QRService.captureFrameFromVideo(mockVideoElement);
 
       expect(mockCanvas.width).toBe(640);
       expect(mockCanvas.height).toBe(480);
@@ -122,8 +115,10 @@ describe("QRScannerService", () => {
         480
       );
       expect(mockCanvas.toDataURL).toHaveBeenCalledWith("image/png");
-      expect(global.fetch).toHaveBeenCalledWith(
-        "data:image/png;base64,fakedata"
+      // Fix: Make the call match the `responseType` property
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        "data:image/png;base64,fakedata",
+        { responseType: "blob" }
       );
       expect(result).toEqual(mockBlob);
     });
@@ -132,18 +127,86 @@ describe("QRScannerService", () => {
   describe("dataUrlToBlob", () => {
     it("should convert data URL to blob", async () => {
       const mockBlob = new Blob(["fake blob data"], { type: "image/png" });
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        blob: jest.fn().mockResolvedValueOnce(mockBlob),
+      mockedAxios.get.mockResolvedValueOnce({
+        data: mockBlob,
       });
 
-      const result = await QRScannerService.dataUrlToBlob(
+      const result = await QRService.dataUrlToBlob(
         "data:image/png;base64,fakedata"
       );
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        "data:image/png;base64,fakedata"
+      // Fix: Make the call match the `responseType` property
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        "data:image/png;base64,fakedata",
+        { responseType: "blob" }
       );
       expect(result).toEqual(mockBlob);
+    });
+  });
+
+  describe("generateQRCodeUrl", () => {
+    it("should generate correct QR code URL with default size", () => {
+      const data = "https://example.com";
+      const url = QRService.generateQRCodeUrl(data);
+
+      expect(url).toBe(
+        "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https%3A%2F%2Fexample.com"
+      );
+    });
+  });
+
+  describe("downloadQRCode", () => {
+    it("should download QR code successfully", async () => {
+      const mockBlob = new Blob(["fake blob data"], { type: "image/png" });
+      mockedAxios.get.mockResolvedValueOnce({
+        data: mockBlob,
+      });
+
+      // Mock DOM methods
+      const mockLink = {
+        href: "",
+        download: "",
+        click: jest.fn(),
+      };
+
+      document.createElement = jest.fn().mockReturnValue(mockLink);
+      document.body.appendChild = jest.fn();
+      document.body.removeChild = jest.fn();
+
+      await QRService.downloadQRCode(
+        "https://example.com/qr.png",
+        "qrcode.png"
+      );
+
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        "https://example.com/qr.png",
+        {
+          responseType: "blob",
+        }
+      );
+      expect(URL.createObjectURL).toHaveBeenCalledWith(mockBlob);
+      expect(mockLink.href).toBe("blob:mock-url");
+      expect(mockLink.download).toBe("qrcode.png");
+      expect(document.body.appendChild).toHaveBeenCalledWith(mockLink);
+      expect(mockLink.click).toHaveBeenCalled();
+      expect(document.body.removeChild).toHaveBeenCalledWith(mockLink);
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
+
+      // Ensure toast.error was not called
+      expect(toast.error).not.toHaveBeenCalled();
+    });
+
+    it("should do nothing if URL is empty", async () => {
+      await QRService.downloadQRCode("", "qrcode.png");
+      expect(mockedAxios.get).not.toHaveBeenCalled();
+    });
+
+    it("should throw an error when download fails", async () => {
+      mockedAxios.get.mockRejectedValueOnce(new Error("Network error"));
+
+      await expect(
+        QRService.downloadQRCode("https://example.com/qr.png", "qrcode.png")
+      ).rejects.toThrow("Failed to download QR code");
     });
   });
 });
