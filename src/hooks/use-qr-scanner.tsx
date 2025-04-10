@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { QRScannerService } from "@/api/qrApi";
+import { QRService } from "@/api/qrApi";
 
 interface UseQRScannerOptions {
   onScanSuccess: (result: string) => void;
@@ -61,12 +61,10 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
 
     try {
       // capture frame from video
-      const imageBlob = await QRScannerService.captureFrameFromVideo(
-        videoRef.current
-      );
+      const imageBlob = await QRService.captureFrameFromVideo(videoRef.current);
 
       // scan the captured frame
-      const decodedText = await QRScannerService.scanQRCode(imageBlob);
+      const decodedText = await QRService.scanQRCode(imageBlob);
 
       if (decodedText && decodedText !== lastScannedRef.current) {
         lastScannedRef.current = decodedText;
@@ -130,12 +128,10 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
       setError(null);
 
       // capture frame from video
-      const imageBlob = await QRScannerService.captureFrameFromVideo(
-        videoRef.current
-      );
+      const imageBlob = await QRService.captureFrameFromVideo(videoRef.current);
 
       // scan the captured frame
-      const decodedText = await QRScannerService.scanQRCode(imageBlob);
+      const decodedText = await QRService.scanQRCode(imageBlob);
 
       if (decodedText) {
         setScanResult(decodedText);
@@ -164,10 +160,10 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
       setError(null);
 
       // convert data url to blob
-      const imageBlob = await QRScannerService.dataUrlToBlob(uploadedImage);
+      const imageBlob = await QRService.dataUrlToBlob(uploadedImage);
 
       // scan the image
-      const decodedText = await QRScannerService.scanQRCode(imageBlob);
+      const decodedText = await QRService.scanQRCode(imageBlob);
 
       if (decodedText) {
         setScanResult(decodedText);
