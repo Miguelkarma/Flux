@@ -7,6 +7,13 @@ import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsD
 import { useAssetDetails } from "@/hooks/use-asset-details";
 import { useQRScanner } from "@/hooks/use-qr-scanner";
 import { useScanHistory } from "@/hooks/use-qr-history";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface QRScannerProps {
   user: any;
@@ -47,6 +54,8 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
 
   const {
     uploadedImage,
+    isCameraDialogOpen,
+    setIsCameraDialogOpen,
     isScanning,
     scanResult,
     isLoading,
@@ -55,15 +64,24 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
     handleFileUpload,
     startCamera,
     stopCamera,
-    captureFrame,
     resetScan,
     manualScan,
   } = useQRScanner({ onScanSuccess: handleScanSuccess });
 
+  const handleOpenCameraDialog = () => {
+    setIsCameraDialogOpen(true);
+    startCamera();
+  };
+
+  const handleCloseCameraDialog = () => {
+    stopCamera();
+    setIsCameraDialogOpen(false);
+  };
+
   return (
     <>
-      <div className="flex items-center mt-6 my-auto text-card-foreground  ">
-        <Card className="w-full max-w-6xl  h-full mx-auto shadow shadow-popover-foreground">
+      <div className="flex items-center mt-6 my-auto text-card-foreground">
+        <Card className="w-full max-w-6xl h-full mx-auto shadow shadow-popover-foreground">
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <Camera className="w-5 h-5" />
@@ -77,6 +95,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
                   onClick={() => fileInputRef.current?.click()}
                   className="w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground"
                   disabled={isLoading}
+                  variant="outline"
                 >
                   <Upload className="w-4 h-4" />
                   Upload QR Code
@@ -90,41 +109,26 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
                 />
 
                 <Button
-                  onClick={isScanning ? stopCamera : startCamera}
-                  className={`w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground ${
-                    isScanning ? "bg-red-500 hover:bg-red-600" : ""
-                  }`}
+                  variant="outline"
+                  onClick={handleOpenCameraDialog}
+                  className="w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground"
                   disabled={isLoading}
                 >
                   <Camera className="w-4 h-4" />
-                  {isScanning ? "Stop Camera" : "Use Camera"}
+                  Use Camera
                 </Button>
               </div>
-
-              {isScanning && (
-                <div className="space-y-2">
-                  <div className=" rounded-md overflow-hidden">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      className="w-full h-64 object-cover"
-                    />
-                  </div>
-                  <Button
-                    onClick={captureFrame}
-                    className="w-full"
-                    disabled={isLoading}
-                  >
-                    Capture and Scan
-                  </Button>
-                </div>
-              )}
 
               {uploadedImage ? (
                 <div className="flex flex-col items-center space-y-2">
                   <div className="w-[300px] h-[300px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
-                    <img src={uploadedImage} width="300" height="300" />
+                    <img
+                      src={uploadedImage}
+                      width="300"
+                      height="300"
+                      alt="QR code"
+                      className="rounded-md"
+                    />
                   </div>
                 </div>
               ) : (
@@ -135,6 +139,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
                   </div>
                 </div>
               )}
+
               {isLoading && (
                 <div className="flex justify-center p-4">
                   <Loader2 className="w-6 h-6 animate-spin" />
@@ -155,7 +160,8 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
                   Reset Scan
                 </Button>
                 <Button
-                  className="w-full  shadow shadow-popover-foreground bg-transparent text-card-foreground"
+                  variant="outline"
+                  className="w-full shadow shadow-popover-foreground bg-transparent text-card-foreground"
                   onClick={manualScan}
                   disabled={isLoading || (!uploadedImage && !isScanning)}
                 >
@@ -165,6 +171,37 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
             </div>
           </CardContent>
         </Card>
+
+        {/* Camera Dialog */}
+        <Dialog
+          open={isCameraDialogOpen}
+          onOpenChange={handleCloseCameraDialog}
+        >
+          <DialogContent className="w-full max-w-4xl ">
+            <DialogHeader>
+              <DialogTitle>Scan QR Code</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 h-full">
+              <div className="rounded-md overflow-hidden h-full">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <DialogFooter className="flex flex-col sm:flex-row gap-2">
+              <Button
+                variant="outline"
+                onClick={handleCloseCameraDialog}
+                className="sm:w-auto flex-1"
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {selectedAsset && (
           <AssetDetailsDialog

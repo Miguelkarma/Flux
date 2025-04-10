@@ -84,12 +84,14 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
                 </div>
                 <div className="flex justify-center pt-2 gap-4">
                   <Button
+                    variant="outline"
                     onClick={generateQRCode}
                     className="shadow shadow-popover-foreground w-full bg-transparent text-card-foreground"
                   >
                     Generate QR Code
                   </Button>
                   <Button
+                    variant="outline"
                     onClick={downloadQRCode}
                     className="shadow shadow-popover-foreground w-full bg-transparent text-card-foreground"
                   >

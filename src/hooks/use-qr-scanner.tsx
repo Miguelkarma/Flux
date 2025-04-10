@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
+import { QRScannerService } from "@/api/qrApi";
 
 interface UseQRScannerOptions {
   onScanSuccess: (result: string) => void;
@@ -11,10 +12,15 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isCameraDialogOpen, setIsCameraDialogOpen] = useState<boolean>(false);
+  const [autoScanEnabled, setAutoScanEnabled] = useState<boolean>(true);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const scanIntervalRef = useRef<number | null>(null);
+  const lastScannedRef = useRef<string | null>(null);
+  const scanCooldownRef = useRef<boolean>(false);
 
   // handle file upload for qr scanning
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +35,56 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
     reader.readAsDataURL(file);
   };
 
+  // setup auto scan interval
+  const setupAutoScan = () => {
+    if (!autoScanEnabled || !isScanning) return;
+
+    // clear any existing interval
+    if (scanIntervalRef.current) {
+      window.clearInterval(scanIntervalRef.current);
+    }
+
+    // set up new scan interval (every 100ms)
+    scanIntervalRef.current = window.setInterval(() => {
+      if (!scanCooldownRef.current && isScanning && videoRef.current) {
+        processVideoFrame();
+      }
+    }, 100);
+  };
+
+  // process video frame for qr code detection
+  const processVideoFrame = async () => {
+    if (!videoRef.current || !isScanning) return;
+
+    // set cooldown to avoid multiple scans
+    scanCooldownRef.current = true;
+
+    try {
+      // capture frame from video
+      const imageBlob = await QRScannerService.captureFrameFromVideo(
+        videoRef.current
+      );
+
+      // scan the captured frame
+      const decodedText = await QRScannerService.scanQRCode(imageBlob);
+
+      if (decodedText && decodedText !== lastScannedRef.current) {
+        lastScannedRef.current = decodedText;
+        setScanResult(decodedText);
+        stopCamera();
+        setIsCameraDialogOpen(false);
+        onScanSuccess(decodedText);
+      }
+    } catch (error) {
+      console.error("error in auto scan:", error);
+    } finally {
+      // release cooldown after 1 second
+      setTimeout(() => {
+        scanCooldownRef.current = false;
+      }, 500);
+    }
+  };
+
   // start camera for scanning
   const startCamera = async () => {
     try {
@@ -39,10 +95,14 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
         videoRef.current.srcObject = stream;
         streamRef.current = stream;
         setIsScanning(true);
+
+        // reset last scanned result when starting camera
+        lastScannedRef.current = null;
       }
     } catch (error) {
-      console.error("Error accessing camera:", error);
-      toast.error("Unable to access camera");
+      console.error("error accessing camera:", error);
+      toast.error("unable to access camera");
+      setIsCameraDialogOpen(false);
     }
   };
 
@@ -52,100 +112,85 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
       setIsScanning(false);
+
+      // clear auto scan interval
+      if (scanIntervalRef.current) {
+        window.clearInterval(scanIntervalRef.current);
+        scanIntervalRef.current = null;
+      }
     }
   };
 
-  // capture frame and scan for qr
-  const captureFrame = async () => {
+  // manual capture frame and scan
+  const manualCaptureAndScan = async () => {
     if (!videoRef.current || !isScanning) return;
-
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    const video = videoRef.current;
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context?.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const imageDataUrl = canvas.toDataURL("image/png");
-
-    // convert to blob and send to api
-    const response = await fetch(imageDataUrl);
-    const blob = await response.blob();
-    const file = new File([blob], "qrcode.png", { type: "image/png" });
-
-    const formData = new FormData();
-    formData.append("file", file);
 
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(
-        "https://api.qrserver.com/v1/read-qr-code/",
-        {
-          method: "POST",
-          body: formData,
-        }
+
+      // capture frame from video
+      const imageBlob = await QRScannerService.captureFrameFromVideo(
+        videoRef.current
       );
 
-      const data = await response.json();
-      const decodedText = data[0]?.symbol[0]?.data;
+      // scan the captured frame
+      const decodedText = await QRScannerService.scanQRCode(imageBlob);
 
       if (decodedText) {
         setScanResult(decodedText);
         stopCamera();
+        setIsCameraDialogOpen(false);
         onScanSuccess(decodedText);
       } else {
         setError("no qr code found");
+        toast.error("no qr code found in the image");
       }
     } catch (error) {
       console.error("error scanning qr code:", error);
       setError("error scanning qr code");
+      toast.error("error scanning qr code");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // trigger scan after file upload or camera capture
+  // scan uploaded image
+  const scanUploadedImage = async () => {
+    if (!uploadedImage) return;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // convert data url to blob
+      const imageBlob = await QRScannerService.dataUrlToBlob(uploadedImage);
+
+      // scan the image
+      const decodedText = await QRScannerService.scanQRCode(imageBlob);
+
+      if (decodedText) {
+        setScanResult(decodedText);
+        onScanSuccess(decodedText);
+      } else {
+        setError("no qr code found in the image");
+        toast.error("no qr code found in the image");
+      }
+    } catch (error) {
+      console.error("error scanning uploaded image:", error);
+      setError("error scanning qr code");
+      toast.error("error scanning qr code");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // trigger appropriate scan method based on current state
   const manualScan = async () => {
     if (uploadedImage) {
-      // trigger the scan for uploaded image
-      const formData = new FormData();
-      const response = await fetch(uploadedImage);
-      const blob = await response.blob();
-      const file = new File([blob], "qrcode.png", { type: "image/png" });
-
-      formData.append("file", file);
-
-      try {
-        setIsLoading(true);
-        setError(null);
-        const response = await fetch(
-          "https://api.qrserver.com/v1/read-qr-code/",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const data = await response.json();
-        const decodedText = data[0]?.symbol[0]?.data;
-
-        if (decodedText) {
-          setScanResult(decodedText);
-          onScanSuccess(decodedText);
-        } else {
-          setError("no qr code found in the image");
-        }
-      } catch (error) {
-        console.error("error scanning qr code:", error);
-        setError("error scanning qr code");
-      } finally {
-        setIsLoading(false);
-      }
+      await scanUploadedImage();
     } else if (isScanning) {
-      // Capture and scan frame if using camera
-      await captureFrame();
+      await manualCaptureAndScan();
     }
   };
 
@@ -159,14 +204,37 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
     }
   };
 
+  // setup auto scanning when camera is started
+  useEffect(() => {
+    if (isScanning && autoScanEnabled) {
+      setupAutoScan();
+    }
+
+    return () => {
+      if (scanIntervalRef.current) {
+        window.clearInterval(scanIntervalRef.current);
+      }
+    };
+  }, [isScanning, autoScanEnabled]);
+
   // cleanup camera on unmount
   useEffect(() => {
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
+      if (scanIntervalRef.current) {
+        window.clearInterval(scanIntervalRef.current);
+      }
     };
   }, []);
+
+  // handle closing dialog
+  useEffect(() => {
+    if (!isCameraDialogOpen) {
+      stopCamera();
+    }
+  }, [isCameraDialogOpen]);
 
   return {
     uploadedImage,
@@ -174,12 +242,16 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
     scanResult,
     isLoading,
     error,
+    isCameraDialogOpen,
+    setIsCameraDialogOpen,
+    autoScanEnabled,
+    setAutoScanEnabled,
     fileInputRef,
     videoRef,
     handleFileUpload,
     startCamera,
     stopCamera,
-    captureFrame,
+    manualCaptureAndScan,
     resetScan,
     manualScan,
   };
