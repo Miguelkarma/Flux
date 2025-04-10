@@ -172,7 +172,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
           </CardContent>
         </Card>
 
-        {/* vamera feed Dialog */}
+        {/* camera feed Dialog */}
         <Dialog
           open={isCameraDialogOpen}
           onOpenChange={handleCloseCameraDialog}

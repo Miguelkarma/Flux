@@ -18,7 +18,6 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
   const generateQRCode = () => {
     if (!serialNum.trim()) return;
 
-    // include user id if available
     const qrData = userId ? `${serialNum}|user:${userId}` : serialNum;
 
     const apiUrl = QRService.generateQRCodeUrl(qrData);

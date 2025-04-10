@@ -4,7 +4,7 @@ import { useQRScanner } from "@/hooks/use-qr-scanner";
 import { useAssetDetails } from "@/hooks/use-asset-details";
 import { useScanHistory } from "@/hooks/use-qr-history";
 
-// Mock hooks and UI components
+// mock hooks and UI components
 jest.mock("@/hooks/use-qr-scanner");
 jest.mock("@/hooks/use-asset-details");
 jest.mock("@/hooks/use-qr-history");
