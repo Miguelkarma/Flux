@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeInfo, QrCode } from "lucide-react";
 import { QRService } from "@/api/qrApi";
+import { toast } from "sonner";
 
 interface QRGeneratorProps {
   userId?: string | null;
@@ -22,6 +23,7 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
 
     const apiUrl = QRService.generateQRCodeUrl(qrData);
     setQrCodeUrl(apiUrl);
+    toast.success("QR code generated successfully!");
   };
 
   // download qr code using service
@@ -30,8 +32,9 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
 
     try {
       await QRService.downloadQRCode(qrCodeUrl, `QR_${serialNum}.png`);
+      toast.success("QR code downloaded successfully!");
     } catch (error) {
-      console.error("Failed to download QR code:", error);
+      toast.error("Failed to download QR code:");
     }
   };
 
