@@ -29,18 +29,6 @@ const backVariants = {
   hover: { rotateX: 0, opacity: 1 },
 };
 
-const glowVariants = {
-  initial: { opacity: 0, scale: 0.8 },
-  hover: {
-    opacity: 1,
-    scale: 1.5,
-    transition: {
-      opacity: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
-      scale: { duration: 0.5, type: "spring", stiffness: 300, damping: 25 },
-    },
-  },
-};
-
 const sharedTransition = {
   type: "spring",
   stiffness: 100,
@@ -96,15 +84,15 @@ const Header = () => {
   return (
     <motion.header
       id="header"
-      className="border-b shadow-3xl border-teal-900 h-16 md:h-20 lg:h-22 fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur"
+      className=" shadow-3xl  h-16 max-sm:h-8 max-md:h-13 max-lg:h-13 fixed top-0 left-0 right-0 z-50 bg-transparent "
       initial={{ y: 0 }}
-      animate={{ y: visible ? 0 : -100 }}
+      animate={{ y: visible ? 0 : -105 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto h-full flex items-center justify-between">
+      <div className="container rounded-full mx-auto h-full flex items-center justify-between bg-gradient-to-t from-teal-700 via-slate-950 to-gray-950 mt-5 shadow shadow-popover-foreground ">
         {/* Logo */}
         <Button
-          className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[2px_2px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200 hover:border hover:border-slate-600"
+          className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[2px_2px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200 hover:border hover:border-slate-600 shadow-none"
           onClick={() => {
             navigate("/");
           }}
@@ -117,11 +105,7 @@ const Header = () => {
           <NavigationMenu className="text-sm">
             <NavigationMenuList className="flex items-center gap-1 relative z-10">
               {navMenu.map(({ href, label, icon }, index) => {
-                const gradients = [
-                  "radial-gradient(circle, rgba(153, 233, 242, 0.5) 0%, rgba(102, 204, 214, 0.06) 70%, rgba(77, 182, 194, 0) 80%)",
-                ];
                 const iconColors = ["text-teal-500"];
-                const gradient = gradients[index % gradients.length];
                 const iconColor = iconColors[index % iconColors.length];
 
                 const isHovering = activeHoverItem === index;
@@ -137,17 +121,6 @@ const Header = () => {
                       onHoverEnd={() => setActiveHoverItem(null)}
                       onClick={() => setActiveHoverItem(null)}
                     >
-                      {/* Glow effect */}
-                      <motion.div
-                        className="absolute inset-0 z-0 pointer-events-none"
-                        variants={glowVariants}
-                        style={{
-                          background: gradient,
-                          opacity: 0,
-                          borderRadius: "16px",
-                        }}
-                      />
-
                       {/* Front face */}
                       <motion.a
                         href={href || "#"}
@@ -223,10 +196,10 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className="lg:hidden absolute right-4 top-1/2 transform -translate-y-1/2">
+        <div className="lg:hidden absolute right-4 top-1/2 transform -translate-y-1/2 mt-5 bg-transparent ">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon">
+              <Button variant="ghost" size="icon" className="">
                 <span>
                   <Menu />
                 </span>
