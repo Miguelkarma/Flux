@@ -10,6 +10,10 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 describe("QRService", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Mock URL.createObjectURL and URL.revokeObjectURL
+    global.URL.createObjectURL = jest.fn().mockReturnValue("blob:mock-url");
+    global.URL.revokeObjectURL = jest.fn();
   });
 
   describe("scanQRCode", () => {
@@ -32,7 +36,6 @@ describe("QRService", () => {
       const imageBlob = new Blob(["fake image data"], { type: "image/png" });
       const result = await QRService.scanQRCode(imageBlob);
 
-      // fix: don't strictly check the formdata object
       expect(mockedAxios.post).toHaveBeenCalledWith(
         "https://api.qrserver.com/v1/read-qr-code/",
         expect.any(FormData),
@@ -115,7 +118,6 @@ describe("QRService", () => {
         480
       );
       expect(mockCanvas.toDataURL).toHaveBeenCalledWith("image/png");
-      // Fix: Make the call match the `responseType` property
       expect(mockedAxios.get).toHaveBeenCalledWith(
         "data:image/png;base64,fakedata",
         { responseType: "blob" }
@@ -135,7 +137,6 @@ describe("QRService", () => {
         "data:image/png;base64,fakedata"
       );
 
-      // Fix: Make the call match the `responseType` property
       expect(mockedAxios.get).toHaveBeenCalledWith(
         "data:image/png;base64,fakedata",
         { responseType: "blob" }
