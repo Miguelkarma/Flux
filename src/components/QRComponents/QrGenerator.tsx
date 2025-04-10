@@ -67,7 +67,7 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
                   onChange={(e) => setSerialNum(e.target.value)}
                   icon={BadgeInfo}
                 />
-                {/* QR Placeholder Box */}
+                {/* QR placeholder box */}
                 <div className="w-[400px] h-[400px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
                   {qrCodeUrl ? (
                     <img

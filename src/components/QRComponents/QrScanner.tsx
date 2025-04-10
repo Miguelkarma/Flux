@@ -134,7 +134,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
               ) : (
                 <div className="flex flex-col items-center space-y-2">
                   <div className="w-[300px] h-[300px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
-                    {/* Placeholder content */}
+                    {/* placeholder content */}
                     <span className="text-gray-400">Qr Code</span>
                   </div>
                 </div>
@@ -172,7 +172,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
           </CardContent>
         </Card>
 
-        {/* Camera Dialog */}
+        {/* vamera feed Dialog */}
         <Dialog
           open={isCameraDialogOpen}
           onOpenChange={handleCloseCameraDialog}
