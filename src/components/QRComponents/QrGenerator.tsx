@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeInfo, QrCode } from "lucide-react";
+import { QRService } from "@/api/qrApi";
 
 interface QRGeneratorProps {
   userId?: string | null;
@@ -12,37 +13,23 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
   const [serialNum, setSerialNum] = useState<string>("");
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
 
-  // generate qr code using goqr.me api
+  // generate qr code using service
   const generateQRCode = () => {
     if (!serialNum.trim()) return;
 
     // include user id if available
     const qrData = userId ? `${serialNum}|user:${userId}` : serialNum;
 
-    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(
-      qrData
-    )}`;
+    const apiUrl = QRService.generateQRCodeUrl(qrData);
     setQrCodeUrl(apiUrl);
   };
 
-  // download qr code
+  // download qr code using service
   const downloadQRCode = async () => {
     if (!qrCodeUrl) return;
 
     try {
-      const response = await fetch(qrCodeUrl, { mode: "cors" });
-      const blob = await response.blob();
-
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = `QR_${serialNum}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Revoke blob URL to free up memory
-      URL.revokeObjectURL(blobUrl);
+      await QRService.downloadQRCode(qrCodeUrl, `QR_${serialNum}.png`);
     } catch (error) {
       console.error("Failed to download QR code:", error);
     }
@@ -50,10 +37,10 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
 
   return (
     <>
-      <div className="flex items-center h-full text-card-foreground ">
-        <Card className="w-full max-w-6xl mx-auto mt-8 bg-card shadow shadow-popover-foreground ">
+      <div className="flex items-center h-full text-card-foreground">
+        <Card className="w-full max-w-6xl mx-auto mt-8 bg-card shadow shadow-popover-foreground">
           <CardHeader>
-            <CardTitle className="text-xl font-bold flex items-center gap-3 ">
+            <CardTitle className="text-xl font-bold flex items-center gap-3">
               <QrCode className="w-5 h-5" />
               Generate IT Asset QR Code
             </CardTitle>

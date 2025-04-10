@@ -1,4 +1,5 @@
-export const QRScannerService = {
+export const QRService = {
+  // Existing QR scanner functionality
   async scanQRCode(imageBlob: Blob): Promise<string | null> {
     try {
       const formData = new FormData();
@@ -39,5 +40,35 @@ export const QRScannerService = {
   async dataUrlToBlob(dataUrl: string): Promise<Blob> {
     const response = await fetch(dataUrl);
     return await response.blob();
+  },
+
+  // qr generator function
+  generateQRCodeUrl(data: string, size: number = 400): string {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(
+      data
+    )}`;
+  },
+
+  async downloadQRCode(url: string, filename: string): Promise<void> {
+    if (!url) return;
+
+    try {
+      const response = await fetch(url, { mode: "cors" });
+      const blob = await response.blob();
+
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // revoke blob URL to free up memory
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Failed to download QR code:", error);
+      throw new Error("Failed to download QR code");
+    }
   },
 };
