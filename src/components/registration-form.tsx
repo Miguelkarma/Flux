@@ -57,7 +57,7 @@ export function RegistrationForm({
       )}
 
       <div className="mb-4 ">
-        <div className="text-xs uppercase tracking-wider text-teal-400">
+        <div className="text-xs uppercase tracking-wider text-cyan-400">
           START FOR FREE
         </div>
         <h1 className="text-3xl font-bold mt-2">
@@ -137,7 +137,7 @@ export function RegistrationForm({
               <input
                 type="checkbox"
                 id="terms"
-                className="rounded bg-gray-800 border-gray-700 text-teal-700 focus:ring-teal-400/20 mr-2"
+                className="rounded bg-gray-800 border-gray-700 text-cyan-700 focus:ring-teal-400/20 mr-2"
               />
               <label htmlFor="terms" className="text-sm text-gray-300">
                 I agree to the Terms
@@ -149,7 +149,7 @@ export function RegistrationForm({
               </span>{" "}
               <a
                 href="#"
-                className="text-teal-400"
+                className="text-cyan-400"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/Login");
@@ -164,7 +164,7 @@ export function RegistrationForm({
             <Button
               type="submit"
               disabled={loading}
-              className="flex-2 bg-teal-500 hover:bg-teal-600 text-white border-none"
+              className="flex-2 bg-cyan-500 hover:bg-cyan-600 text-white border-none"
             >
               Sign Up
             </Button>

@@ -43,7 +43,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
       )}
 
       <div className="mb-8 ">
-        <div className="text-xs uppercase tracking-wider text-teal-400">
+        <div className="text-xs uppercase tracking-wider text-cyan-400">
           START FOR FREE
         </div>
         <h1 className="text-3xl font-bold mt-2">
@@ -105,7 +105,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               <input
                 type="checkbox"
                 id="remember"
-                className="rounded bg-gray-800 border-gray-700 text-teal-700 focus:ring-teal-400/20 mr-2"
+                className="rounded bg-gray-800 border-gray-700 text-cyanl-700 focus:ring-teal-400/20 mr-2"
               />
               <label htmlFor="remember" className="text-sm text-gray-300">
                 Remember me
@@ -117,7 +117,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               </span>{" "}
               <a
                 href="#"
-                className="text-teal-400"
+                className="text-cyan-400"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/Registration");
@@ -132,7 +132,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="flex-2 bg-teal-500 hover:bg-teal-600 text-white border-none"
+              className="flex-2 bg-cyan-500 hover:bg-cyan-600 text-white border-none"
             >
               Login
             </Button>

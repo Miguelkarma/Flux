@@ -48,7 +48,7 @@ export default function CurrencyConverter() {
         <div className="space-y-2">
           <label
             htmlFor="amount"
-            className="text-secondary-foreground  text-sm font-medium"
+            className="text-foreground  text-sm font-medium"
           >
             Amount
           </label>
