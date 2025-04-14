@@ -1,91 +1,261 @@
-import { motion } from "motion/react";
-import { featureData } from "@/Landing/constants/constants";
-import FeaturedCard from "@/Landing/constants/FeatureCard";
+"use client";
 
-import * as variants from "@/Animation/motionVariants";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { BarChart3, Lock } from "lucide-react";
 
-export default function Features() {
+function ElegantShape({
+  className,
+  delay = 0,
+  width = 400,
+  height = 100,
+  rotate = 0,
+  gradient = "from-white/[0.08]",
+}: {
+  className?: string;
+  delay?: number;
+  width?: number;
+  height?: number;
+  rotate?: number;
+  gradient?: string;
+}) {
   return (
-    <>
-      <section id="features" className="section">
-        <div className="container">
-          <div className="section-head">
-            <motion.p
-              variants={variants.fadeInUp}
-              initial="start"
-              whileInView={"end"}
-              viewport={{ once: true }}
-              className="section-subtitle"
-            >
-              {featureData.sectionSubtitle}
-            </motion.p>
-            <motion.h2
-              variants={variants.fadeInUp}
-              initial="start"
-              whileInView={"end"}
-              viewport={{ once: true }}
-              className="section-title"
-            >
-              {featureData.sectionTitle}
-            </motion.h2>
-            <motion.p
-              variants={variants.fadeInUp}
-              initial="start"
-              whileInView={"end"}
-              viewport={{ once: true }}
-              className="section-text"
-            >
-              {featureData.sectionText}
-            </motion.p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-6">
-            {featureData.features.map(
-              ({ icon, iconBoxColor, title, desc, imgSrc }, index) => (
-                <FeaturedCard
-                  key={index}
-                  classes={
-                    index < 2
-                      ? "md:col-span-2 lg:col-span-1 xl:col-span-3 "
-                      : "xl:col-span-2 "
-                  }
-                >
-                  <>
-                    <div className="p-8">
-                      <motion.div
-                        variants={variants.fadeInUp}
-                        className={`w-16 h-16 grid place-items-center rounded-full flex-shrink-0 ${iconBoxColor}`}
-                      >
-                        {icon}
-                      </motion.div>
-                      <motion.h3
-                        variants={variants.fadeInUp}
-                        className="text-white text-xl font-medium mt-4 mb-3"
-                      >
-                        {title}
-                      </motion.h3>
-                      <motion.p
-                        variants={variants.fadeInUp}
-                        className="text-slate-400 line-clamp-2"
-                      >
-                        {desc}
-                      </motion.p>
-                      <motion.div variants={variants.fadeInUp}></motion.div>
-                    </div>
-                    {imgSrc && (
-                      <motion.figure
-                        variants={variants.fadeInUp}
-                        className="p-6 pt-0 "
-                      >
-                        <img src={imgSrc} alt="title" className="rounded-md" />
-                      </motion.figure>
-                    )}
-                  </>
-                </FeaturedCard>
-              )
-            )}
-          </div>
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: -150,
+        rotate: rotate - 15,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        rotate: rotate,
+      }}
+      transition={{
+        duration: 2.4,
+        delay,
+        ease: [0.23, 0.86, 0.39, 0.96],
+        opacity: { duration: 1.2 },
+      }}
+      className={cn("absolute", className)}
+    >
+      <motion.div
+        animate={{
+          y: [0, 15, 0],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+        }}
+        style={{
+          width,
+          height,
+        }}
+        className="relative"
+      >
+        <div
+          className={cn(
+            "absolute inset-0 rounded-full",
+            "bg-gradient-to-r to-transparent",
+            gradient,
+            "backdrop-blur-[2px] border-2 border-white/[0.15]",
+            "shadow-[0_8px_32px_0_rgba(255,255,255,0.1)]",
+            "after:absolute after:inset-0 after:rounded-full",
+            "after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.2),transparent_100%)]"
+          )}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+interface Feature {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}
+
+export default function Features({
+  badge = "Kokonut UI",
+  title1 = "Elevate Your",
+  title2 = "Digital Vision",
+}: {
+  badge?: string;
+  title1?: string;
+  title2?: string;
+}) {
+  const fadeUpVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1,
+        delay: 0.5 + i * 0.2,
+        ease: [0.25, 0.4, 0.25, 1],
+      },
+    }),
+  };
+
+  // Custom styles for the Pacifico font fallback
+  const pacificoStyle = {
+    fontFamily: "'Pacifico', cursive",
+    fontWeight: 400,
+  };
+
+  const features: Feature[] = [
+    {
+      icon: <BarChart3 className="w-6 h-6" />,
+      title: "Analytics",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius, enim ex faucibus purus.",
+    },
+    {
+      icon: <Lock className="w-6 h-6" />,
+      title: "Datacenter security",
+      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec congue, nisl eget molestie varius, enim ex faucibus purus.",
+    },
+  ];
+
+  return (
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
+      <div className="absolute inset-0 overflow-hidden">
+        <ElegantShape
+          delay={0.3}
+          width={600}
+          height={140}
+          rotate={12}
+          gradient="from-indigo-500/[0.15]"
+          className="left-[-10%] md:left-[-5%] top-[15%] md:top-[20%]"
+        />
+
+        <ElegantShape
+          delay={0.5}
+          width={500}
+          height={120}
+          rotate={-15}
+          gradient="from-rose-500/[0.15]"
+          className="right-[-5%] md:right-[0%] top-[70%] md:top-[75%]"
+        />
+
+        <ElegantShape
+          delay={0.4}
+          width={300}
+          height={80}
+          rotate={-8}
+          gradient="from-violet-500/[0.15]"
+          className="left-[5%] md:left-[10%] bottom-[5%] md:bottom-[10%]"
+        />
+
+        <ElegantShape
+          delay={0.6}
+          width={200}
+          height={60}
+          rotate={20}
+          gradient="from-amber-500/[0.15]"
+          className="right-[15%] md:right-[20%] top-[10%] md:top-[15%]"
+        />
+
+        <ElegantShape
+          delay={0.7}
+          width={150}
+          height={40}
+          rotate={-25}
+          gradient="from-cyan-500/[0.15]"
+          className="left-[20%] md:left-[25%] top-[5%] md:top-[10%]"
+        />
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 md:px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            custom={0}
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-8 md:mb-12"
+          >
+            <img
+              src="https://kokonutui.com/logo.svg"
+              alt="Kokonut UI"
+              width={20}
+              height={20}
+            />
+            <span className="text-sm text-white/60 tracking-wide">{badge}</span>
+          </motion.div>
+
+          <motion.div
+            custom={1}
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 md:mb-8 tracking-tight">
+              <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
+                {title1}
+              </span>
+              <br />
+              <span
+                className={cn(
+                  "bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white/90 to-rose-300"
+                )}
+                style={pacificoStyle}
+              >
+                {title2}
+              </span>
+            </h1>
+          </motion.div>
+
+          <motion.div
+            custom={2}
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <section className="py-14">
+              <div className="max-w-screen-xl mx-auto px-4 text-gray-600 gap-16 justify-between md:px-8 lg:flex">
+                <div>
+                  <div className="max-w-xl space-y-3">
+                    <h3 className="text-indigo-600 font-semibold">Features</h3>
+                    <p className="text-gray-800 text-3xl font-semibold sm:text-4xl">
+                      Simple solutions for complex issues
+                    </p>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Donec congue, nisl eget molestie varius, enim ex faucibus
+                      purus
+                    </p>
+                  </div>
+                  <div className="mt-12 max-w-lg lg:max-w-none">
+                    <ul className="space-y-8">
+                      {features.map((item, idx) => (
+                        <li key={idx} className="flex gap-x-4">
+                          <div className="flex-none w-12 h-12 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center">
+                            {item.icon}
+                          </div>
+                          <div>
+                            <h4 className="text-lg text-gray-800 font-semibold">
+                              {item.title}
+                            </h4>
+                            <p className="mt-3">{item.desc}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-12 lg:mt-0">
+                  <img
+                    src="/api/placeholder/800/600"
+                    alt="Feature illustration"
+                    className="w-full shadow-lg rounded-lg border"
+                  />
+                </div>
+              </div>
+            </section>
+          </motion.div>
         </div>
-      </section>
-    </>
+      </div>
+    </div>
   );
 }

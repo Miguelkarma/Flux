@@ -1,10 +1,8 @@
 import { motion } from "motion/react";
 import * as variants from "@/Animation/motionVariants";
 import { ctaData } from "./constants/constants";
-import { Button } from "@/components/ui/button";
 import CTApic from "@/assets/CTA.jpg";
-import { ArrowRightCircle } from "lucide-react";
-import { Link } from "react-scroll";
+import CtaButton from "@/components/ui/ctaButton";
 
 export default function CTA() {
   return (
@@ -15,7 +13,7 @@ export default function CTA() {
           initial="start"
           whileInView="end"
           viewport={{ once: true }}
-          className="bg-landing-background rounded-xl border-t border-primary-foreground/30 overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center border-none  "
+          className="bg-gradient-to-tl from-transparent via-indigo-950/10 to-indigo-400/80 rounded-xl border-t border-primary-foreground/30 overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center border-none  "
         >
           <div className="p-8 md:p-16 xl:p-20 ">
             <motion.h2
@@ -34,11 +32,8 @@ export default function CTA() {
               whileInView="end"
               viewport={{ once: true }}
             >
-              <Link to="header" smooth={true} duration={500}>
-                <Button className="bg-slate-700 text-white hover:bg-zinc-800">
-                  Start Now <ArrowRightCircle></ArrowRightCircle>
-                </Button>
-              </Link>
+              {" "}
+              <CtaButton />
             </motion.div>
           </div>
           <motion.figure
@@ -51,7 +46,7 @@ export default function CTA() {
             <img
               src={CTApic}
               alt="pricelol"
-              className="w-full h-full object-contain object-right"
+              className="w-full h-full object-contain object-right rounded-l-2xl"
             />
           </motion.figure>
         </motion.div>

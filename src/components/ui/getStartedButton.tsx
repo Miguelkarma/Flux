@@ -10,7 +10,7 @@ const StartButton = ({ onClick }: { onClick: () => void }) => {
 
 const StyledWrapper = styled.div`
   button {
-    --green: #1bfd9c;
+    --indigo: #aab1e5;
     font-size: 15px;
     padding: 0.7em 2.7em;
     letter-spacing: 0.06em;
@@ -20,23 +20,23 @@ const StyledWrapper = styled.div`
     overflow: hidden;
     transition: all 0.3s;
     line-height: 1.4em;
-    border: 2px solid var(--green);
+    border: 2px solid var(--indigo);
     background: linear-gradient(
       to right,
-      rgba(27, 253, 156, 0.1) 1%,
+      rgba(170, 177, 229, 0.1) 1%,
       transparent 40%,
       transparent 60%,
-      rgba(27, 253, 156, 0.1) 100%
+      rgba(170, 177, 229, 0.1) 100%
     );
-    color: var(--green);
-    box-shadow: inset 0 0 10px rgba(27, 253, 156, 0.4),
-      0 0 9px 3px rgba(27, 253, 156, 0.1);
+    color: var(--indigo);
+    box-shadow: inset 0 0 10px rgba(170, 177, 229, 0.4),
+      0 0 9px 3px rgba(170, 177, 229, 0.1);
   }
 
   button:hover {
-    color: #82ffc9;
-    box-shadow: inset 0 0 10px rgba(27, 253, 156, 0.6),
-      0 0 9px 3px rgba(27, 253, 156, 0.2);
+    color: #c4c9f0;
+    box-shadow: inset 0 0 10px rgba(170, 177, 229, 0.6),
+      0 0 9px 3px rgba(170, 177, 229, 0.2);
   }
 
   button:before {
@@ -50,8 +50,8 @@ const StyledWrapper = styled.div`
     background: linear-gradient(
       to right,
       transparent 1%,
-      rgba(27, 253, 156, 0.1) 40%,
-      rgba(27, 253, 156, 0.1) 60%,
+      rgba(170, 177, 229, 0.1) 40%,
+      rgba(170, 177, 229, 0.1) 60%,
       transparent 100%
     );
   }
