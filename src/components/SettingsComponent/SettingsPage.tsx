@@ -95,7 +95,7 @@ export default function SettingsPage() {
       )}
 
       {success && (
-        <Alert className="mb-4 text-popover-foreground shadow shadow-popover-foreground">
+        <Alert className="mb-4 text-foreground shadow shadow-popover-foreground">
           <Check className="h-4 w-4" />
           <AlertTitle>Success</AlertTitle>
           <AlertDescription>{success}</AlertDescription>
@@ -103,7 +103,7 @@ export default function SettingsPage() {
       )}
 
       <Tabs defaultValue="profile" className="h-full max-w-full mx-auto ">
-        <TabsList className="grid w-full grid-cols-3 bg-secondary text-popover-foreground shadow shadow-popover-foreground">
+        <TabsList className="grid w-full grid-cols-3 bg-secondary text-foreground shadow shadow-popover-foreground">
           <TabsTrigger className="hover:bg-background " value="profile">
             Profile
           </TabsTrigger>

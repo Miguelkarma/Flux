@@ -90,7 +90,7 @@ export function AssetSearch() {
         <input
           type="text"
           placeholder="Search assets..."
-          className="bg-transparent border-none focus:outline-none text-xs sm:text-sm w-24 max-sm:w-[5em] sm:w-[12em] md:w-40 placeholder:text-slate-500 text-popover-foreground"
+          className="bg-transparent border-none focus:outline-none text-xs sm:text-sm w-24 max-sm:w-[5em] sm:w-[12em] md:w-40 placeholder:text-slate-500 text-foreground"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => {
@@ -102,7 +102,7 @@ export function AssetSearch() {
       </div>
 
       {showResults && filteredProducts.length > 0 && (
-        <div className="absolute mt-2 w-48 sm:w-56 md:w-64 max-h-80 overflow-y-auto bg-card rounded-md shadow-lg border border-slate-700/50 z-50 text-popover-foreground">
+        <div className="absolute mt-2 w-48 sm:w-56 md:w-64 max-h-80 overflow-y-auto bg-card rounded-md shadow-lg border border-slate-700/50 z-50 text-foreground">
           <ul className="py-1">
             {filteredProducts.map((product) => (
               <li

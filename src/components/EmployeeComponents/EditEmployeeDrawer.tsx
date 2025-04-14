@@ -107,12 +107,10 @@ export function EditEmployeeDrawer({
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent
           side="bottom"
-          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+          className="w-full bg-gradient-to-tr from-accent to-card text-foreground"
         >
           <SheetHeader>
-            <SheetTitle className="text-popover-foreground">
-              Edit Employee
-            </SheetTitle>
+            <SheetTitle className="text-foreground">Edit Employee</SheetTitle>
             <SheetDescription className="text-primary">
               Update the employee details below. First name, last name, and
               email are required.
@@ -214,7 +212,7 @@ export function EditEmployeeDrawer({
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
               <div className="grid gap-2">
                 <Label htmlFor="department">Department</Label>
                 <Select

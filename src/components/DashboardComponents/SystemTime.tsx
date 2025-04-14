@@ -37,7 +37,7 @@ export default function SystemTime() {
     <div className="bg-[hsl(var(--card))] border border-slate-700/50 backdrop-blur-sm rounded-lg overflow-hidden shadow shadow-popover-foreground">
       <div className="bg-[hsl(var(--secondary))]  p-6 border-b border-slate-700/50">
         <div className="text-center">
-          <div className="text-xs text-popover-foreground mb-1 font-mono">
+          <div className="text-xs text-foreground mb-1 font-mono">
             SYSTEM TIME
           </div>
           <div className="text-3xl font-mono text-secondary-foreground mb-1">
@@ -51,9 +51,7 @@ export default function SystemTime() {
       <div className="p-4">
         <div className="grid grid-cols-1 gap-3 text-center">
           <div className="bg-[hsl(var(--secondary))] rounded-md p-3 border border-slate-700/50 ">
-            <div className="text-xs text-secondary-foreground mb-1">
-              Time Zone
-            </div>
+            <div className="text-xs text-foreground mb-1">Time Zone</div>
             <div className="text-sm font-mono text-primary">UTC-08:00</div>
           </div>
         </div>

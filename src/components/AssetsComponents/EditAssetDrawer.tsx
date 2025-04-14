@@ -163,12 +163,10 @@ export function EditAssetDrawer({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent
         side="bottom"
-        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
+        className="w-full bg-gradient-to-tr from-accent to-card text-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
       >
         <SheetHeader>
-          <SheetTitle className="text-popover-foreground">
-            Edit Asset
-          </SheetTitle>
+          <SheetTitle className="text-foreground">Edit Asset</SheetTitle>
           <SheetDescription>Update the asset details below.</SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="grid gap-6 py-4">
@@ -368,7 +366,7 @@ export function EditAssetDrawer({
             <SheetClose asChild>
               <Button
                 type="button"
-                className="bg-teal-950 hover:bg-slate-900 text-foreground"
+                className="bg-teal-950 hover:bg-slate-900 text-teal-100"
               >
                 Cancel
               </Button>
@@ -376,7 +374,7 @@ export function EditAssetDrawer({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
+              className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-teal-100"
             >
               {isSubmitting ? "Updating..." : "Update Asset"}
             </Button>

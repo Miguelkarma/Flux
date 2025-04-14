@@ -63,7 +63,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     accessorKey: "serialNo",
     header: "Serial No.",
     cell: ({ row }) => (
-      <Badge variant="secondary" className="w-auto text-center">
+      <Badge variant="secondary" className="w-auto text-center text-foreground">
         {row.getValue<string>("serialNo") || "N/A"}
       </Badge>
     ),
@@ -72,7 +72,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     accessorKey: "assetTag",
     header: "Asset Tag",
     cell: ({ row }) => (
-      <div className="capitalize text-center text-secondary-foreground">
+      <div className="capitalize text-center text-foreground">
         {row.getValue<string>("assetTag") || "N/A"}
       </div>
     ),
@@ -81,7 +81,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     accessorKey: "model",
     header: "Model",
     cell: ({ row }) => (
-      <div className="text-center text-secondary-foreground">
+      <div className="text-center text-foreground">
         {row.getValue<string>("model") || "N/A"}
       </div>
     ),
@@ -126,7 +126,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
       return (
         <div className="flex items-center space-x-2">
           <div
-            className={`p-2 bg-primary-foreground rounded-lg shadow-md ${typeStyles[type]}`}
+            className={`p-2 bg-secondary rounded-lg shadow-md ${typeStyles[type]}`}
           >
             {icon}
           </div>
@@ -141,7 +141,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     accessorKey: "location",
     header: "Location",
     cell: ({ row }) => (
-      <div className="capitalize text-center text-secondary-foreground">
+      <div className="capitalize text-center text-foreground">
         {row.getValue<string>("location") || "N/A"}
       </div>
     ),
@@ -150,7 +150,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     accessorKey: "assignedEmployee",
     header: "Assigned Employee",
     cell: ({ row }) => (
-      <div className="capitalize text-center text-secondary-foreground">
+      <div className="capitalize text-center text-foreground">
         {row.getValue<string>("assignedEmployee") || "N/A"}
       </div>
     ),
@@ -171,11 +171,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
       const formattedDate = dateValue
         ? new Date(dateValue).toLocaleDateString()
         : "N/A";
-      return (
-        <div className="text-center text-secondary-foreground">
-          {formattedDate}
-        </div>
-      );
+      return <div className="text-center text-foreground">{formattedDate}</div>;
     },
     sortingFn: (rowA, rowB, columnId) => {
       const dateA = new Date(rowA.getValue(columnId)).getTime();
@@ -191,18 +187,17 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
 
       const statusColors: Record<string, string> = {
         Active:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-green-500 rounded-lg",
+          "text-foreground bg-secondary border-0 shadow-green-500 rounded-lg",
         Maintenance:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
+          "text-foreground bg-secondary border-0 shadow-orange-400 rounded-lg",
         Retired:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-purple-500 rounded-lg",
+          "text-foreground bg-secondary border-0 shadow-purple-500 rounded-lg",
         Available:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
-        Lost: "text-secondary-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
+          "text-foreground bg-secondary border-0 shadow-cyan-400 rounded-lg",
+        Lost: "text-foreground bg-secondary border-0 shadow-red-500 rounded-lg",
       };
 
-      const badgeClass =
-        statusColors[status] || "bg-gray-500 text-secondary-foreground";
+      const badgeClass = statusColors[status] || "bg-gray-500 text-foreground";
 
       return (
         <Badge className={`capitalize text-center ${badgeClass}`}>

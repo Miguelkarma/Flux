@@ -14,10 +14,10 @@ export default function Header() {
   const { user, handleLogout } = useAuth();
 
   return (
-    <header className="flex items-center justify-between py-4 border-b border-slate-700/50 mb-6">
+    <header className="flex items-center justify-between py-4 border-slate-500 mb-6 rounded-lg">
       <div className="flex items-center space-x-2 ">
-        <Waypoints className="h-8 w-8 text-teal-300" />
-        <span className="text-xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent ">
+        <Waypoints className="h-8 w-8 text-cyan-500" />
+        <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-600 bg-clip-text text-transparent ">
           Flux
         </span>
       </div>
