@@ -105,7 +105,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               <input
                 type="checkbox"
                 id="remember"
-                className="rounded bg-gray-800 border-gray-700 text-cyanl-700 focus:ring-teal-400/20 mr-2"
+                className="rounded bg-gray-800 border-gray-700 text-cyan-700 focus:ring-teal-400/20 mr-2"
               />
               <label htmlFor="remember" className="text-sm text-gray-300">
                 Remember me
