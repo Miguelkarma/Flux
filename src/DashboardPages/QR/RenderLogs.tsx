@@ -38,7 +38,7 @@ export default function Logs() {
         style={{ zIndex: 100000 }}
       />
       <div
-        className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
+        className={`${theme} min-h-screen bg-gradient-to-bl from-cyan-600/50 via-cyan-900/20 text-slate-100 relative overflow-hidden`}
       >
         <DashboardParticles />
         {/* Loading overlay */}
