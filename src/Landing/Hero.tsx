@@ -86,7 +86,7 @@ export default function Hero() {
           </motion.figure>
 
           <motion.div
-            className="absolute bg-violet-200 inset-5 blur-[100px] -z-10 "
+            className="absolute bg-sky-200 inset-5 blur-[100px] -z-10 "
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5, ease: "backInOut" }}
@@ -97,7 +97,7 @@ export default function Hero() {
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5, ease: "backOut" }}
-            className="absolute inset-0 bg-indigo-400 blur-[300px] -z-10"
+            className="absolute inset-0 bg-sky-400 blur-[300px] -z-10"
             style={{
               willChange: "transform, opacity",
               transform: "scale(1.25, 0.8)",
