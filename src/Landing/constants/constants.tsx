@@ -6,20 +6,7 @@ import blog2 from "@/assets/blog/blog2.png";
 import avatar2 from "@/assets/blog/blog2avatar.png";
 import blog3 from "@/assets/blog/blog3.png";
 import avatar3 from "@/assets/blog/blog3avatar.webp";
-// feature pics
-import feature1 from "@/assets/feature/feature1.jpg";
-import feature2 from "@/assets/feature/feature2.jpg";
-import feature3 from "@/assets/feature/feature3.jpg";
-import feature4 from "@/assets/feature/feature4.jpeg";
-import feature5 from "@/assets/feature/feature5.jpeg";
 
-export const featureImages = {
-  feature1: feature1,
-  feature2: feature2,
-  feature3: feature3,
-  feature4: feature4,
-  feature5: feature5,
-};
 import {
   BarChart2,
   Github,
@@ -166,35 +153,30 @@ export const featureData = {
       iconBoxColor: "bg-blue-600",
       title: "Asset Management",
       desc: "Add, update, and delete IT equipment while storing crucial details like name, serial number, and status.",
-      imgSrc: featureImages.feature1,
     },
     {
       icon: <Users size={32} />,
       iconBoxColor: "bg-cyan-700",
       title: "Assignment Tracking",
       desc: "Easily assign equipment to employees and track which employee has which device",
-      imgSrc: featureImages.feature2,
     },
     {
       icon: <Activity size={32} />,
       iconBoxColor: "bg-emerald-500",
       title: "Status Monitoring",
       desc: "Keep track of asset status—Available, Assigned, or Under Repair—to optimize asset utilization.",
-      imgSrc: featureImages.feature3,
     },
     {
       icon: <BarChart2 size={32} />,
       iconBoxColor: "bg-violet-700",
       title: "Basic Reporting",
       desc: "Gain insights into total assets, assigned assets, and available assets with clear and concise reporting.",
-      imgSrc: featureImages.feature4,
     },
     {
       icon: <UserPlus size={32} />,
       iconBoxColor: "bg-teal-600",
       title: "Employee Management",
       desc: "Add and manage employees within the system, allowing seamless asset assignment and tracking.",
-      imgSrc: featureImages.feature5,
     },
   ],
 };

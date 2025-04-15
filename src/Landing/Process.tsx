@@ -5,7 +5,7 @@ import form from "@/assets/process.png";
 
 const Process = () => {
   return (
-    <section id="process" className="section">
+    <section id="process" className="section mt-4">
       <div className="container">
         <div className="section-head">
           <motion.p
@@ -13,7 +13,7 @@ const Process = () => {
             initial="start"
             whileInView={"end"}
             viewport={{ once: true }}
-            className="section-subtitle"
+            className="section-subtitle "
           >
             {processData.sectionSubtitle}
           </motion.p>
@@ -48,14 +48,14 @@ const Process = () => {
                 viewport={{ once: true }}
               >
                 <motion.div
-                  className="w-16 h-16 grid place-items-center rounded-full border border-foreground/5 shrink-0"
+                  className="w-16 h-16 grid place-items-center rounded-full border border-foreground/5 shrink-0 bg-slate-800"
                   variants={variants.fadeInScale}
                 >
                   {icon}
                 </motion.div>
                 <div className="grid gap-2 md:gap-3">
                   <motion.h3
-                    className="text-xl lg:text-2xl text-teal-400"
+                    className="text-xl lg:text-2xl text-cyan-300"
                     variants={variants.fadeInLeft}
                   >
                     {title}
@@ -76,15 +76,13 @@ const Process = () => {
               initial="start"
               whileInView={"end"}
               viewport={{ once: true }}
-              className="mx-auto bg-landing-foreground rounded-3xl max-w-[580px] overflow-hidden p-8 !pb-0
+              className="mx-auto bg-slate-800/60 rounded-3xl max-w-[580px] overflow-hidden p-8 !pb-0
             lg:p-12 "
             >
               <img
                 src={form}
-                width={500}
-                height={528}
-                alt="Flux login"
-                className="w-full h-full object-contain object-bottom rounded-t-xl  "
+                alt="Flux Dashboard"
+                className="w-full h-full object-contain object-center rounded-t-xl"
               />
             </motion.figure>
           </div>

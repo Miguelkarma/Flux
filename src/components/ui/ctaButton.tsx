@@ -24,17 +24,9 @@ const CtaButton = () => {
 const StyledWrapper = styled.div`
   .btn {
     font-family: "IBM Plex Mono", monospace;
-    font-weight: 100;
+    font-weight: 700;
     font-style: normal;
-    --border-color: linear-gradient(
-      135deg,
-      #4b0082,
-      #430075,
-      #a57fc0,
-      #000,
-      #00ffff,
-      #00ffff
-    );
+    --border-color: linear-gradient(135deg, #00ffff, #a57fc0, #000);
     --border-width: 0.125em;
     --curve-size: 0.5em;
     --blur: 30px;

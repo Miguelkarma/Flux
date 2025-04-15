@@ -7,15 +7,34 @@ import CtaButton from "@/components/ui/ctaButton";
 export default function CTA() {
   return (
     <section id="cta" className="section ">
-      <div className="container ">
+      <div className="container relative">
+        <motion.div
+          className="absolute bottom-0 -left-20 w-1/6 h-1/4 bg-indigo-200 blur-[100px] -z-10 opacity-90 mix-blend-screen"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 2, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "backInOut" }}
+          style={{ willChange: "transform, opacity" }}
+        />
+
+        <motion.div
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 2, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "backOut" }}
+          className="absolute bottom-0 -left-20 w-1/6 h-1/5 bg-indigo-800/80 blur-[100px] -z-10 opacity-90 mix-blend-screen"
+          style={{
+            willChange: "transform, opacity",
+            transform: "translate(25%, 25%) scale(1.25, 0.8)",
+          }}
+        />
+
         <motion.div
           variants={variants.fadeInUp}
           initial="start"
           whileInView="end"
           viewport={{ once: true }}
-          className="bg-gradient-to-tl from-transparent via-indigo-950/10 to-indigo-400/80 rounded-xl border-t border-primary-foreground/30 overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center border-none  "
+          className="bg-gradient-to-bl from-transparent via-sky-950/10 to-indigo-200/20 rounded-xl border-slate-600 border overflow-hidden grid grid-cols-1 lg:grid-cols-[1fr,0.7fr] lg:items-center  "
         >
-          <div className="p-8 md:p-16 xl:p-20 ">
+          <div className="p-8 md:p-16 xl:p-20  ">
             <motion.h2
               className="text-[26px] leading-tight font-semibold mb-6 capitalize sm:text-[34px] md:text-[40px] lg:text-[46px] lg:mb-10 text-white"
               variants={variants.fadeIn}

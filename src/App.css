@@ -98,10 +98,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
   }
   ::-webkit-scrollbar {
-    @apply w-2 h-2;
+    @apply w-2 h-2 bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
     @apply bg-foreground/20 rounded-full hover:bg-foreground/40;
@@ -166,7 +166,7 @@
 }
 
 .section-subtitle {
-  @apply text-teal-500
+  @apply text-cyan-400
   text-sm
   font-medium
   uppercase;

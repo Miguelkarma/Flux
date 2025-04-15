@@ -13,7 +13,7 @@ import { Quote } from "lucide-react";
 const Review = () => {
   return (
     <section id="reviews" className="section">
-      <div className="container">
+      <div className="container relative">
         <div className="section-head">
           <motion.p
             variants={variants.fadeInUp}
@@ -44,7 +44,7 @@ const Review = () => {
           {reviewData.reviewCard.map(
             ({ title, text, reviewAuthor, date }, index) => (
               <motion.div key={index} variants={variants.fadeInUp}>
-                <Card className="relative bg-landing-foreground text-white border-none ">
+                <Card className="relative bg-gradient-to-b from-transparent via-sky-950/10 to-cyan-200/20 border border-slate-600 text-white ">
                   <CardHeader>
                     <CardTitle className="text-lg">{title}</CardTitle>
                   </CardHeader>
@@ -58,7 +58,7 @@ const Review = () => {
                     <p>{reviewAuthor}</p>
                     <p className="text-xs text-slate-400">{date}</p>
                   </CardFooter>
-                  <div className="absolute bottom-0 right-3 opacity-[0.02]">
+                  <div className="absolute bottom-0 right-3 opacity-[0.15]">
                     <Quote size={80} />
                   </div>
                 </Card>

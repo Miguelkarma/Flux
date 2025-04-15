@@ -14,7 +14,26 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const Blog = () => {
   return (
     <section id="blog" className="section">
-      <div className="container">
+      <div className="container relative">
+        <motion.div
+          className="absolute top-0 -right-20 w-1/6 h-1/4 bg-sky-200 blur-[100px] -z-10 opacity-90 mix-blend-screen"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 2, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "backInOut" }}
+          style={{ willChange: "transform, opacity" }}
+        />
+
+        <motion.div
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 2, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "backOut" }}
+          className="absolute top-0 -right-20 w-1/6 h-1/5 bg-cyan-400/80 blur-[100px] -z-10 opacity-90 mix-blend-screen"
+          style={{
+            willChange: "transform, opacity",
+            transform: "translate(25%, 25%) scale(1.25, 0.8)",
+          }}
+        />
+
         <div className="section-head">
           <motion.p
             variants={variants.fadeInUp}
@@ -63,7 +82,7 @@ const Blog = () => {
               index
             ) => (
               <motion.div key={index} variants={variants.fadeInUp}>
-                <Card className="group bg-landing-foreground text-white border-teal-100/0">
+                <Card className="group bg-gradient-to-t from-transparent via-sky-950/10 to-cyan-200/30  text-white border-slate-600">
                   <CardHeader>
                     <figure className="rounded-lg overflow-hidden">
                       <img

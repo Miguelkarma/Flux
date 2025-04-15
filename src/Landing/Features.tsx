@@ -2,11 +2,13 @@ import React from "react";
 import featureimg from "@/assets/feature.png";
 import phoneimg from "@/assets/featurePhone.png";
 import { Layout, MousePointerClick, Sparkles } from "lucide-react";
+import { GridBackground } from "./constants/grid-background";
 
 const SimpleFeatureCard: React.FC = () => {
   return (
-    <div className="max-w-full px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto mt-16">
-      <div className="max-w-7xl mx-auto">
+    <div className="max-w-full px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto mt-16  relative">
+      <GridBackground />
+      <div className="max-w-7xl mx-auto ">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Feature Block 1 */}
           <div className="flex flex-col p-6 bg-slate-800/80 rounded-lg backdrop-blur-3xl before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full">
