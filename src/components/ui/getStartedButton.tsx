@@ -10,7 +10,7 @@ const StartButton = ({ onClick }: { onClick: () => void }) => {
 
 const StyledWrapper = styled.div`
   button {
-    --indigo: #aab1e5;
+    --cyan: #00ffff; /* or #80eaff for a softer look */
     font-size: 15px;
     padding: 0.7em 2.7em;
     letter-spacing: 0.06em;
@@ -20,17 +20,17 @@ const StyledWrapper = styled.div`
     overflow: hidden;
     transition: all 0.3s;
     line-height: 1.4em;
-    border: 2px solid var(--indigo);
+    border: 2px solid var(--cyan);
     background: linear-gradient(
       to right,
-      rgba(170, 177, 229, 0.1) 1%,
+      rgba(0, 255, 255, 0.1) 1%,
       transparent 40%,
       transparent 60%,
-      rgba(170, 177, 229, 0.1) 100%
+      rgba(0, 255, 255, 0.1) 100%
     );
-    color: var(--indigo);
-    box-shadow: inset 0 0 10px rgba(170, 177, 229, 0.4),
-      0 0 9px 3px rgba(170, 177, 229, 0.1);
+    color: var(--cyan);
+    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.4),
+      0 0 9px 3px rgba(0, 255, 255, 0.1);
   }
 
   button:hover {
