@@ -83,7 +83,7 @@ const Process = () => {
                 src={form}
                 width={500}
                 height={528}
-                alt="Flux Dashboard"
+                alt="Flux login"
                 className="w-full h-full object-contain object-bottom rounded-t-xl  "
               />
             </motion.figure>

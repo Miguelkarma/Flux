@@ -41,7 +41,7 @@ export default function Hero() {
         className="container text-center"
       >
         <div className="max-w-screen-md mx-auto">
-          <p className="text-sm uppercase tracking-wider bg-neutral-800 text-cyan-300 max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10 ">
+          <p className="relative text-sm uppercase tracking-wider bg-zinc-900 border text-cyan-300 max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10 before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full">
             {heroData.sectionSubtitle}
           </p>
 
@@ -76,11 +76,19 @@ export default function Hero() {
             }}
             className="bg-background/60 border border-slate-800 backdrop-blur-3xl rounded-xl shadow-2xl"
           >
+            <div className="relative flex items-center bg-gray-800 border-b border-gray-800 rounded-t-xl py-2 px-4 ">
+              <div className="flex gap-x-1 absolute top-1/2 left-4 -translate-y-1/2">
+                <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+                <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+                <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+              </div>
+              <div className="mx-auto text-sm text-gray-300">www.flux.com</div>
+            </div>
             <img
               src={hero}
               alt="Flux Dashboard"
               loading="lazy"
-              className="rounded-xl opacity-90 
+              className="rounded-b-xl opacity-90 
               w-auto h-auto max-sm:h-[13em] max-sm:w-[20em] max-md:h-[30em] max-md:w-[40em] lg:h-auto lg:w-auto "
             />
           </motion.figure>

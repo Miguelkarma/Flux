@@ -6,7 +6,7 @@ import OverviewBeam from "./constants/animated-beam";
 
 const Overview = () => {
   return (
-    <section id="overview" className="section">
+    <section id="overview" className="section ">
       <div className="container">
         <figure className="">
           <OverviewBeam />

@@ -31,14 +31,14 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   fromRef,
   toRef,
   curvature = 0,
-  reverse = false, // Include the reverse prop
+  reverse = false, 
   duration = Math.random() * 3 + 4,
   delay = 0,
   pathColor = "gray",
   pathWidth = 2,
   pathOpacity = 0.2,
-  gradientStartColor = "#00e6e6",
-  gradientStopColor = "#008080",
+  gradientStartColor = "#00FFFF",
+  gradientStopColor = "	#2c369a",
   startXOffset = 0,
   startYOffset = 0,
   endXOffset = 0,
@@ -94,7 +94,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     // Initialize ResizeObserver
     const resizeObserver = new ResizeObserver((entries) => {
       // For all entries, recalculate the path
-      for (const entry of entries) {
+      for (const _entry of entries) {
         updatePath();
       }
     });
