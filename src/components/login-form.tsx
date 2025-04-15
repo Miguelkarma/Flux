@@ -47,7 +47,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
           START FOR FREE
         </div>
         <h1 className="text-3xl font-bold mt-2">
-          Login to your account<span className="text-teal-400">.</span>
+          Login to your account<span className="text-cyan-400">.</span>
         </h1>
       </div>
 
@@ -117,7 +117,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
               </span>{" "}
               <a
                 href="#"
-                className="text-cyan-400"
+                className="text-cyan-300"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/Registration");
@@ -132,7 +132,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="flex-2 bg-cyan-500 hover:bg-cyan-600 text-white border-none"
+              className="flex-2 bg-sky-700 hover:bg-cyan-600 text-white border-none"
             >
               Login
             </Button>
