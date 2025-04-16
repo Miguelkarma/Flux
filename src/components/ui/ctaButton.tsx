@@ -30,7 +30,7 @@ const StyledWrapper = styled.div`
     --border-width: 0.125em;
     --curve-size: 0.5em;
     --blur: 30px;
-    --bg: #080312;
+    --bg: rgba(10, 25, 47, 1);
     --color: #fff;
     color: var(--color);
     cursor: pointer;

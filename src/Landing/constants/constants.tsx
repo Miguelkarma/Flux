@@ -232,10 +232,10 @@ export const reviewData = {
 
 // Blog
 export const blogData = {
-  sectionSubtitle: "Our Blog",
+  sectionSubtitle: "Blogs",
   sectionTitle: "Resource Center",
   sectionText:
-    "Unlock the potential of our resource center, accessing valuable information and insights for effective IT asset management.",
+    "Unlock the potential of accessing valuable information and insights for effective IT asset management.",
   blogs: [
     {
       href: "https://www.assetpanda.com/resource-center/blog/it-asset-management-best-practices/",
