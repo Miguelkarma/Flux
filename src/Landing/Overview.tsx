@@ -8,9 +8,15 @@ const Overview = () => {
   return (
     <section id="overview" className="section ">
       <div className="container">
-        <figure className="">
+        <motion.figure
+          className=""
+          initial="start"
+          variants={variants.fadeInUp}
+          whileInView={"end"}
+          viewport={{ once: true }}
+        >
           <OverviewBeam />
-        </figure>
+        </motion.figure>
 
         <motion.div
           className="flex flex-wrap justify-center items-center text-center gap-5 md:gap-10 xl:gap-64 w-full mx-auto lg:ml-3 md:ml-7 sm:ml-7 max-sm:ml-0 my-20"
