@@ -89,7 +89,7 @@ const Header = () => {
       animate={{ y: visible ? 0 : -105 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container backdrop-blur-xl rounded-full mx-auto h-full flex items-center justify-between  mt-5 shadow-md shadow-cyan-300 max-2xl:rounded-none max-2xl:mt-0  ">
+      <div className="landing-container backdrop-blur-xl rounded-full mx-auto h-full flex items-center justify-between  mt-5 shadow-md shadow-cyan-300 max-2xl:rounded-none max-2xl:mt-0  ">
         {/* Logo */}
         <Button
           className="text-2xl font-bold bg-gradient-to-t from-sky-100 via-sky-300 to-cyan-900 bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[2px_2px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200 hover:border hover:border-slate-600 shadow-none"

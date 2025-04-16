@@ -38,7 +38,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="container text-center"
+        className="landing-container text-center"
       >
         <div className="max-w-screen-md mx-auto">
           <p className="relative text-sm uppercase tracking-wider bg-zinc-900 border text-cyan-300 max-w-max mx-auto px-3 py-1 rounded-full border-t border-blue-500/10 backdrop-blur-3xl mb-6 md:mb-10 before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full">

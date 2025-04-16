@@ -7,7 +7,7 @@ import OverviewBeam from "./constants/animated-beam";
 const Overview = () => {
   return (
     <section id="overview" className="section ">
-      <div className="container">
+      <div className="landing-container">
         <motion.figure
           className=""
           initial="start"

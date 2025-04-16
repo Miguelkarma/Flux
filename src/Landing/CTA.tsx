@@ -7,7 +7,7 @@ import CtaButton from "@/components/ui/ctaButton";
 export default function CTA() {
   return (
     <section id="cta" className="section ">
-      <div className="container relative">
+      <div className="landing-container relative">
         <motion.div
           className="absolute bottom-0 -left-20 w-1/6 h-1/4 bg-indigo-200 blur-[100px] -z-10 opacity-90 mix-blend-screen"
           initial={{ scale: 0.9, opacity: 0 }}

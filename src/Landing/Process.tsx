@@ -6,8 +6,7 @@ import form from "@/assets/process.png";
 const Process = () => {
   return (
     <section id="process" className="section mt-4 relative">
-    
-      <div className="container">
+      <div className="landing-container">
         <div className="section-head">
           <motion.p
             variants={variants.fadeInUp}

@@ -6,7 +6,7 @@ import * as variants from "@/Animation/motionVariants";
 const Brand = () => {
   return (
     <section className="section">
-      <div className="container max-w-screen-lg">
+      <div className="landing-container max-w-screen-lg">
         {/* Heading */}
         <motion.p
           variants={variants.fadeInUp}

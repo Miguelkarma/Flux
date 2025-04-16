@@ -84,7 +84,7 @@
   }
 }
 @layer utilities {
-  .container {
+  .landing-container {
     @apply px-4 mx-auto 
     /*responsive for large screen*/
     2xl:max-w-screen-xl;
