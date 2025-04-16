@@ -62,7 +62,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
     accessorKey: "employeeId",
     header: "Employee ID",
     cell: ({ row }) => (
-      <Badge variant="secondary" className="w-auto text-center">
+      <Badge variant="secondary" className="w-auto text-center text-foreground">
         {row.getValue<string>("employeeId") || "N/A"}
       </Badge>
     ),
@@ -83,10 +83,8 @@ export const columns: ColumnDef<EmployeeData>[] = [
       const fullName = `${row.original.firstName} ${row.original.lastName}`;
       return (
         <div className="flex items-center gap-2">
-          <UserCircle className="h-5 w-5 text-secondary-foreground" />
-          <span className="font-medium text-secondary-foreground">
-            {fullName}
-          </span>
+          <UserCircle className="h-5 w-5 text-foreground" />
+          <span className="font-medium text-foreground">{fullName}</span>
         </div>
       );
     },
@@ -96,8 +94,8 @@ export const columns: ColumnDef<EmployeeData>[] = [
     header: "Email",
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
-        <Mail className="h-5 w-5 text-secondary-foreground" />
-        <span className="font-medium text-secondary-foreground">
+        <Mail className="h-5 w-5 text-foreground" />
+        <span className="font-medium text-foreground">
           {row.getValue<string>("email") || "N/A"}
         </span>
       </div>
@@ -150,7 +148,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
             {icon}
           </div>
           <span
-            className={`font-medium text-secondary-foreground ${
+            className={`font-medium text-foreground ${
               departmentStyles[department] || "shadow-neutral-500"
             }`}
           >
@@ -168,9 +166,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
 
       return (
         <div className="flex items-center space-x-2 text-center">
-          <span className="font-medium text-secondary-foreground">
-            {position}
-          </span>
+          <span className="font-medium text-foreground">{position}</span>
         </div>
       );
     },
@@ -179,7 +175,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
     accessorKey: "location",
     header: "Location",
     cell: ({ row }) => (
-      <div className="capitalize text-center text-secondary-foreground">
+      <div className="capitalize text-center text-foreground">
         {row.getValue<string>("location") || "N/A"}
       </div>
     ),
@@ -200,11 +196,7 @@ export const columns: ColumnDef<EmployeeData>[] = [
       const formattedDate = dateValue
         ? new Date(dateValue).toLocaleDateString()
         : "N/A";
-      return (
-        <div className="text-center text-secondary-foreground">
-          {formattedDate}
-        </div>
-      );
+      return <div className="text-center text-foreground">{formattedDate}</div>;
     },
     sortingFn: (rowA, rowB, columnId) => {
       const dateA = new Date(rowA.getValue(columnId)).getTime();
@@ -220,19 +212,18 @@ export const columns: ColumnDef<EmployeeData>[] = [
 
       const statusColors: Record<string, string> = {
         Active:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-green-500 rounded-lg",
+          "text-foreground bg-primary-foreground border-0 shadow-green-500 rounded-lg",
         "On Leave":
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
+          "text-foreground bg-primary-foreground border-0 shadow-orange-400 rounded-lg",
         Terminated:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
+          "text-foreground bg-primary-foreground border-0 shadow-red-500 rounded-lg",
         Probation:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-yellow-400 rounded-lg",
+          "text-foreground bg-primary-foreground border-0 shadow-yellow-400 rounded-lg",
         Remote:
-          "text-secondary-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
+          "text-foreground bg-primary-foreground border-0 shadow-cyan-400 rounded-lg",
       };
 
-      const badgeClass =
-        statusColors[status] || "bg-gray-500 text-secondary-foreground";
+      const badgeClass = statusColors[status] || "bg-gray-500 text-foreground";
 
       return (
         <Badge className={`capitalize text-center ${badgeClass}`}>

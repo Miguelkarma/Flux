@@ -43,7 +43,7 @@ export default function CurrencyInput({
   );
 
   return (
-    <div className="space-y-2 w-full text-popover-foreground ">
+    <div className="space-y-2 w-full text-foreground ">
       <Label className="block text-center">{label}</Label>
       {type === "select" && currencies.length > 0 ? (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -65,7 +65,7 @@ export default function CurrencyInput({
             </Button>
           </DialogTrigger>
           <DialogDescription></DialogDescription>
-          <DialogContent className="max-h-[400px] text-popover-foreground">
+          <DialogContent className="max-h-[400px] text-foreground">
             <DialogHeader>
               <DialogTitle>Select a currency</DialogTitle>
             </DialogHeader>

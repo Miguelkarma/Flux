@@ -3,6 +3,14 @@ import { ArrowUpIcon, ArrowDownIcon, RefreshCwIcon } from "lucide-react";
 import { customElectronicProducts, Product } from "@/api/customElectronics";
 import { fetchElectronicsProducts } from "@/api/electronicProductsAPI";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 type MarketProduct = Product & { change: number };
 
 function MarketPriceTracker() {
@@ -92,25 +100,29 @@ function MarketPriceTracker() {
   ];
 
   return (
-    <div className="bg-[hsl(var(--secondary))] rounded-lg border p-4 relative overflow-hidden shadow shadow-popover-foreground">
-      <div className=" rounded-xl p-4 h-full text-popover-foreground">
-        <div className="flex justify-between items-center mb-3 ">
-          <h3 className="text-lg font-semibold ">Equipment Market Prices</h3>
+    <div className="bg-secondary rounded-lg border p-4 relative overflow-hidden shadow">
+      <div className="rounded-xl p-4 h-full text-foreground">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-lg font-semibold">Equipment Market Prices</h3>
           <div className="flex gap-2">
-            <select
-              className="bg-[hsl(var(--secondary))] text-popover-foreground text-xs rounded-md border border-gray-700 p-1"
+            <Select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onValueChange={(value) => setCategory(value)}
             >
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-32 h-8 text-xs">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <button
               onClick={handleRefresh}
-              className="bg-[hsl(var(--secondary))] text-popover-foreground p-1 rounded-md border border-gray-700"
+              className="bg-secondary text-foreground p-1 rounded-md border border-gray-700 h-8 w-8 flex items-center justify-center"
               disabled={refreshing}
             >
               <RefreshCwIcon
@@ -135,7 +147,7 @@ function MarketPriceTracker() {
                 >
                   <div className="flex items-center">
                     <div className="w-8 h-8 bg-black/40 rounded overflow-hidden mr-2">
-                      <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 ">
+                      <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20">
                         <img
                           src={item.thumbnail}
                           alt={item.title}
@@ -179,7 +191,7 @@ function MarketPriceTracker() {
         <div className="mt-3 pt-2 border-t border-gray-700 flex justify-between items-center">
           <p className="text-xs text-gray-400">Market data for IT assets</p>
           <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-gradient-to-r opacity-20 blur-xl from-cyan-500 to-blue-500"></div>
-          <p className="text-xs text-popover-foreground">
+          <p className="text-xs text-foreground">
             {filteredProducts.length} items
           </p>
         </div>

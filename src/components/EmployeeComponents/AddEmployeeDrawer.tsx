@@ -106,7 +106,7 @@ export function AddEmployeeDrawer({ onEmployeeAdded }: AddEmployeeDrawerProps) {
           <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-8 bg-transparent border-0">
             <Button
               variant="outline"
-              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg "
+              className="text-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg "
             >
               <span className="max-sm:hidden">Add</span>{" "}
               <Plus className="h-4 w-4" />
@@ -116,10 +116,10 @@ export function AddEmployeeDrawer({ onEmployeeAdded }: AddEmployeeDrawerProps) {
 
         <SheetContent
           side="bottom"
-          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+          className="w-full bg-gradient-to-tr from-accent to-card text-foreground"
         >
           <SheetHeader>
-            <SheetTitle className="text-popover-foreground">
+            <SheetTitle className="text-foreground">
               Add New Employee
             </SheetTitle>
             <SheetDescription className="text-primary">

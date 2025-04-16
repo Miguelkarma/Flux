@@ -128,7 +128,7 @@ export function EmployeeTable() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
+                className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-foreground"
               >
                 <span className="max-sm:hidden">Columns</span>
                 <ChevronDown />

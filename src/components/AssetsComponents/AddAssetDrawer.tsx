@@ -163,7 +163,7 @@ export function AddAssetDrawer({
           <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-8 bg-transparent border-0">
             <Button
               variant="outline"
-              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg "
+              className="text-foreground max-sm:w-4 bg-secondary border-0 shadow-popover-foreground rounded-lg "
             >
               <span className="max-sm:hidden">Add</span>
               <Plus className="h-4 w-4" />
@@ -174,12 +174,10 @@ export function AddAssetDrawer({
         {/* Drawer content */}
         <SheetContent
           side="bottom"
-          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
+          className="w-full bg-gradient-to-tr from-accent to-card text-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
         >
           <SheetHeader>
-            <SheetTitle className="text-popover-foreground">
-              Add New Asset
-            </SheetTitle>
+            <SheetTitle className="text-foreground">Add New Asset</SheetTitle>
             <SheetDescription className="text-primary">
               Fill in the details below to add a new asset. Only Serial Number
               is required.
@@ -388,13 +386,13 @@ export function AddAssetDrawer({
               <SheetClose asChild>
                 <Button
                   type="button"
-                  className="bg-teal-950 text-foreground hover:bg-slate-900"
+                  className="bg-teal-950 text-teal-100 hover:bg-slate-900"
                 >
                   Cancel
                 </Button>
               </SheetClose>
               <Button
-                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-foreground"
+                className="bg-gradient-to-br from-gray-700 to-teal-400/50 text-teal-100"
                 type="submit"
                 disabled={isSubmitting}
               >

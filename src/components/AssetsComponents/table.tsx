@@ -121,7 +121,7 @@ export function DataTable() {
           onChange={(event) =>
             table.getColumn("serialNo")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em] text-foreground"
         />
 
         <div className="flex items-center space-x-2 ">
@@ -130,7 +130,7 @@ export function DataTable() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
+                className="max-sm:w-4 bg-secondary border-0 shadow-popover-foreground rounded-lg text-foreground"
               >
                 <span className="max-sm:hidden">Columns</span>
                 <ChevronDown />
@@ -143,7 +143,7 @@ export function DataTable() {
                 .map((column) => (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className="capitalize text-foreground"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
@@ -184,7 +184,7 @@ export function DataTable() {
       </div>
 
       {/* Data table */}
-      <Card className="bg-card p-3 border-0 shadow-popover-foreground overflow-x-auto rounded-md border-b">
+      <Card className="bg-secondary p-3 border-0 shadow-popover-foreground overflow-x-auto rounded-md border-b text-foreground">
         <ScrollArea className="rounded-md transition">
           <Table className="w-full shadow-popover-foreground">
             <TableHeader>

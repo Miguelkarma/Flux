@@ -56,10 +56,10 @@ export default function DashboardParticles() {
           this.size = Math.random() * 3 + 1;
           this.speedX = (Math.random() - 0.5) * 0.5;
           this.speedY = (Math.random() - 0.5) * 0.5;
-          this.color = `rgba(${Math.floor(Math.random() * 100) + 100}, ${
-            Math.floor(Math.random() * 100) + 150
-          }, ${Math.floor(Math.random() * 55) + 200}, ${
-            Math.random() * 0.5 + 0.2
+          this.color = `rgba(${Math.floor(Math.random() * 50) + 100}, ${
+            Math.floor(Math.random() * 100) + 100
+          }, ${Math.floor(Math.random() * 100) + 100}, ${
+            Math.random() * 0.3 + 0.5
           })`;
         }
 
@@ -116,7 +116,7 @@ export default function DashboardParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full opacity-30"
+      className="absolute inset-0 w-full h-full opacity-80 "
     />
   );
 }

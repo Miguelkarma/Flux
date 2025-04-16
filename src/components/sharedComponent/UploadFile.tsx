@@ -56,7 +56,7 @@ export function UploadFile({
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg text-secondary-foreground"
+          className="max-sm:w-4 bg-secondary border-0 shadow-popover-foreground rounded-lg text-foreground"
           onClick={() => setOpen(true)}
         >
           <span className="max-sm:hidden">{buttonLabel}</span>
