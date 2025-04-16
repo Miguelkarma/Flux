@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { format } from "date-fns";
 import {
   Sheet,
   SheetClose,
@@ -19,13 +22,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
-import { Toaster, toast } from "sonner";
-
-import { Card } from "../ui/card";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Card } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
+
+// Icons
+import {
+  Plus,
+  Calendar as CalendarIcon,
   Laptop,
   Server,
   Monitor,
@@ -33,209 +41,97 @@ import {
   Mouse,
   Printer,
   Computer,
+  Tag,
+  Hash,
+  MapPin,
 } from "lucide-react";
-import { Calendar as CalendarIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { query, where, getDocs } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+
+// Form handling
+import { useForm, submitAddAssetForm } from "@/hooks/tableHooks/add-form-hook";
+
+// Types
+interface Asset {
+  serialNo: string;
+  assetTag: string;
+  assignedEmployee: string;
+  employeeId: string;
+  email: string;
+  status: string;
+  type: string;
+  customType: string;
+  location: string;
+  dateAdded: string;
+}
 
 interface AddAssetDrawerProps {
   onAssetAdded: () => void;
   userEmail: string | null;
 }
 
-export function AddAssetDrawer({
-  onAssetAdded,
-  userEmail,
-}: AddAssetDrawerProps) {
-  const [open, setOpen] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-  const [formData, setFormData] = React.useState({
+export function AddAssetDrawer({ onAssetAdded }: AddAssetDrawerProps) {
+  // Initial form values
+  const initialValues: Asset = {
     serialNo: "",
     assetTag: "",
     assignedEmployee: "",
+    employeeId: "",
     email: "",
     status: "Available",
     type: "",
     customType: "",
     location: "",
     dateAdded: new Date().toISOString(),
-  });
-
-  const handleDateChange = (selectedDate: Date | undefined) => {
-    setFormData((prev) => ({
-      ...prev,
-      dateAdded: selectedDate
-        ? selectedDate.toISOString()
-        : new Date().toISOString(),
-    }));
-  };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-  const handleTypeChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      type: value,
-      customType: value === "Other" ? "" : prev.customType,
-    }));
   };
 
-  const handleCustomTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      customType: e.target.value,
-    }));
-  };
+  // Form state and handlers from custom hook
+  const {
+    formData,
+    isSubmitting,
+    setIsSubmitting,
+    open,
+    setOpen,
+    employees,
+    handleInputChange,
+    handleSelectChange,
+    handleDateChange,
+    handleTypeChange,
+    handleEmployeeChange,
+    resetForm,
+  } = useForm<Asset>(initialValues);
 
-  const handleStatusChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      status: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast.error("You must be logged in to add an asset!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!userEmail) {
-      toast.error("You must be logged in to add an asset!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!formData.serialNo || !formData.type) {
-      toast.error("Serial number and asset type are required!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (formData.type === "Other" && !formData.customType) {
-      toast.error("Custom type is required when 'Other' is selected!");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const assetsRef = collection(db, "it-assets");
-      const serialQuery = query(
-        assetsRef,
-        where("serialNo", "==", formData.serialNo),
-        where("userId", "==", user.uid)
-      );
-      const serialSnapshot = await getDocs(serialQuery);
-
-      // Check for duplicate asset tag (if asset tag is provided)
-      let tagSnapshot = { empty: true };
-      if (formData.assetTag) {
-        const tagQuery = query(
-          assetsRef,
-          where("assetTag", "==", formData.assetTag),
-          where("userId", "==", user.uid)
-        );
-        tagSnapshot = await getDocs(tagQuery);
-      }
-
-      if (!serialSnapshot.empty) {
-        toast.error("Asset with this Serial Number already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (!tagSnapshot.empty) {
-        toast.error("Asset with this Asset Tag already exists!");
-        setIsSubmitting(false);
-        return;
-      }
-      await addDoc(collection(db, "it-assets"), {
-        ...formData,
-        type: formData.type === "Other" ? formData.customType : formData.type,
-        userId: user.uid,
-        dateAdded: new Date().toISOString(),
-      });
-
-      toast.success("Asset added successfully!");
-      onAssetAdded();
-      setOpen(false);
-      setFormData({
-        serialNo: "",
-        assetTag: "",
-        assignedEmployee: "",
-        email: "",
-        status: "Available",
-        type: "",
-        customType: "",
-        location: "",
-        dateAdded: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Error adding asset:", error);
-      toast.error("Failed to add asset");
-    } finally {
-      setIsSubmitting(false);
-    }
+  // Form submission handler
+  const handleSubmit = (e: React.FormEvent) => {
+    submitAddAssetForm({
+      e,
+      formData,
+      setIsSubmitting,
+      onAssetAdded,
+      onClose: () => setOpen(false),
+      resetForm,
+    });
   };
 
   return (
     <>
-      <Toaster
-        position="top-right"
-        duration={3000}
-        richColors={true}
-        theme="system"
-        closeButton={true}
-        expand={true}
-        visibleToasts={3}
-        style={{ zIndex: 9999 }}
-      />
       <Sheet open={open} onOpenChange={setOpen}>
+        {/* Trigger button */}
         <SheetTrigger asChild>
-          <Card className="max-w-lg p-0 flex-grow-1  max-sm:w-9 bg-transparent border-0">
+          <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-12 bg-transparent border-0">
             <Button
               variant="outline"
               className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg mr-1"
             >
-              <span className="max-sm:hidden"> Add</span>{" "}
-              <Plus className=" h-4 w-4" />
+              <span className="max-sm:hidden">Add</span>
+              <Plus className="h-4 w-4" />
             </Button>
           </Card>
         </SheetTrigger>
 
+        {/* Drawer content */}
         <SheetContent
           side="bottom"
-          className=" w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+          className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
         >
-          <Toaster
-            position="top-right"
-            duration={3000}
-            richColors={true}
-            theme="system"
-            closeButton={true}
-            expand={true}
-            visibleToasts={3}
-            style={{ zIndex: 9999 }}
-          />
           <SheetHeader>
             <SheetTitle className="text-popover-foreground">
               Add New Asset
@@ -245,7 +141,9 @@ export function AddAssetDrawer({
               is required.
             </SheetDescription>
           </SheetHeader>
+
           <form onSubmit={handleSubmit} className="grid gap-6 py-4">
+            {/* Serial Number */}
             <div className="grid gap-2">
               <Label htmlFor="serialNo">Serial Number *</Label>
               <Input
@@ -254,8 +152,12 @@ export function AddAssetDrawer({
                 value={formData.serialNo}
                 onChange={handleInputChange}
                 placeholder="Enter serial number"
+                required
+                icon={Hash}
               />
             </div>
+
+            {/* Asset Tag */}
             <div className="grid gap-2">
               <Label htmlFor="assetTag">Asset Tag</Label>
               <Input
@@ -264,8 +166,11 @@ export function AddAssetDrawer({
                 value={formData.assetTag}
                 onChange={handleInputChange}
                 placeholder="Enter asset Tag"
+                icon={Tag}
               />
             </div>
+
+            {/* Asset Type */}
             <div className="grid gap-2">
               <Label htmlFor="type">Asset Type</Label>
               <Select
@@ -305,6 +210,7 @@ export function AddAssetDrawer({
               </Select>
             </div>
 
+            {/* Custom Type (conditionally rendered) */}
             {formData.type === "Other" && (
               <div className="grid gap-2">
                 <Label htmlFor="customType">Other Asset *</Label>
@@ -312,13 +218,14 @@ export function AddAssetDrawer({
                   id="customType"
                   name="customType"
                   value={formData.customType}
-                  onChange={handleCustomTypeChange}
+                  onChange={handleInputChange}
                   placeholder="Enter custom asset type"
                   required
                 />
               </div>
             )}
 
+            {/* Location */}
             <div className="grid gap-2">
               <Label htmlFor="location">Location</Label>
               <Input
@@ -327,29 +234,30 @@ export function AddAssetDrawer({
                 value={formData.location}
                 onChange={handleInputChange}
                 placeholder="Enter location (e.g., IT Department, Accounting)"
+                icon={MapPin}
               />
             </div>
+
+            {/* Assigned Employee */}
             <div className="grid gap-2">
-              <Label htmlFor="assignedEmployee">Assigned Employee</Label>
-              <Input
-                id="assignedEmployee"
-                name="assignedEmployee"
-                value={formData.assignedEmployee}
-                onChange={handleInputChange}
-                placeholder="Enter employee name"
-              />
+              <Label htmlFor="employeeId">Assigned Employee</Label>
+              <Select onValueChange={handleEmployeeChange}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an employee" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  {employees.map((employee) => (
+                    <SelectItem key={employee.id} value={employee.id}>
+                      {employee.employeeId} - {employee.firstName}{" "}
+                      {employee.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Employee Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter employee email"
-              />
-            </div>
+
+            {/* Date Added */}
             <div className="grid gap-2">
               <Label htmlFor="dateAdded">Date Added</Label>
               <Popover>
@@ -368,18 +276,19 @@ export function AddAssetDrawer({
                   <Calendar
                     mode="single"
                     selected={new Date(formData.dateAdded)}
-                    onSelect={handleDateChange}
+                    onSelect={handleDateChange("dateAdded")}
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
+            {/* Status */}
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={handleStatusChange}
+                onValueChange={handleSelectChange("status")}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
@@ -393,9 +302,14 @@ export function AddAssetDrawer({
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Action buttons */}
             <SheetFooter>
               <SheetClose asChild>
-                <Button type="button" className="bg-teal-950 text-foreground">
+                <Button
+                  type="button"
+                  className="bg-teal-950 text-foreground hover:bg-slate-900"
+                >
                   Cancel
                 </Button>
               </SheetClose>
