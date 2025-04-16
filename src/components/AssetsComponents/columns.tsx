@@ -32,17 +32,18 @@ export type FirestoreData = {
   model: string;
 };
 
-
 export const columns: ColumnDef<FirestoreData, any>[] = [
   {
     id: "select",
-
     accessorFn: (row) => row.id,
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected()
+            ? true
+            : table.getIsSomePageRowsSelected()
+            ? "indeterminate"
+            : false
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"

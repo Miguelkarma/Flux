@@ -25,7 +25,7 @@ export function useFirestoreData<T>({
   additionalConstraints = [],
 }: UseFirestoreDataProps) {
   const [data, setData] = React.useState<T[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(!!userId); // Initialize loading based on userId
 
   // ref to avoid stale closures
   const dataRef = React.useRef<T[]>([]);

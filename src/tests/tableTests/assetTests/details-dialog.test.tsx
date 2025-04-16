@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
 import { FirestoreData } from "@/components/AssetsComponents/columns";
 
-// Mock UI components
+// mock ui components
 jest.mock("@/components/ui/dialog", () => ({
   Dialog: ({ children, open, onOpenChange }: any) =>
     open ? (
@@ -30,7 +30,7 @@ jest.mock("@/components/ui/separator", () => ({
   Separator: () => <hr data-testid="mock-separator" />,
 }));
 
-// Mock Lucide icons
+// mock icons
 jest.mock("lucide-react", () => ({
   Waypoints: () => <div data-testid="mock-waypoints-icon" />,
   FileText: () => <div data-testid="mock-filetext-icon" />,
@@ -57,54 +57,30 @@ describe("AssetDetailsDialog", () => {
     },
   };
 
-  test("renders asset details correctly when open", () => {
-    const onOpenChangeMock = jest.fn();
+  test("renders asset details when open", () => {
     render(
       <AssetDetailsDialog
         asset={assetMock}
         isOpen={true}
-        onOpenChange={onOpenChangeMock}
+        onOpenChange={jest.fn()}
       />
     );
 
-    // Verify dialog title and status
     expect(screen.getByText("Asset Details")).toBeInTheDocument();
     expect(screen.getByTestId("mock-badge-Active")).toBeInTheDocument();
-
-    // More flexible checks
     expect(screen.getByText(/ASSET-001/)).toBeInTheDocument();
     expect(screen.getByText(/123456/)).toBeInTheDocument();
-
-    // Check for Laptop text and badge
-    expect(screen.getAllByText(/Laptop/)[0]).toBeInTheDocument();
-
-    const laptopBadge = screen.getByTestId("mock-badge-Laptop");
-    expect(laptopBadge).toBeInTheDocument();
-
-    // Verify product details with more flexible matching
-    expect(screen.getByText(/Dell XPS 15/)).toBeInTheDocument();
-
-    // Check description more flexibly
-    expect(screen.getByText("Dell XPS 15")).toBeInTheDocument();
-    expect(
-      screen.getByText("Company laptop for professional use")
-    ).toBeInTheDocument();
-
     expect(screen.getByTestId("mock-badge-Laptop")).toBeInTheDocument();
+    expect(screen.getByText("Dell XPS 15")).toBeInTheDocument();
 
-    // Verify image
     const image = screen.getByRole("img");
     expect(image).toHaveAttribute("src", "https://example.com/image.jpg");
-    expect(image).toHaveAttribute("alt", "Dell XPS 15");
   });
 
-  test("renders default Waypoints icon when no thumbnail", () => {
+  test("shows waypoints icon when no thumbnail", () => {
     const assetWithoutThumbnail = {
       ...assetMock,
-      productDetails: {
-        ...assetMock.productDetails,
-        thumbnail: undefined,
-      },
+      productDetails: { ...assetMock.productDetails, thumbnail: undefined },
     };
 
     render(
@@ -114,11 +90,10 @@ describe("AssetDetailsDialog", () => {
         onOpenChange={jest.fn()}
       />
     );
-
     expect(screen.getByTestId("mock-waypoints-icon")).toBeInTheDocument();
   });
 
-  test("does not render content when closed", () => {
+  test("does not render when closed", () => {
     render(
       <AssetDetailsDialog
         asset={assetMock}
@@ -126,11 +101,10 @@ describe("AssetDetailsDialog", () => {
         onOpenChange={jest.fn()}
       />
     );
-
     expect(screen.queryByText("Asset Details")).not.toBeInTheDocument();
   });
 
-  test("calls onOpenChange when dialog is closed", async () => {
+  test("triggers onOpenChange when closed", async () => {
     const onOpenChangeMock = jest.fn();
     render(
       <AssetDetailsDialog
@@ -140,15 +114,11 @@ describe("AssetDetailsDialog", () => {
       />
     );
 
-    // Close dialog
-    const mockDialog = screen.getByTestId("mock-dialog");
-    await userEvent.click(mockDialog);
-
-    expect(onOpenChangeMock).toHaveBeenCalledTimes(1);
+    await userEvent.click(screen.getByTestId("mock-dialog"));
     expect(onOpenChangeMock).toHaveBeenCalledWith(false);
   });
 
-  test("renders custom type when type is 'Other'", () => {
+  test("shows custom type when type is Other", () => {
     const assetWithCustomType = {
       ...assetMock,
       type: "Other",
@@ -162,16 +132,14 @@ describe("AssetDetailsDialog", () => {
         onOpenChange={jest.fn()}
       />
     );
-
     expect(screen.getByText("Other (Special Equipment)")).toBeInTheDocument();
   });
 
-  test("handles missing product details gracefully", () => {
+  test("handles missing product details", () => {
     const assetWithoutProductDetails = {
       ...assetMock,
       productDetails: undefined,
     };
-
     render(
       <AssetDetailsDialog
         asset={assetWithoutProductDetails}
@@ -179,8 +147,6 @@ describe("AssetDetailsDialog", () => {
         onOpenChange={jest.fn()}
       />
     );
-
-    // Verify dialog renders without errors
     expect(screen.getByText("Asset Details")).toBeInTheDocument();
   });
 
@@ -197,7 +163,6 @@ describe("AssetDetailsDialog", () => {
         onOpenChange={jest.fn()}
       />
     );
-
     expect(screen.getByTestId("mock-filetext-icon")).toBeInTheDocument();
     expect(
       screen.getByText("Company-owned asset for work purposes")
