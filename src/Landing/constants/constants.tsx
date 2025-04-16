@@ -8,7 +8,6 @@ import blog3 from "@/assets/blog/blog3.png";
 import avatar3 from "@/assets/blog/blog3avatar.webp";
 
 import {
-  BarChart2,
   Github,
   Linkedin,
   Instagram,
@@ -18,11 +17,11 @@ import {
   Rocket,
   Settings,
   Star,
-  Server,
-  Users,
-  Activity,
   UserPlus,
   TagIcon,
+  Layout,
+  MousePointerClick,
+  Sparkles,
 } from "lucide-react";
 
 //brands
@@ -142,41 +141,24 @@ export const heroData = {
 
 // Feature
 export const featureData = {
-  sectionSubtitle: "Features",
-  sectionTitle: "Efficient IT Asset Management",
-  sectionText:
-    "Manage your IT assets seamlessly with a powerful suite of features designed to enhance tracking, monitoring, and reporting.",
-
   features: [
     {
-      icon: <Server size={32} />,
-      iconBoxColor: "bg-blue-600",
-      title: "Asset Management",
-      desc: "Add, update, and delete IT equipment while storing crucial details like name, serial number, and status.",
+      icon: <Layout size={32} />,
+      iconBoxColor: "bg-sky-600",
+      title: "Dashboard Visibility",
+      desc: "Get a centralized view of all your IT equipment with real-time status, location, and assignment tracking.",
     },
     {
-      icon: <Users size={32} />,
-      iconBoxColor: "bg-cyan-700",
-      title: "Assignment Tracking",
-      desc: "Easily assign equipment to employees and track which employee has which device",
+      icon: <Sparkles size={32} />,
+      iconBoxColor: "bg-sky-600",
+      title: "Smart QR Scanning",
+      desc: "Register and identify assets instantly using QR codes — no paperwork, no hassle.",
     },
     {
-      icon: <Activity size={32} />,
-      iconBoxColor: "bg-emerald-500",
-      title: "Status Monitoring",
-      desc: "Keep track of asset status—Available, Assigned, or Under Repair—to optimize asset utilization.",
-    },
-    {
-      icon: <BarChart2 size={32} />,
-      iconBoxColor: "bg-violet-700",
-      title: "Basic Reporting",
-      desc: "Gain insights into total assets, assigned assets, and available assets with clear and concise reporting.",
-    },
-    {
-      icon: <UserPlus size={32} />,
-      iconBoxColor: "bg-teal-600",
-      title: "Employee Management",
-      desc: "Add and manage employees within the system, allowing seamless asset assignment and tracking.",
+      icon: <MousePointerClick size={32} />,
+      iconBoxColor: "bg-sky-600",
+      title: "Automated Lifecycle Management",
+      desc: "Track asset usage, maintenance, and retirement automatically with reminders and history logs.",
     },
   ],
 };
@@ -301,104 +283,13 @@ export const ctaData = {
 
 // Footer
 export const footerData = {
-  links: [
-    {
-      title: "Product",
-      items: [
-        {
-          href: "#",
-          label: "Hardware Tracking",
-        },
-        {
-          href: "#",
-          label: "Pricing",
-        },
-        {
-          href: "#",
-          label: "Dashboard",
-        },
-        {
-          href: "#",
-          label: "Feature requests",
-        },
-      ],
-    },
-    {
-      title: "IT Managers",
-      items: [
-        {
-          href: "#",
-          label: "Documentation",
-        },
-        {
-          href: "#",
-          label: "Support forum",
-        },
-        {
-          href: "#",
-          label: "Technical support",
-        },
-        {
-          href: "#",
-          label: "Glossary",
-        },
-        {
-          href: "#",
-          label: "Changelog",
-        },
-      ],
-    },
-    {
-      title: "Company",
-      items: [
-        {
-          href: "#",
-          label: "About",
-        },
-        {
-          href: "#",
-          label: "Careers",
-        },
-        {
-          href: "#",
-          label: "Blog",
-        },
-        {
-          href: "#",
-          label: "Contact",
-        },
-      ],
-    },
-    {
-      title: "Legal",
-      items: [
-        {
-          href: "#",
-          label: "Terms and Conditions",
-        },
-        {
-          href: "#",
-          label: "Privacy Policy",
-        },
-        {
-          href: "#",
-          label: "Data Processing Agreement",
-        },
-        {
-          href: "#",
-          label: "Cookie manager",
-        },
-      ],
-    },
-  ],
-
   socialLinks: [
     {
       href: "https://github.com/miguelkarma",
       icon: <Github size={18} />,
     },
     {
-      href: "https://www.linkedin.com/",
+      href: "https://ph.linkedin.com/in/paul-miguel-santos-17aa43320",
       icon: <Linkedin size={18} />,
     },
     {

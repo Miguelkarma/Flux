@@ -1,65 +1,71 @@
 import React from "react";
 import featureimg from "@/assets/feature.png";
 import phoneimg from "@/assets/featurePhone.png";
-import { Layout, MousePointerClick, Sparkles } from "lucide-react";
-import { GridBackground } from "./constants/grid-background";
+import { motion } from "framer-motion";
+import {
+  fadeIn,
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  staggerContainer,
+  lazyLoad,
+} from "@/Animation/motionVariants";
+import { featureData } from "./constants/constants";
 
-const SimpleFeatureCard: React.FC = () => {
+const Features: React.FC = () => {
+  // Array of animation variants to cycle through for each card
+  const animationVariants = [fadeInLeft, fadeInUp, fadeInRight];
+
   return (
-    <div className="max-w-full px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto mt-16  relative">
-      <GridBackground />
-      <div className="max-w-7xl mx-auto ">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature Block 1 */}
-          <div className="flex flex-col p-6 bg-slate-800/80 rounded-lg backdrop-blur-3xl before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full">
-            <div className="flex items-center mb-4 ">
-              <Layout className="w-6 h-6 text-sky-600" />
-              <h3 className="ml-3 font-semibold text-lg text-gray-50">
-                Unified Asset Dashboard
-              </h3>
-            </div>
-            <p className="text-gray-400">
-              Get a centralized view of all your IT equipment with real-time
-              status, location, and assignment tracking.
-            </p>
-          </div>
-
-          {/* Feature Block 2 */}
-          <div className="flex flex-col p-6 rounded-lg bg-slate-800/80 backdrop-blur-3xl before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full">
-            <div className="flex items-center mb-4">
-              <Sparkles className="w-6 h-6 text-sky-600" />
-              <h3 className="ml-3 font-semibold text-lg text-gray-50">
-                Smart QR Scanning
-              </h3>
-            </div>
-            <p className="text-gray-400">
-              Register and identify assets instantly using QR codes — no
-              paperwork, no hassle.
-            </p>
-          </div>
-
-          {/* Feature Block 3 */}
-          <div className="flex flex-col p-6 bg-slate-800/80 rounded-lg backdrop-blur-3xl before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full">
-            <div className="flex items-center mb-4">
-              <MousePointerClick className="w-6 h-6 text-sky-600" />
-              <h3 className="ml-3 font-semibold text-lg text-gray-50">
-                Automated Lifecycle Management
-              </h3>
-            </div>
-            <p className="text-gray-400">
-              Track asset usage, maintenance, and retirement automatically with
-              reminders and history logs.
-            </p>
-          </div>
-        </div>
+    <div
+      id="features"
+      className="max-w-full px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto mt-16 relative"
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Feature Cards Container with Stagger Effect */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {/* Map through the first 3 features */}
+          {featureData.features.slice(0, 3).map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              className="flex flex-col p-6 bg-slate-800/80 rounded-lg backdrop-blur-3xl before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full"
+              variants={animationVariants[index % animationVariants.length]}
+              initial="start"
+              whileInView="end"
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center mb-4">
+                {React.cloneElement(feature.icon, {
+                  className: "w-6 h-6 text-sky-600",
+                })}
+                <h3 className="ml-3 font-semibold text-lg text-gray-50">
+                  {feature.title}
+                </h3>
+              </div>
+              <p className="text-gray-400">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
 
         {/* Feature Content */}
         {/* Devices Display Section */}
         <div className="relative flex justify-center items-center mt-16 pb-28">
           {/* Browser Mockup */}
-          <div className="relative  w-auto max-w-full shadow-lg rounded-lg overflow-hidden">
+          <motion.div
+            className="relative w-auto max-w-full shadow-lg rounded-lg overflow-hidden"
+            variants={fadeIn}
+            initial="start"
+            whileInView="end"
+            viewport={{ once: true, amount: 0.3 }}
+          >
             {/* Browser Header */}
-            <div className="relative flex items-center bg-gray-800 border-b border-gray-800 rounded-t-xl py-2 px-4 ">
+            <div className="relative flex items-center bg-gray-800 border-b border-gray-800 rounded-t-xl py-2 px-4">
               <div className="flex gap-x-1 absolute top-1/2 left-4 -translate-y-1/2">
                 <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
                 <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
@@ -73,13 +79,19 @@ const SimpleFeatureCard: React.FC = () => {
               <img
                 src={featureimg}
                 alt="Dashboard Interface"
-                className="w-full h-auto "
+                className="w-full h-auto"
               />
             </div>
-          </div>
+          </motion.div>
 
           {/* Realistic Phone Mockup */}
-          <div className="absolute bottom-0 left-0 z-20 w-64 hidden lg:block ">
+          <motion.div
+            className="absolute bottom-0 left-0 z-20 w-64 hidden lg:block"
+            variants={lazyLoad}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             <div className="relative top-2">
               {/* Phone frame */}
               <div className="relative w-full bg-gray-800 rounded-[3rem] p-2 shadow-xl">
@@ -97,16 +109,16 @@ const SimpleFeatureCard: React.FC = () => {
                   <img
                     src={phoneimg}
                     alt="Mobile Interface"
-                    className="absolute top-0 left-0 w-full h-full object-contain "
+                    className="absolute top-0 left-0 w-full h-full object-contain"
                   />
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
   );
 };
 
-export default SimpleFeatureCard;
+export default Features;

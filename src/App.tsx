@@ -12,6 +12,7 @@ import Review from "./Landing/Review";
 import Blog from "./Landing/Blog";
 import CTA from "./Landing/CTA";
 import Footer from "./Landing/Footer";
+import { GridBackground } from "./Landing/constants/grid-background";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -40,9 +41,14 @@ export default function Home() {
         <main>
           <Hero />
           <Brand />
-          <Features />
-          <Process />
-          <Overview />
+          <div className=" relative">
+            <GridBackground />
+            <div className="container">
+              <Features />
+              <Process />
+              <Overview />
+            </div>
+          </div>
           <Review />
           <Blog />
           <CTA />

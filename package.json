@@ -67,6 +67,7 @@
     "tsparticles-engine": "^2.12.0",
     "tsparticles-slim": "^2.12.0",
     "util": "^0.12.5",
+    "vanta": "^0.5.24",
     "vaul": "^1.1.2"
   },
   "devDependencies": {

@@ -24,13 +24,13 @@ export function GridBackground() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Grid config
-      const gridSize = 100;
-      const gridColor = "rgba(255, 255, 255, 0.1)";
+      // grid settings
+      const gridSize = 120;
+      const gridColor = "rgba(255, 255, 255, 0.04)";
       ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
 
-      // Draw vertical lines
+      // vertical lines
       for (let x = 0; x <= canvas.width; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -38,7 +38,7 @@ export function GridBackground() {
         ctx.stroke();
       }
 
-      // Draw horizontal lines
+      // horizontal lines
       for (let y = 0; y <= canvas.height; y += gridSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -46,7 +46,7 @@ export function GridBackground() {
         ctx.stroke();
       }
 
-      // Horizontal fade (left and right)
+      // horizontal fade (left/right)
       const gradientX = ctx.createLinearGradient(0, 0, canvas.width, 0);
       gradientX.addColorStop(0, "hsl(222.2, 84%, 4.9%)");
       gradientX.addColorStop(0, "rgba(0, 0, 0, 0)");
@@ -56,7 +56,7 @@ export function GridBackground() {
       ctx.fillStyle = gradientX;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Vertical fade (top & bottom)
+      // vertical fade (top/bottom)
       const gradientY = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradientY.addColorStop(0, "hsl(222.2, 84%, 4.9%)");
       gradientY.addColorStop(0.2, "rgba(0, 0, 0, 0)");
@@ -67,14 +67,14 @@ export function GridBackground() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
-    // Initial sizing
+    // initial draw
     resizeCanvas();
 
-    // Set up resize observer to handle container size changes
+    // observe container resize
     const resizeObserver = new ResizeObserver(resizeCanvas);
     resizeObserver.observe(container);
 
-    // Also handle window resize events
+    // handle window resize
     window.addEventListener("resize", resizeCanvas);
 
     return () => {

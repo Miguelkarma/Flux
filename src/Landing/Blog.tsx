@@ -16,7 +16,7 @@ const Blog = () => {
     <section id="blog" className="section">
       <div className="container relative">
         <motion.div
-          className="absolute top-0 -right-20 w-1/6 h-1/4 bg-sky-200 blur-[100px] -z-10 opacity-90 mix-blend-screen"
+          className="absolute top-0 -right-20 w-1/6 h-1/4 bg-sky-200/40 blur-[100px] -z-10 opacity-60 mix-blend-screen"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 2, opacity: 1 }}
           transition={{ duration: 1.5, ease: "backInOut" }}
@@ -27,7 +27,7 @@ const Blog = () => {
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 2, opacity: 1 }}
           transition={{ duration: 1.5, ease: "backOut" }}
-          className="absolute top-0 -right-20 w-1/6 h-1/5 bg-cyan-400/80 blur-[100px] -z-10 opacity-90 mix-blend-screen"
+          className="absolute top-0 -right-20 w-1/6 h-1/5 bg-cyan-400/80 blur-[100px] -z-10 opacity-60 mix-blend-screen"
           style={{
             willChange: "transform, opacity",
             transform: "translate(25%, 25%) scale(1.25, 0.8)",
