@@ -132,7 +132,7 @@ export function AddAssetDrawer({
       mouse: "Mouse",
       server: "Server",
       printer: "Printer",
-      "mobile-accessories": "Peripheral",
+      peripherals: "Peripheral",
     };
 
     // find the best match or default to 'Other'
