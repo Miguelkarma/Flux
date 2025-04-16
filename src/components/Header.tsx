@@ -1,4 +1,4 @@
-import { Waypoints, CirclePower } from "lucide-react";
+import { Waypoints, CirclePower, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Tooltip,
@@ -6,6 +6,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { useAuth } from "@/hooks/use-auth";
 import Switch from "@/components/ui/switch";
 import { AssetSearch } from "@/components/SearchComponents/AssetSearch";
@@ -14,20 +19,20 @@ export default function Header() {
   const { user, handleLogout } = useAuth();
 
   return (
-    <header className="flex items-center justify-between py-4 border-slate-500 mb-6 rounded-lg">
-      <div className="flex items-center space-x-2 ">
+    <header className="flex flex-col md:flex-row items-center justify-between py-4 border-slate-500 mb-6 rounded-lg">
+      <div className="flex items-center space-x-2 mb-4 md:mb-0">
         <Waypoints className="h-8 w-8 text-cyan-500" />
-        <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-600 bg-clip-text text-transparent ">
+        <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-600 bg-clip-text text-transparent">
           Flux
         </span>
       </div>
 
-      <div className="flex items-center space-x-6 max-sm:space-x-2 ml-2">
-        <div className="flex-shrink">
+      <div className="flex flex-col md:flex-row items-center space-y-4 md:space-x-6 md:space-y-0 ml-2">
+        <div className="flex-shrink w-full md:w-auto">
           <AssetSearch />
         </div>
 
-        <div className="flex items-center space-x-3 ">
+        <div className="p-1 rounded-full border shadow shadow-popover-foreground flex items-center space-x-3 w-full justify-between md:w-auto bg-secondary">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -39,19 +44,39 @@ export default function Header() {
             </Tooltip>
           </TooltipProvider>
 
-          <Avatar>
-            <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
-            <AvatarFallback className="bg-slate-700 text-cyan-500">
-              {user?.displayName?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="cursor-pointer">
+                <Avatar>
+                  <AvatarImage
+                    src="/placeholder.svg?height=40&width=40"
+                    alt="User"
+                  />
+                  <AvatarFallback className="bg-muted text-primary flex flex-row items-center justify-center gap-1">
+                    <User className="w-4 h-4" />
+                    {user?.displayName?.charAt(0).toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="p-4 w-64">
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold text-base text-foreground">
+                  Username: {user?.displayName || "Unknown User"}
+                </p>
+                <p className="text-sm text-muted-foreground break-words">
+                  Email: {user?.email || "No email available"}
+                </p>
+              </div>
+            </PopoverContent>
+          </Popover>
 
           <button
             onClick={handleLogout}
-            className="relative text-sm text-red-500 transition duration-300 rounded-full mr-6  
-             hover:text-red hover:shadow-[0_0_20px_1px#ff0000] hover:rounded-full"
+            className="w-8 h-8 relative text-sm text-red-500 transition duration-300 rounded-full mr-1
+              hover:text-red hover:shadow-[0_0_20px_1px#ff0000] hover:rounded-full flex items-center justify-center"
           >
-            <CirclePower />
+            <CirclePower className="w-8 h-8" />
           </button>
         </div>
       </div>

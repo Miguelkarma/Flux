@@ -60,7 +60,7 @@ export function RegistrationForm({
         <div className="text-xs uppercase tracking-wider text-cyan-400">
           START FOR FREE
         </div>
-        <h1 className="text-3xl font-bold mt-2">
+        <h1 className="text-3xl font-bold mt-2 text-gray-50">
           Create your account<span className="text-teal-400">.</span>
         </h1>
       </div>
@@ -70,7 +70,7 @@ export function RegistrationForm({
         className={cn("flex flex-col gap-6", className)}
         {...props}
       >
-        <div className="grid gap-2">
+        <div className="grid gap-5">
           <div className="grid gap-2">
             <Label htmlFor="username" className="text-sm text-gray-300">
               Username
@@ -132,7 +132,7 @@ export function RegistrationForm({
             </div>
           </div>
 
-          <div className="flex justify-between mt-2">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-2 gap-2">
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -143,13 +143,13 @@ export function RegistrationForm({
                 I agree to the Terms
               </label>
             </div>
-            <div className="ml-auto flex gap-1">
-              <span className="text-white pointer-events-none">
+            <div className="flex flex-wrap gap-1 text-sm text-white">
+              <span className="text-gray-50 pointer-events-none">
                 Already have an account?
               </span>{" "}
               <a
                 href="#"
-                className="text-cyan-400"
+                className="text-cyan-300 font-bold"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/Login");
@@ -164,7 +164,7 @@ export function RegistrationForm({
             <Button
               type="submit"
               disabled={loading}
-              className="flex-2 bg-cyan-500 hover:bg-cyan-600 text-white border-none"
+              className="flex-2 bg-custom-background hover:bg-cyan-300/20 text-white border-none"
             >
               Sign Up
             </Button>

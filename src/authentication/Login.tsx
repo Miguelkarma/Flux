@@ -56,8 +56,8 @@ function Login() {
         expand={true}
         visibleToasts={3}
       />
-      <div className="flex items-center justify-center min-h-screen bg-teal-950/50">
-        <div className="bg-gradient-to-r from-cyan-950 via-cyan-300/60 to-cyan-300 rounded-lg shadow-md shadow-sky-300 overflow-hidden w-full max-w-7xl h-[40em] grid grid-cols-1 lg:grid-cols-2">
+      <div className=" bg-custom-background flex items-center justify-center min-h-screen bg-teal-950/50">
+        <div className="bg-gradient-to-r from-gray-800 via-cyan-900 to-cyan-700 rounded-lg shadow-md shadow-sky-300 overflow-hidden w-full max-w-7xl h-[50em] grid grid-cols-1 lg:grid-cols-2 max-sm:h-[40em] ">
           {/* Left Side - Login Form */}
           <div className="p-10 flex flex-col justify-center relative">
             <a

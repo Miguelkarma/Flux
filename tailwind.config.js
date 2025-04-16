@@ -29,6 +29,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        "custom-background": "hsl(222.2, 84%, 4.9%)",
         "landing-background": "hsl(var(--landing-background))",
         "landing-foreground": "hsl(var(--landing-foreground))",
         border: "hsl(var(--border))",
