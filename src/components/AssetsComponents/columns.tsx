@@ -11,9 +11,11 @@ import {
   Mouse,
   Printer,
   Computer,
+  Usb,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ActionsCell from "./ActionsCell";
+import { ProductDetails } from "@/components/AssetsComponents/types";
 
 export type FirestoreData = {
   id: string;
@@ -25,9 +27,12 @@ export type FirestoreData = {
   assignedEmployee: string;
   status: string;
   dateAdded: string;
+  description?: string;
+  productDetails?: ProductDetails;
+  model: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export const columns: ColumnDef<FirestoreData, any>[] = [
   {
     id: "select",
@@ -72,6 +77,15 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
     ),
   },
   {
+    accessorKey: "model",
+    header: "Model",
+    cell: ({ row }) => (
+      <div className="text-center text-secondary-foreground">
+        {row.getValue<string>("model") || "N/A"}
+      </div>
+    ),
+  },
+  {
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => {
@@ -85,6 +99,7 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
         Keyboard: "shadow-orange-500",
         Mouse: "shadow-yellow-500",
         Printer: "shadow-pink-500",
+        Peripheral: "shadow-indigo-500",
         Other: "shadow-gray-500",
       };
 
@@ -103,6 +118,8 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
           <Mouse size={18} />
         ) : type === "Printer" ? (
           <Printer size={18} />
+        ) : type === "Peripheral" ? (
+          <Usb size={18} />
         ) : null;
 
       return (
@@ -112,7 +129,9 @@ export const columns: ColumnDef<FirestoreData, any>[] = [
           >
             {icon}
           </div>
-          <span className={`font-medium ${typeStyles[type]}`}>{type}</span>
+          <span className={`font-medium ${typeStyles[type]}`}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </span>
         </div>
       );
     },

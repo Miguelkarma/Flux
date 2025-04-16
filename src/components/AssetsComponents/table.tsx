@@ -39,7 +39,7 @@ import {
 } from "../sharedComponent/BulkDeleteDialog";
 import { UploadFile } from "../sharedComponent/UploadFile";
 import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
-
+import { FirestoreData } from "@/components/AssetsComponents/types";
 import { db } from "@/firebase/firebase";
 import {
   collection,
@@ -49,20 +49,6 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-// Type definitions
-export type FirestoreData = {
-  id: string;
-  serialNo: string;
-  assetTag: string;
-  type: string;
-  customType?: string;
-  location: string;
-  email: string;
-  assignedEmployee: string;
-  status: string;
-  dateAdded: string;
-};
 
 export function DataTable() {
   // State management
@@ -174,21 +160,29 @@ export function DataTable() {
     title: "Upload IT Assets",
     collectionName: "it-assets",
     formatExamples: {
-      csv: "serialNo,assetTag,type,location,status\n12345,LAP-001,Laptop,Office,Active\n67890,MON-002,Monitor,Remote,Active",
+      csv: "serialNo,assetTag,model,type,location,description,status\n123456,AT001,Dell Latitude,Laptop,Office A,Work laptop,Active",
     },
-    requiredFields: ["serialNo", "assetTag", "type", "location", "status"],
+    requiredFields: [
+      "serialNo",
+      "assetTag",
+      "model",
+      "type",
+      "location",
+      "description",
+      "status",
+    ],
     uniqueField: "serialNo",
   };
   return (
     <>
       <div className="flex items-center justify-between">
         <Input
-          placeholder="Filter Asset Tag"
+          placeholder="Filter Serial No."
           value={
-            (table.getColumn("assetTag")?.getFilterValue() as string) ?? ""
+            (table.getColumn("serialNo")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table.getColumn("assetTag")?.setFilterValue(event.target.value)
+            table.getColumn("serialNo")?.setFilterValue(event.target.value)
           }
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em] max-md:w-[8em]"
         />

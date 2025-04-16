@@ -20,27 +20,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Laptop2,
-  Monitor,
-  Mouse,
-  Keyboard,
-  Printer,
-  Server,
-  CalendarIcon,
-  Computer,
-  Tag,
-  Hash,
-  MapPin,
-} from "lucide-react";
+import { CalendarIcon, Tag, Hash, MapPin, Search } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
+import { Textarea } from "../ui/textarea";
 
 import {
   useFormState,
   submitAssetForm,
 } from "@/hooks/tableHooks/edit-form-hook";
+import ElectronicsSearch from "@/components/SearchComponents/ProductsSearch";
+import { generateUniqueSerialNumber } from "@/api/electronicProductsAPI";
 
 interface EditAssetDrawerProps {
   asset: {
@@ -54,6 +45,9 @@ interface EditAssetDrawerProps {
     type: string;
     customType?: string;
     location: string;
+    description?: string;
+    productDetails?: any;
+    model?: string; // Added optional model field
   };
   isOpen: boolean;
   onClose: () => void;
@@ -66,7 +60,7 @@ export function EditAssetDrawer({
   onClose,
   onAssetUpdated,
 }: EditAssetDrawerProps) {
-  // Initialize the form state using the useFormState hook
+  // initialize the form state
   const {
     formData,
     employees,
@@ -88,9 +82,51 @@ export function EditAssetDrawer({
     customType: asset.customType ?? "",
     location: asset.location ?? "",
     dateAdded: asset.dateAdded ?? new Date().toISOString(),
+    description: asset.description ?? "",
+    model: asset.model ?? "", // Added model initialization
   });
 
-  // Update state when asset changes
+  // state for product search dialog
+  const [isProductSearchOpen, setIsProductSearchOpen] = React.useState(false);
+
+  const handleProductSelect = (product: {
+    id: any;
+    title: string;
+    category: string;
+  }) => {
+    setFormData((prev) => ({
+      ...prev,
+      serialNo: generateUniqueSerialNumber(`SN-${product.id}`),
+      type: getProductType(product.category),
+      customType: product.category,
+      model: product.title,
+      productDetails: product,
+    }));
+    setIsProductSearchOpen(false);
+  };
+
+  // Helper function to map product categories to asset types
+  const getProductType = (category: string) => {
+    const categoryMap = {
+      computers: "Computer",
+      monitor: "Monitor",
+      laptops: "Laptop",
+      keyboards: "Keyboard",
+      mouse: "Mouse",
+      server: "Server",
+      printer: "Printer",
+      "mobile-accessories": "Peripheral",
+    };
+
+    // Find the best match or default to 'Other'
+    return Object.keys(categoryMap).find((key) =>
+      category.toLowerCase().includes(key)
+    )
+      ? categoryMap[category.toLowerCase() as keyof typeof categoryMap]
+      : "Other";
+  };
+
+  // update state when asset changes
   React.useEffect(() => {
     setFormData({
       id: asset.id,
@@ -103,6 +139,8 @@ export function EditAssetDrawer({
       customType: asset.customType ?? "",
       location: asset.location ?? "",
       dateAdded: asset.dateAdded ?? new Date().toISOString(),
+      description: asset.description ?? "",
+      model: asset.model ?? "",
     });
   }, [asset, setFormData]);
 
@@ -125,7 +163,7 @@ export function EditAssetDrawer({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent
         side="bottom"
-        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground"
+        className="w-full bg-gradient-to-tr from-accent to-card text-popover-foreground max-h-[calc(100vh-100px)] overflow-y-auto"
       >
         <SheetHeader>
           <SheetTitle className="text-popover-foreground">
@@ -155,47 +193,72 @@ export function EditAssetDrawer({
               value={formData.assetTag}
               onChange={handleInputChange}
               placeholder="Enter asset Tag"
-              required
               icon={Tag}
             />
           </div>
-          {/* Type */}
-          <div className="grid gap-2">
-            <Label htmlFor="type">Asset Type</Label>
-            <Select
-              value={formData.type}
-              onValueChange={handleSelectChange("type")}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select asset type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Laptop">
-                  <Laptop2 className="inline-block w-4 h-4 mr-2" /> Laptop
-                </SelectItem>
-                <SelectItem value="Computer">
-                  <Computer className="inline-block w-4 h-4 mr-2" /> Computer
-                </SelectItem>
-                <SelectItem value="Server">
-                  <Server className="inline-block w-4 h-4 mr-2" /> Server
-                </SelectItem>
-                <SelectItem value="Monitor">
-                  <Monitor className="inline-block w-4 h-4 mr-2" /> Monitor
-                </SelectItem>
-                <SelectItem value="Keyboard">
-                  <Keyboard className="inline-block w-4 h-4 mr-2" /> Keyboard
-                </SelectItem>
-                <SelectItem value="Mouse">
-                  <Mouse className="inline-block w-4 h-4 mr-2" /> Mouse
-                </SelectItem>
-                <SelectItem value="Printer">
-                  <Printer className="inline-block w-4 h-4 mr-2" /> Printer
-                </SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Asset Type and Model section */}
+          <div className="flex gap-4">
+            {/* Asset Type */}
+            <div className="flex flex-col w-full">
+              <Label htmlFor="type" className="mb-1">
+                Asset Type
+              </Label>
+              <Select
+                value={formData.type}
+                onValueChange={handleSelectChange("type")}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select asset type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Computer">Computer</SelectItem>
+                  <SelectItem value="Laptop">Laptop</SelectItem>
+                  <SelectItem value="Monitor">Monitor</SelectItem>
+                  <SelectItem value="Server">Server</SelectItem>
+                  <SelectItem value="Mouse">Mouse</SelectItem>
+                  <SelectItem value="Keyboard">Keyboard</SelectItem>
+                  <SelectItem value="Printer">Printer</SelectItem>
+                  <SelectItem value="Peripheral">Peripheral</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Model */}
+            <div className="flex flex-col w-full">
+              <Label htmlFor="model" className="mb-1">
+                Model
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="model"
+                  name="model"
+                  value={formData.model}
+                  onChange={handleInputChange}
+                  placeholder="Enter model name"
+                  icon={Hash}
+                  className="w-full"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsProductSearchOpen(true)}
+                  title="Search Products"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
+
+          {/* Product Search Dialog */}
+          <ElectronicsSearch
+            isOpen={isProductSearchOpen}
+            onClose={() => setIsProductSearchOpen(false)}
+            onProductSelect={handleProductSelect}
+          />
+
           {formData.type === "Other" && (
             <div className="grid gap-2">
               <Label htmlFor="customType">Other Asset *</Label>
@@ -267,6 +330,18 @@ export function EditAssetDrawer({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+
+          {/* Description */}
+          <div className="grid gap-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Enter asset description"
+            />
           </div>
 
           {/* Status */}
