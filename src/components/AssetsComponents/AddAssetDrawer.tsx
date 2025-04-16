@@ -160,10 +160,10 @@ export function AddAssetDrawer({
       <Sheet open={open} onOpenChange={setOpen}>
         {/* Trigger button */}
         <SheetTrigger asChild>
-          <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-12 bg-transparent border-0">
+          <Card className="max-w-lg p-0 flex-grow-1 max-sm:w-8 bg-transparent border-0">
             <Button
               variant="outline"
-              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg mr-1"
+              className="text-secondary-foreground max-sm:w-4 bg-primary-foreground border-0 shadow-popover-foreground rounded-lg "
             >
               <span className="max-sm:hidden">Add</span>
               <Plus className="h-4 w-4" />

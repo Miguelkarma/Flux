@@ -121,10 +121,10 @@ export function DataTable() {
           onChange={(event) =>
             table.getColumn("serialNo")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em] max-md:w-[8em]"
+          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em]"
         />
 
-        <div className="flex items-center space-x-2 max-sm:space-x-1">
+        <div className="flex items-center space-x-2 ">
           {/* columns dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
