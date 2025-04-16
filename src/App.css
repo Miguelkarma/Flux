@@ -36,6 +36,10 @@
 
     --landing-background: 220 40% 10%;
     --landing-foreground: 210 12% 70%;
+    --logo: 200 100% 28%;
+    --brand-100: 200, 80%, 80%;
+    --brand-300: 210, 80%, 50%;
+    --brand-900: 180, 80%, 0%;
   }
 
   .dark {
@@ -66,6 +70,10 @@
     --border: 217.2 32.6% 17.5%;
     --input: 174 60% 70%;
     --ring: 212.7 26.8% 83.9%;
+    --logo: 200 100% 75%;
+    --brand-100: 197, 100%, 95%;
+    --brand-300: 197, 71%, 74%;
+    --brand-900: 191, 100%, 18%;
   }
 }
 
@@ -104,5 +112,21 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(3, 22, 34, 0.61);
+  }
+}
+
+@layer components {
+  .icon-logo {
+    color: hsl(var(--logo));
+  }
+  .logo-gradient {
+    background: linear-gradient(
+      10deg,
+      hsl(var(--brand-100)) 0%,
+      hsl(var(--brand-300)) 50%,
+      hsl(var(--brand-900)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }

@@ -21,10 +21,8 @@ export default function Header() {
   return (
     <header className="flex flex-col md:flex-row items-center justify-between py-4 border-slate-500 mb-6 rounded-lg">
       <div className="flex items-center space-x-2 mb-4 md:mb-0">
-        <Waypoints className="h-8 w-8 text-cyan-500" />
-        <span className="text-xl font-bold bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-600 bg-clip-text text-transparent">
-          Flux
-        </span>
+        <Waypoints className="h-8 w-8 icon-logo" />
+        <span className="text-xl font-bold logo-gradient ">Flux</span>
       </div>
 
       <div className="flex flex-col md:flex-row items-center space-y-4 md:space-x-6 md:space-y-0 ml-2">
@@ -52,9 +50,8 @@ export default function Header() {
                     src="/placeholder.svg?height=40&width=40"
                     alt="User"
                   />
-                  <AvatarFallback className="bg-muted text-primary flex flex-row items-center justify-center gap-1">
+                  <AvatarFallback className="bg-muted text-primary flex flex-row items-center justify-center gap-1 font-bold">
                     <User className="w-4 h-4" />
-                    {user?.displayName?.charAt(0).toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
               </div>
