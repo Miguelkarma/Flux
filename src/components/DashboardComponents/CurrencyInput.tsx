@@ -7,9 +7,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Banknote } from "lucide-react";
 
 interface Currency {
   code: string;
@@ -41,20 +43,26 @@ export default function CurrencyInput({
   );
 
   return (
-    <div className="space-y-2 p-0 max-sm:w-24 text-center">
-      <Label>{label}</Label>
+    <div className="space-y-2 w-full text-popover-foreground ">
+      <Label className="block text-center">{label}</Label>
       {type === "select" && currencies.length > 0 ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-full max-sm:text-xs ">
-              {selectedCurrency
-                ? `${selectedCurrency.code.toUpperCase()} - ${
-                    selectedCurrency.name
-                  }`
-                : "Select currency"}
+            <Button
+              variant="outline"
+              className="w-full h-10 px-3 flex items-center justify-center"
+            >
+              <span className="truncate text-sm">
+                {selectedCurrency
+                  ? `${selectedCurrency.code.toUpperCase()} - ${
+                      selectedCurrency.name
+                    }`
+                  : "Select currency"}
+              </span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-h-[400px]">
+          <DialogDescription></DialogDescription>
+          <DialogContent className="max-h-[400px] text-popover-foreground">
             <DialogHeader>
               <DialogTitle>Select a currency</DialogTitle>
             </DialogHeader>
@@ -63,15 +71,15 @@ export default function CurrencyInput({
               placeholder="Search currency..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="mb-2"
+              icon={Banknote}
             />
-            <ScrollArea className="max-h-[200px] overflow-y-hidden">
+            <ScrollArea className="max-h-[200px]">
               <div className="grid gap-2">
                 {filteredCurrencies.map(({ code, name }) => (
                   <Button
                     key={code}
                     variant="ghost"
-                    className="w-full justify-start"
+                    className="w-full justify-start  hover:bg-card"
                     onClick={() => {
                       onChange(code);
                       setOpen(false);

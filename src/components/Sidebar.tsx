@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Command, Laptop, Users, Banknote, ExternalLink } from "lucide-react";
+import { Command, Laptop, Users } from "lucide-react";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
@@ -54,8 +54,6 @@ const items = [
   { title: "Dashboard", url: "/dashboard", icon: Command },
   { title: "Assets", url: "/assets", icon: Laptop },
   { title: "Employee", url: "/employee", icon: Users },
-  { title: "Exchange", url: "/exchange", icon: Banknote },
-  { title: "Coming Soon", url: "/external-api", icon: ExternalLink },
 ];
 
 export default function Sidebar() {
