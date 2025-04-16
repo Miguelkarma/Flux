@@ -1,39 +1,34 @@
-import { Github, Linkedin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { footerData } from "./constants/constants";
 
 export default function Footer() {
   return (
-    <footer className="border-t bg-transparent">
-      <div className="container flex flex-col md:flex-row justify-between items-start gap-20 py-8 md:py-12">
-        {/* Brand Section */}
-        <div className="flex-1 space-y-4">
-          <h2 className="font-DM Sans, sans-serif; font-bold text-2xl leading-[1.1] sm:text-2xl md:text-4xl bg-gradient-to-b from-teal-400 via-gray-400 to-gray-800 bg-clip-text text-transparent ">
-            Miguelkarma
-          </h2>
+    <footer className="section !pb-0">
+      <div className="container">
+        {/* Top Border */}
+        <p className="border-t border-gray-600/50"></p>
+
+        {/* Footer Content */}
+        <div className="flex justify-between items-center py-6">
+          {/* Flux Logo */}
+          <Button className="text-2xl font-bold bg-gradient-to-t from-sky-100 via-sky-300 to-cyan-900 bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[2px_2px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200 hover:border hover:border-slate-600">
+            Flux
+          </Button>
+
+          {/* Social Links */}
+          <ul className="flex gap-5">
+            {footerData.socialLinks.map(({ href, icon }, index) => (
+              <li key={index}>
+                <a href={href} target="_blank" rel="noopener noreferrer">
+                  {icon}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* Footer Grid */}
-        <div className="flex flex-grow justify-end w-full">
-          <div className="space-y-4 self-end">
-            <h3 className="text-sm text-white font-medium">Connect</h3>
-            <div className="flex space-x-4">
-              <a
-                href="https://github.com/miguelkarma"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/paul-miguel-santos-17aa43320/"
-                className="text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </a>
-            </div>
-          </div>
-        </div>
+        {/* Bottom Border */}
+        <p className="border-t border-gray-600/10"></p>
       </div>
     </footer>
   );

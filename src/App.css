@@ -43,8 +43,8 @@
     --sidebar-border: 180 20% 50%;
     --sidebar-ring: 180 60% 47%;
 
-    --landing-background: 220 40% 10%;
-    --landing-foreground: 210 12% 70%;
+    --landing-background: 200 70% 14%;
+    --landing-foreground: 198 85% 10%;
   }
 
   .dark {
@@ -86,13 +86,25 @@
     --sidebar-ring: 180 60% 42%;
   }
 }
-
+@layer utilities {
+  .container {
+    @apply px-4 mx-auto 
+    /*responsive for large screen*/
+    2xl:max-w-screen-xl;
+  }
+}
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-foreground;
+  }
+  ::-webkit-scrollbar {
+    @apply w-2 h-2 bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-foreground/20 rounded-full hover:bg-foreground/40;
   }
 }
 
@@ -123,4 +135,58 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(3, 22, 34, 0.61);
   }
+}
+
+.bg-mask {
+  height: 60rem;
+
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.section {
+  @apply py-8
+
+  md:py-16;
+}
+
+.section-head {
+  @apply pb-8
+  text-center
+  md:pb-16
+  
+  lg:max-w-screen-sm
+  lg:mx-auto;
+}
+
+.section-subtitle {
+  @apply text-cyan-400
+  text-sm
+  font-medium
+  uppercase;
+}
+.section-title {
+  @apply text-white
+  text-3xl
+  font-semibold
+  leading-snug
+  py-3
+  
+  md:text-[40px];
+}
+.section-text {
+  @apply text-slate-400
+
+  md:text-xl;
+}
+
+.img-cover {
+  @apply w-full h-full object-cover;
+}
+.feature-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
