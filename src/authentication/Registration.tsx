@@ -1,45 +1,113 @@
+"use client";
+
 import { useNavigate } from "react-router-dom";
-import RegistrationForm from "@/components/registration-form";
+import { RegistrationForm } from "@/components/registration-form";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/firebase/firebase";
 
 import back from "@/assets/log.jpg";
-import "@/styles/LoginReg.css";
-import { Waypoints } from "lucide-react";
+import { Toaster } from "sonner";
+import "../styles/LoginReg.css";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { ArrowLeftCircle, Waypoints } from "lucide-react";
 
-const Registration = () => {
+function Registration() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const toastMessage = sessionStorage.getItem("toastMessage");
+    if (toastMessage) {
+      toast.success(toastMessage);
+      sessionStorage.removeItem("toastMessage");
+    }
+  }, []);
+
+  const handleRegister = async (
+    username: string,
+    email: string,
+    password: string
+  ) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: username });
+
+      console.log("User Registered:", user);
+      sessionStorage.setItem(
+        "toastMessage",
+        "Registration successful! Please login."
+      );
+
+      navigate("/login"); // Redirect to login page on success
+    } catch (error) {
+      console.error("Registration Error:", error);
+      toast.error("Registration failed! Please try again.");
+    }
+  };
+
   return (
-    <div className=" back grid min-h-svh lg:grid-cols-2 text-white">
-      <div className="flex flex-col gap-4 p-6 md:p-10 text-gray-100">
-        <div className="flex justify-center gap-2 md:justify-start text-white">
-          <a
-            href="#"
-            className="flex items-center gap-2 font-medium text-xl"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("/Home");
-            }}
-          >
-            <Waypoints className="h-8 w-8 text-teal-300" />
-            <div className="text-2xl font-bold bg-gradient-to-t from-teal-200 via-teal-400 to-cyan-800 bg-clip-text text-transparent ">
-              Flux
+    <>
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors={true}
+        theme="system"
+        closeButton={true}
+        expand={true}
+        visibleToasts={3}
+      />
+      <div className="flex items-center justify-center min-h-screen bg-teal-950/50">
+        <div className="bg-gradient-to-r from-gray-800 via-teal-900 to-teal-700 rounded-lg shadow-lg shadow-teal-900 overflow-hidden w-full max-w-7xl h-[40em] grid grid-cols-1 lg:grid-cols-2">
+          {/* Left Side - Registration Form */}
+          <div className="p-10 flex flex-col justify-center relative">
+            <a
+              className="absolute top-4 left-4 text-gray-300 hover:text-gray-700"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/");
+              }}
+            >
+              <ArrowLeftCircle className="w-6 h-6" />
+            </a>
+            {/* Logo & Title */}
+            <div className="flex items-center gap-2 mb-6 ">
+              <Waypoints className="h-8 w-8 text-teal-300" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent">
+                Flux
+              </span>
             </div>
-          </a>
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <RegistrationForm />
+
+            <h2 className="text-2xl font-semibold text-white">
+              Create an account!
+            </h2>
+            <p className="text-gray-400 text-sm mb-6">
+              Enter your details below.
+            </p>
+
+            {/* Registration Form */}
+            <RegistrationForm onRegister={handleRegister} />
+          </div>
+
+          {/* Right Side - Image */}
+          <div className="hidden lg:block relative bg-mask opacity-100">
+            <img
+              src={back || "/placeholder.svg"}
+              alt="Registration Illustration"
+              className="absolute w-full h-full object-cover"
+              style={{ backgroundPosition: "left bottom" }}
+            />
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
-        <img
-          src={back}
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
-      </div>
-    </div>
+    </>
   );
-};
+}
 
 export default Registration;
