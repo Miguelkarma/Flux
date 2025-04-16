@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -80,6 +82,15 @@ export function AssetDetailsDialog({
                 </h3>
                 <p className="text-base font-semibold">
                   {asset.assetTag || "N/A"}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Assigned Employee
+                </h3>
+                <p className="text-base font-semibold">
+                  {asset.assignedEmployee || "N/A"}
                 </p>
               </div>
 

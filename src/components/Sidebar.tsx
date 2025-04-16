@@ -1,9 +1,18 @@
 import { NavLink } from "react-router-dom";
-import { Command, Laptop, Settings, Users } from "lucide-react";
+import {
+  Command,
+  Laptop,
+  Settings,
+  Users,
+  ChevronDown,
+  QrCode,
+  ScanQrCode,
+  History,
+} from "lucide-react";
 import { useTheme } from "@/hooks/ThemeProvider";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 
 interface StatusItemProps {
@@ -57,6 +66,13 @@ const items = [
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
+// QR Assets submenu items
+const qrSubItems = [
+  { title: "Generate QR", url: "/qrcode/generate-qr", icon: QrCode },
+  { title: "Scan QR", url: "/qrcode/scanner-qr", icon: ScanQrCode },
+  { title: "QR Logs", url: "/qrcode/qr-logs", icon: History },
+];
+
 export default function Sidebar() {
   const { theme } = useTheme();
   const [statusCounts, setStatusCounts] = useState({
@@ -70,6 +86,30 @@ export default function Sidebar() {
   const [allAssets, setAllAssets] = useState<any[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [totalEmployees, setTotalEmployees] = useState(0);
+  const [isQrMenuExpanded, setIsQrMenuExpanded] = useState(false);
+
+  const collapsibleRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState<number | undefined>(0);
+
+  const isQrPathActive = () => {
+    return window.location.pathname.includes("/qrcode");
+  };
+
+  // Set QR menu expanded if a QR path is active
+  useEffect(() => {
+    if (isQrPathActive()) {
+      setIsQrMenuExpanded(true);
+    }
+  }, []);
+
+  //animation for collapsible
+  useEffect(() => {
+    if (collapsibleRef.current) {
+      setContentHeight(
+        isQrMenuExpanded ? collapsibleRef.current.scrollHeight : 0
+      );
+    }
+  }, [isQrMenuExpanded, qrSubItems]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -185,19 +225,92 @@ export default function Sidebar() {
     }
   };
 
+  const toggleQrMenu = () => {
+    setIsQrMenuExpanded(!isQrMenuExpanded);
+  };
+
   return (
     <div
-      className={`${theme} bg-sidebar-background border-sidebar-border text-sidebar-foreground
+      className={`${theme} bg-sidebar-background border-sidebar-border 
       backdrop-blur-sm h-full rounded-lg border p-4 shadow shadow-popover-foreground`}
     >
       <nav className="space-y-2 bg-sidebar-background">
-        {items.map((item) => (
+        {/* Dashboard and Assets links */}
+        {items.slice(0, 2).map((item) => (
           <NavLink
             key={item.title}
             to={item.url}
             className={({ isActive }) =>
-              `relative flex items-center gap-2 p-2 rounded-full transition-all hover-active-state-alt ${
-                isActive ? "active-state-alt" : "inactive-state"
+              `relative flex items-center gap-2 p-2 rounded-md transition-all hover:bg-accent/70 ${
+                isActive
+                  ? "bg-accent/70 text-accent-foreground "
+                  : "text-muted-foreground hover:text-card-foreground"
+              }`
+            }
+          >
+            <item.icon className="h-5 w-5" />
+            {item.title}
+          </NavLink>
+        ))}
+
+        {/* QR Assets Section */}
+        <div className="space-y-1">
+          <div
+            onClick={toggleQrMenu}
+            className={`relative flex items-center justify-between p-2 rounded-md transition-all hover:bg-accent/70 cursor-pointer ${
+              isQrPathActive()
+                ? "bg-accent/70 text-accent-foreground"
+                : "hover:text-card-foreground text-muted-foreground "
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <QrCode className="h-5 w-5" />
+              QR Assets
+            </div>
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
+                isQrMenuExpanded ? "rotate-180" : ""
+              }`}
+            />
+          </div>
+
+          {/* Animated Collapsible Content */}
+          <div
+            ref={collapsibleRef}
+            className="overflow-hidden transition-all duration-300 ease-in-out"
+            style={{ maxHeight: `${contentHeight}px` }}
+          >
+            <div className="ml-6 space-y-1 mt-1 border-l border-sidebar-border pl-2">
+              {qrSubItems.map((subItem) => (
+                <NavLink
+                  key={subItem.title}
+                  to={subItem.url}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-2 rounded-md transition-all ${
+                      isActive
+                        ? " text-accent-foreground"
+                        : "text-muted-foreground hover:text-card-foreground hover:bg-accent/70"
+                    }`
+                  }
+                >
+                  <subItem.icon className="h-4 w-4" />
+                  {subItem.title}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Employee and Settings links */}
+        {items.slice(2).map((item) => (
+          <NavLink
+            key={item.title}
+            to={item.url}
+            className={({ isActive }) =>
+              `relative flex items-center gap-2 p-2 rounded-md transition-all hover:bg-accent/70 ${
+                isActive
+                  ? "bg-accent/70 text-accent-foreground"
+                  : "text-muted-foreground hover:text-card-foreground"
               }`
             }
           >
