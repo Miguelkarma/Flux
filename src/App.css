@@ -186,18 +186,19 @@
 .feature-card {
   will-change: transform, opacity;
   transform: translateZ(0);
-@layer components {
-  .icon-logo {
-    color: hsl(var(--logo));
-  }
-  .logo-gradient {
-    background: linear-gradient(
-      10deg,
-      hsl(var(--brand-100)) 0%,
-      hsl(var(--brand-300)) 50%,
-      hsl(var(--brand-900)) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  @layer components {
+    .icon-logo {
+      color: hsl(var(--logo));
+    }
+    .logo-gradient {
+      background: linear-gradient(
+        10deg,
+        hsl(var(--brand-100)) 0%,
+        hsl(var(--brand-300)) 50%,
+        hsl(var(--brand-900)) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 }
