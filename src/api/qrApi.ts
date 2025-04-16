@@ -1,3 +1,6 @@
+import axios from "axios";
+import { toast } from "sonner";
+
 export const QRService = {
   // Existing QR scanner functionality
   async scanQRCode(imageBlob: Blob): Promise<string | null> {
@@ -6,16 +9,13 @@ export const QRService = {
       const file = new File([imageBlob], "qrcode.png", { type: "image/png" });
       formData.append("file", file);
 
-      const response = await fetch(
+      const response = await axios.post(
         "https://api.qrserver.com/v1/read-qr-code/",
-        {
-          method: "POST",
-          body: formData,
-        }
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      const data = await response.json();
-      const decodedText = data[0]?.symbol[0]?.data;
+      const decodedText = response.data[0]?.symbol[0]?.data;
 
       return decodedText || null;
     } catch (error) {
@@ -33,13 +33,13 @@ export const QRService = {
     context?.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
     const imageDataUrl = canvas.toDataURL("image/png");
-    const response = await fetch(imageDataUrl);
-    return await response.blob();
+    const response = await axios.get(imageDataUrl, { responseType: "blob" });
+    return response.data;
   },
 
   async dataUrlToBlob(dataUrl: string): Promise<Blob> {
-    const response = await fetch(dataUrl);
-    return await response.blob();
+    const response = await axios.get(dataUrl, { responseType: "blob" });
+    return response.data;
   },
 
   // qr generator function
@@ -53,8 +53,8 @@ export const QRService = {
     if (!url) return;
 
     try {
-      const response = await fetch(url, { mode: "cors" });
-      const blob = await response.blob();
+      const response = await axios.get(url, { responseType: "blob" });
+      const blob = response.data;
 
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -67,7 +67,7 @@ export const QRService = {
       // revoke blob URL to free up memory
       URL.revokeObjectURL(blobUrl);
     } catch (error) {
-      console.error("Failed to download QR code:", error);
+      toast.error("Failed to download QR code:");
       throw new Error("Failed to download QR code");
     }
   },
