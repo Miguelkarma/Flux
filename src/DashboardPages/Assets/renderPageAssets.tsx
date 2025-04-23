@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import { DataTable } from "@/components/AssetsComponents/table";
-import Header from "@/components/DashboardComponents/Header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Loader from "@/Animation/SmallLoader";
 import { useTheme } from "@/hooks/ThemeProvider"; // Import theme hook

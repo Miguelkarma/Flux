@@ -4,10 +4,8 @@ import Login from "../authentication/Login";
 import Registration from "@/authentication/Registration";
 import App from "@/App.tsx";
 import "@/App.css";
-import ExternalAPI from "@/DashboardPages/ExternalAPI";
 import Dashboard from "@/DashboardPages/Dashboard/renderDashboard";
 import Assets from "@/DashboardPages/Assets/renderPageAssets";
-import Exchange from "@/DashboardPages/Exchange/renderPageCurrency";
 import Employee from "@/DashboardPages/Employee/RenderEmployee";
 
 const AppRouter = () => {
@@ -20,8 +18,6 @@ const AppRouter = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/assets" element={<Assets />} />
         <Route path="/employee" element={<Employee />} />
-        <Route path="/external-api" element={<ExternalAPI />} />
-        <Route path="/exchange" element={<Exchange />} />
       </Routes>
     </BrowserRouter>
   );

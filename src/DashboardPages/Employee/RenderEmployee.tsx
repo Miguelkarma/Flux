@@ -1,4 +1,4 @@
-import Header from "@/components/DashboardComponents/Header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import { EmployeeTable } from "@/components/EmployeeComponents/table";

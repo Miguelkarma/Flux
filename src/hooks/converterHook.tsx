@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ExchangeRate,
   fetchCurrencies,
   fetchExchangeRate,
   fetchExchangeRates,
 } from "@/api/currencyAPI";
-import { debounce } from "lodash";
+
 
 export const useCurrencyConverter = () => {
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState<number | string>(1);
   const [fromCurrency, setFromCurrency] = useState("");
   const [toCurrency, setToCurrency] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
@@ -65,21 +65,28 @@ export const useCurrencyConverter = () => {
     getExchangeRates();
   }, []);
 
-  // Debounce amount input change
-  const debounceRef = useRef(
-    debounce((value: number) => {
-      if (value > 0) setAmount(value);
-    }, 500)
-  );
-
-  const handleAmountChange = useCallback((value: number) => {
-    debounceRef.current(value);
+  // Handle amount change without debounce for empty string
+  const handleAmountChange = useCallback((value: string | number) => {
+    // If value is empty string, update state immediately
+    if (value === "") {
+      setAmount("");
+    } else {
+      // For numerical inputs, use debounce
+      const numValue = typeof value === "string" ? parseFloat(value) : value;
+      if (!isNaN(numValue)) {
+        setAmount(numValue);
+      }
+    }
   }, []);
 
-  // Calculate conversion
+  // Calculate conversion only when amount is a number
   useEffect(() => {
-    if (exchangeRate !== null) {
-      setConvertedAmount(amount * exchangeRate);
+    if (exchangeRate !== null && amount !== "") {
+      const numAmount =
+        typeof amount === "string" ? parseFloat(amount) : amount;
+      setConvertedAmount(numAmount * exchangeRate);
+    } else {
+      setConvertedAmount(null);
     }
   }, [amount, exchangeRate]);
 

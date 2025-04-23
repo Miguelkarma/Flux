@@ -33,11 +33,6 @@ import {
 import ElectronicsSearch from "@/components/SearchComponents/ProductsSearch";
 import { generateUniqueSerialNumber } from "@/api/electronicProductsAPI";
 
-import {
-  useFormState,
-  submitAssetForm,
-} from "@/hooks/tableHooks/edit-form-hook";
-
 interface EditAssetDrawerProps {
   asset: {
     id: string;
