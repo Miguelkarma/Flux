@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Menu } from "lucide-react";
+import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import { navMenu } from "./constants/constants";
 import {
@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuth } from "../hooks/use-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const itemVariants = {
   initial: { rotateX: 0, opacity: 1 },
@@ -38,6 +40,7 @@ const sharedTransition = {
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user, userEmail, handleLogout, loading } = useAuth();
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeHoverItem, setActiveHoverItem] = useState<number | null>(null);
@@ -81,10 +84,29 @@ const Header = () => {
     }
   };
 
+  const getAvatarFallback = () => {
+    if (!user) return "U";
+
+    if (user.displayName) {
+      const initials = user.displayName
+        .split(" ")
+        .map((name) => name[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2);
+      return initials;
+    }
+
+    return user.email ? user.email.charAt(0).toUpperCase() : "U";
+  };
+
+  // Check if user is logged in
+  const isLoggedIn = !!user;
+
   return (
     <motion.header
       id="header"
-      className=" shadow-3xl  h-16 max-sm:h-8 max-md:h-13 max-lg:h-13 fixed top-0 left-0 right-0 z-50 bg-transparent "
+      className=" shadow-3xl  h-16 max-sm:h-16 max-md:h-13 max-lg:h-13 fixed top-0 left-0 right-0 z-50 bg-transparent "
       initial={{ y: 0 }}
       animate={{ y: visible ? 0 : -105 }}
       transition={{ duration: 0.3 }}
@@ -125,7 +147,7 @@ const Header = () => {
                       <motion.a
                         href={href || "#"}
                         onClick={(e) => handleNavigation(e, href || "#")}
-                        className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-foreground transition-colors rounded-xl font-normal text-"
+                        className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-foreground transition-colors rounded-xl font-normal text-white"
                         variants={itemVariants}
                         transition={sharedTransition}
                         style={{
@@ -165,7 +187,7 @@ const Header = () => {
                       >
                         {icon && (
                           <span
-                            className={`transition-colors duration-300 text-sky-300`}
+                            className={`transition-colors duration-300 text-sky-300 `}
                           >
                             {icon}
                           </span>
@@ -180,26 +202,89 @@ const Header = () => {
           </NavigationMenu>
         </div>
 
-        {/* Auth Buttons */}
+        {/* Auth Buttons or User Avatar */}
         <div className="hidden lg:flex gap-2 !rounded-none hover:!rounded-full">
-          <Button
-            variant="ghost"
-            onClick={() => {
-              navigate("/registration");
-            }}
-            className="!rounded-full hover:!rounded-full"
-          >
-            Sign In
-          </Button>
-          <Button
-            className="relative w-auto px-6 py-2 p-4 text-white bg-black border border-white/30 rounded-full transition-all hover:bg-black 
-                before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent hover:border-sky-200 before:rounded-full"
-            onClick={() => {
-              navigate("/login");
-            }}
-          >
-            Log In
-          </Button>
+          {loading ? (
+            // Loading state - show subtle loading indicator
+            <div className="w-10 h-10 rounded-full border-2 border-cyan-200 border-t-transparent animate-spin"></div>
+          ) : isLoggedIn ? (
+            // User is logged in
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" className="rounded-full h-10 w-10 p-0">
+                  <Avatar className="h-10 w-10 border-2 border-cyan-200 cursor-pointer hover:border-sky-300 transition-all">
+                    <AvatarImage
+                      src={user?.photoURL || ""}
+                      alt={user?.displayName || "User"}
+                    />
+                    <AvatarFallback className="bg-gradient-to-br from-sky-400 to-cyan-800 text-white">
+                      {getAvatarFallback()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-60 bg-background/70 backdrop-blur-md border-foreground/5 border rounded-lg shadow-lg p-4">
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-300">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage
+                        src={user?.photoURL || ""}
+                        alt={user?.displayName || "User"}
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-sky-400 to-cyan-800 text-white">
+                        {getAvatarFallback()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-white">
+                        {user?.displayName || "User"}
+                      </span>
+                      <span className="text-sm text-gray-400">{userEmail}</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    className="flex justify-start gap-2 text-gray-300 hover:text-white"
+                    onClick={() => navigate("/settings")}
+                  >
+                    <UserIcon size={16} />
+                    <span>My Profile</span>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    className="flex justify-start gap-2 text-red-500 hover:text-red-500"
+                    onClick={handleLogout}
+                  >
+                    <LogOut size={16} />
+                    <span>Logout</span>
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  navigate("/registration");
+                }}
+                className="!rounded-full hover:!rounded-full text-white hover:bg-transparent hover:border hover:text-white hover:border-cyan-200"
+              >
+                Sign In
+              </Button>
+              <Button
+                className="relative w-auto px-6 py-2 p-4 text-white bg-black border border-white/30 rounded-full transition-all hover:bg-black 
+                    before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent hover:border-sky-200 before:rounded-full"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Log In
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu */}
@@ -217,7 +302,14 @@ const Header = () => {
               className="bg-background/70 backdrop-blur-md 
                   border-foreground/5 border rounded-lg shadow-lg overflow-hidden"
             >
-              <MobileMenu navMenu={navMenu} />
+              <MobileMenu
+                navMenu={navMenu}
+                isLoggedIn={isLoggedIn}
+                user={user}
+                userEmail={userEmail}
+                onLogout={handleLogout}
+                loading={loading}
+              />
             </PopoverContent>
           </Popover>
         </div>

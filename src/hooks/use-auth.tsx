@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { auth } from "@/firebase/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
-export function useAuth() {
+export function useAuth(requireAuth = false) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -20,14 +21,18 @@ export function useAuth() {
       } else {
         setUserId(null);
         setUserEmail(null);
-        navigate("/login");
+        
+    
+        if (requireAuth) {
+          navigate("/login", { state: { from: location.pathname } });
+        }
       }
 
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [navigate]);
+  }, [navigate, location, requireAuth]);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -42,6 +47,7 @@ export function useAuth() {
       userEmail,
       loading,
       handleLogout,
+      isAuthenticated: !!user,
     }),
     [user, userId, userEmail, loading]
   );

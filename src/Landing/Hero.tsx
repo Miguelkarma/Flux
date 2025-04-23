@@ -45,7 +45,7 @@ export default function Hero() {
             {heroData.sectionSubtitle}
           </p>
 
-          <h2 className="text-4xl font-semibold !leading-tight mb-4 max-sm:text-2xl md:text-5xl md:mb-5 lg:text-6xl">
+          <h2 className="text-4xl font-semibold !leading-tight mb-4 max-sm:text-2xl md:text-5xl md:mb-5 lg:text-6xl text-gray-200">
             {heroData.sectionTitle}
             <span className="relative isolate ms-4 sm:inline-block sm:max-w-[493px] bg-gradient-to-t from-cyan-200 via-cyan-300 to-blue-800 bg-clip-text text-transparent pb-1 ">
               {heroData.decoTitle}

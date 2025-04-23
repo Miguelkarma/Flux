@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "./Animation/Loader";
 import Header from "@/Landing/Header";
 import Hero from "@/Landing/Hero";
-import Brand from "./Landing/Brand";
+import Brand from "./Landing/Stats";
 import { ReactLenis } from "lenis/react";
 import "./App.css";
 import Features from "./Landing/Features";

@@ -116,7 +116,7 @@ export default function SettingsPage() {
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6 mt-6 ">
-          <Card className="shadow shadow-popover-foreground ">
+          <Card className="shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
               <CardDescription>Update your username</CardDescription>
@@ -149,7 +149,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="email" className="space-y-6 mt-6 ">
-          <Card className="shadow shadow-popover-foreground">
+          <Card className="shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
             <CardHeader>
               <CardTitle>Email Address</CardTitle>
               <CardDescription>
@@ -208,7 +208,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="password" className="space-y-6 mt-6">
-          <Card className="shadow shadow-popover-foreground">
+          <Card className="shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
             <CardHeader>
               <CardTitle>Password</CardTitle>
               <CardDescription>

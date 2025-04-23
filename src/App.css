@@ -6,8 +6,8 @@
   :root {
     --background: linear-gradient(
       to bottom right,
-      hsla(188, 67%, 83%, 0.5),
-      hsl(180, 29%, 47%)
+      hsla(0, 0%, 99%, 0.863),
+      hsl(180, 44%, 41%)
     );
     --foreground: 222.2 84% 10%;
 
@@ -143,11 +143,11 @@
 }
 
 .bg-mask {
-  height: 60rem;
+  height: 51rem;
 
   mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 90%,
+    to left,
+    rgba(0, 0, 0, 1) 30%,
     rgba(0, 0, 0, 0) 100%
   );
 }

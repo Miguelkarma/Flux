@@ -37,10 +37,10 @@ const StyledWrapper = styled.div`
     background: rgb(25, 145, 124);
     background: linear-gradient(
       90deg,
-      rgba(178, 255, 252, 1) 0%,
-      rgba(0, 216, 216, 1) 30%,
-      rgba(129, 236, 236, 1) 50%,
-      rgba(0, 188, 212, 1) 100%
+      #00ffff 0%,
+      /* Cyan */ #00e0e0 30%,
+      /* Lighter Cyan */ #00cccc 50%,
+      /* Medium Cyan */ #00bfbf 100% /* Deep Cyan */
     );
 
     animation-name: dot2_;
