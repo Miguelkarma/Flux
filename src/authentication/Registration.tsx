@@ -7,7 +7,6 @@ import { auth } from "@/firebase/firebase";
 
 import back from "@/assets/log.jpg";
 import { Toaster } from "sonner";
-import "../styles/LoginReg.css";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { ArrowLeftCircle, Waypoints } from "lucide-react";
@@ -62,7 +61,7 @@ function Registration() {
         expand={true}
         visibleToasts={3}
       />
-      <div className="flex bg-custom-background items-center justify-center min-h-screen bg-teal-950/50">
+      <div className="bg-gradient-to-r from-gray-900 via-cyan-950 to-cyan-900 flex items-center justify-center min-h-screen">
         <div className="bg-gradient-to-r from-gray-800 via-cyan-900 to-cyan-700 rounded-lg shadow-md shadow-sky-300 overflow-hidden w-full max-w-7xl h-[50em] grid grid-cols-1 lg:grid-cols-2 max-sm:h-[41.7em] max-sm">
           {/* Left Side - Registration Form */}
           <div className="p-10 flex flex-col justify-center relative">

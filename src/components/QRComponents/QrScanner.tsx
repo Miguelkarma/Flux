@@ -80,8 +80,8 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
 
   return (
     <>
-      <div className="flex items-center mt-6 my-auto text-card-foreground">
-        <Card className="w-full max-w-6xl h-full mx-auto shadow shadow-popover-foreground">
+      <div className="flex items-center mt-6 my-auto text-card-foreground ">
+        <Card className="w-full max-w-6xl h-full mx-auto shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <Camera className="w-5 h-5" />

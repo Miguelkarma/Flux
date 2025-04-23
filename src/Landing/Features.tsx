@@ -109,7 +109,7 @@ const Features: React.FC = () => {
                   <img
                     src={phoneimg}
                     alt="Mobile Interface"
-                    className="absolute top-0 left-0 w-full h-full object-contain"
+                    className="absolute top-0 left-0 w-full h-full object-cover "
                   />
                 </div>
               </div>

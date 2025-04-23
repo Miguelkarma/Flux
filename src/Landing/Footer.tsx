@@ -4,7 +4,7 @@ import { footerData } from "./constants/constants";
 export default function Footer() {
   return (
     <footer className="section !pb-0">
-      <div className="container">
+      <div className="landing-container">
         {/* Top Border */}
         <p className="border-t border-gray-600/50"></p>
 

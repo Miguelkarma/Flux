@@ -42,7 +42,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
         </div>
       )}
 
-      <div className="mb-8 ">
+      <div className="mb-8  ">
         <div className="text-xs uppercase tracking-wider  text-cyan-400">
           START FOR FREE
         </div>

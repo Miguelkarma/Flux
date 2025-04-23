@@ -1,5 +1,8 @@
 # Ignore environment variables
 .env
+.env.development
+.env.staging
+.env.production
 
 # Ignore node_modules directory
 node_modules/

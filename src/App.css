@@ -5,9 +5,9 @@
 @layer base {
   :root {
     --background: linear-gradient(
-      to bottom right,
-      hsla(188, 67%, 83%, 0.5),
-      hsl(180, 29%, 47%)
+      to top right,
+      hsl(0, 0%, 100%),
+      hsla(180, 76%, 81%, 0.781)
     );
     --foreground: 222.2 84% 10%;
 
@@ -38,17 +38,24 @@
 
     --radius: 0.5rem;
 
-    --landing-background: 220 40% 10%;
-    --landing-foreground: 210 12% 70%;
+    --sidebar-background: 0, 0%, 90%;
+    --sidebar-foreground: 180 30% 31%;
+    --sidebar-primary: 180 60% 38%;
+    --sidebar-primary-foreground: 180 90% 100%;
+    --sidebar-accent: 180 15% 85%;
+    --sidebar-accent-foreground: 60 40% 20%;
+    --sidebar-border: 180 20% 50%;
+    --sidebar-ring: 180 60% 47%;
+
     --logo: 200 100% 28%;
-    --brand-100: 200, 80%, 80%;
-    --brand-300: 210, 80%, 50%;
-    --brand-900: 180, 80%, 0%;
+    --brand-100: 197, 100%, 68%; /* was 95% */
+    --brand-300: 197, 71%, 60%; /* was 74% */
+    --brand-900: 191, 100%, 12%;
   }
 
   .dark {
     --background: linear-gradient(
-      to top left,
+      to top right,
       hsl(191, 91%, 5%),
       hsla(204, 48%, 30%, 0.9)
     );
@@ -85,7 +92,7 @@
   }
 }
 @layer utilities {
-  .container {
+  .landing-container {
     @apply px-4 mx-auto 
     /*responsive for large screen*/
     2xl:max-w-screen-xl;
@@ -135,19 +142,72 @@
   }
 }
 
-@layer components {
-  .icon-logo {
-    color: hsl(var(--logo));
-  }
-  .logo-gradient {
-    background: linear-gradient(
-      10deg,
-      hsl(var(--brand-100)) 0%,
-      hsl(var(--brand-300)) 50%,
-      hsl(var(--brand-900)) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.bg-mask {
+  height: 51rem;
+
+  mask-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.section {
+  @apply py-8
+
+  md:py-16;
+}
+
+.section-head {
+  @apply pb-8
+  text-center
+  md:pb-16
+  
+  lg:max-w-screen-sm
+  lg:mx-auto;
+}
+
+.section-subtitle {
+  @apply text-cyan-400
+  text-sm
+  font-medium
+  uppercase;
+}
+.section-title {
+  @apply text-white
+  text-3xl
+  font-semibold
+  leading-snug
+  py-3
+  
+  md:text-[40px];
+}
+.section-text {
+  @apply text-slate-400
+
+  md:text-xl;
+}
+
+.img-cover {
+  @apply w-full h-full object-cover;
+}
+.feature-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  @layer components {
+    .icon-logo {
+      color: hsl(var(--logo));
+    }
+    .logo-gradient {
+      background: linear-gradient(
+        10deg,
+        hsl(var(--brand-100)) 0%,
+        hsl(var(--brand-300)) 50%,
+        hsl(var(--brand-900)) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 }
 

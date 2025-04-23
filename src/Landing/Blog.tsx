@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const Blog = () => {
   return (
     <section id="blog" className="section">
-      <div className="container relative">
+      <div className="landing-container relative">
         <motion.div
           className="absolute top-0 -right-20 w-1/6 h-1/4 bg-sky-200/40 blur-[100px] -z-10 opacity-60 mix-blend-screen"
           initial={{ scale: 0.9, opacity: 0 }}

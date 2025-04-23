@@ -64,7 +64,7 @@ export function UploadFile({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto bg-[hsl(var(--secondary))] ">
         <DialogTitle className="text-primary">{config.title}</DialogTitle>
         <DialogDescription>
           Only CSV files are supported. Files must include all required fields.

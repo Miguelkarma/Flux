@@ -13,7 +13,7 @@ import { Quote } from "lucide-react";
 const Review = () => {
   return (
     <section id="reviews" className="section">
-      <div className="container relative">
+      <div className="landing-container relative">
         <div className="section-head">
           <motion.p
             variants={variants.fadeInUp}

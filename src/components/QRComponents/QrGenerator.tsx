@@ -40,7 +40,7 @@ export function QRGenerator({ userId }: QRGeneratorProps) {
   return (
     <>
       <div className="flex items-center h-full text-card-foreground">
-        <Card className="w-full max-w-6xl mx-auto mt-8 bg-card shadow shadow-popover-foreground">
+        <Card className="w-full max-w-6xl mx-auto mt-8 bg-[hsl(var(--secondary))]  shadow shadow-popover-foreground">
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-3">
               <QrCode className="w-5 h-5" />

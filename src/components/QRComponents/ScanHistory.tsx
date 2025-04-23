@@ -156,7 +156,7 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
   }, [userId]);
 
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow shadow-popover-foreground">
+    <Card className="w-full max-w-4xl mx-auto shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-xl font-bold flex items-center gap-2 mt-2">
           <History className="w-5 h-5" />
