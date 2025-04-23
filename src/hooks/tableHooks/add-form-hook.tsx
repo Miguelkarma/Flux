@@ -66,12 +66,11 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
   }, []);
 
   // input change handler
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // select change handler
@@ -274,22 +273,6 @@ export async function submitAddAssetForm({
       toast.error("asset with this serial number already exists!");
       setIsSubmitting(false);
       return;
-    }
-
-    // check for duplicate asset tag
-    if (formData.assetTag) {
-      const tagQuery = query(
-        assetsRef,
-        where("assetTag", "==", formData.assetTag),
-        where("userId", "==", user.uid)
-      );
-      const tagSnapshot = await getDocs(tagQuery);
-
-      if (!tagSnapshot.empty) {
-        toast.error("asset with this asset tag already exists!");
-        setIsSubmitting(false);
-        return;
-      }
     }
 
     // prepare data for submission
