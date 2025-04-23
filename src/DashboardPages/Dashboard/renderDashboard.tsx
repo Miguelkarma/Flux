@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { useTheme } from "@/hooks/ThemeProvider";
 import DashboardParticles from "@/Animation/DashboardParticles";
 import Header from "@/components/Header";
+<<<<<<< HEAD
 import Header from "@/components/Header";
+=======
+>>>>>>> useHooks
 import Sidebar from "@/components/Sidebar";
 import SystemTime from "@/components/DashboardComponents/SystemTime";
 import AssetSummary from "@/components/DashboardComponents/AssetSummary";
@@ -12,9 +15,12 @@ import { toast, Toaster } from "sonner";
 import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
 import MarketPriceTracker from "@/components/DashboardComponents/MarketPrice";
 import Loader from "@/Animation/SmallLoader";
+<<<<<<< HEAD
 import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
 import MarketPriceTracker from "@/components/DashboardComponents/MarketPrice";
 import Loader from "@/Animation/SmallLoader";
+=======
+>>>>>>> useHooks
 
 export default function Dashboard() {
   const { theme } = useTheme();
@@ -51,12 +57,10 @@ export default function Dashboard() {
         visibleToasts={3}
       />
 
-
       {/* Background particle effect */}
       <DashboardParticles />
 
       {/* Loading overlay */}
-      {isLoading && <Loader />}
       {isLoading && <Loader />}
 
       <div className="container mx-auto p-4 relative z-10">
@@ -65,16 +69,14 @@ export default function Dashboard() {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Sidebar */}
-          <div className="md:col-span-3">
           <div className="md:col-span-3">
             <Sidebar />
           </div>
 
           {/* Main Dashboard */}
           <div className="md:col-span-6">
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             <div className="grid gap-2">
@@ -89,6 +91,11 @@ export default function Dashboard() {
               <AssetSummary />
               <MarketPriceTracker />
 >>>>>>> account-settings
+=======
+            <div className="grid gap-6">
+              <AssetSummary />
+              <MarketPriceTracker />
+>>>>>>> useHooks
             </div>
           </div>
 
@@ -97,11 +104,14 @@ export default function Dashboard() {
             <SystemTime />
             <CurrencyConverter />
           </div>
+<<<<<<< HEAD
           {/* Right Sidebar */}
           <div className="md:col-span-3 lg:col-span-3 flex flex-col gap-6 md:order-last">
             <SystemTime />
             <CurrencyConverter />
           </div>
+=======
+>>>>>>> useHooks
         </div>
       </div>
     </div>

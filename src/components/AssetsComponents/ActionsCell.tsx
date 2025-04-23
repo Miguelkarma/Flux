@@ -9,14 +9,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import DeleteAssetDialog from "@/components/AssetsComponents/DeleteAssetDialog";
 import { toast } from "sonner";
 import { FirestoreData } from "./columns";
-import { db } from "@/firebase/firebase";
-import { doc, deleteDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+
 import { EditAssetDrawer } from "@/components/AssetsComponents/EditAssetDrawer";
 import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
+import DeleteDialog from "@/components/sharedComponent/DeleteDialog";
 
 interface ActionsCellProps {
   asset: FirestoreData;
@@ -25,40 +23,8 @@ interface ActionsCellProps {
 
 const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-
-  const handleDelete = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast.error("You must be logged in to delete assets.");
-      return;
-    }
-
-    if (!asset.id) {
-      toast.error("Error: Asset ID is missing");
-      return;
-    }
-
-    try {
-      setIsDeleting(true);
-      const assetRef = doc(db, "it-assets", asset.id);
-      await deleteDoc(assetRef);
-      toast.success(`${asset.assetTag || "Asset"} deleted successfully.`);
-      setIsDeleteDialogOpen(false);
-      onAssetUpdated(); // Refresh data after deleting
-    } catch (error) {
-      console.error("Delete error:", error);
-      toast.error(
-        "Failed to delete asset. Check Firestore rules and authentication."
-      );
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const handleCopySerialNo = async () => {
     try {
@@ -141,12 +107,11 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
       />
 
       {/* Render Delete Confirmation Dialog */}
-      <DeleteAssetDialog
-        asset={asset}
+      <DeleteDialog
+        item={{ type: "asset", data: asset }}
         isOpen={isDeleteDialogOpen}
         setIsOpen={setIsDeleteDialogOpen}
-        onDelete={handleDelete}
-        isDeleting={isDeleting}
+        onAssetUpdated={onAssetUpdated}
       />
     </>
   );

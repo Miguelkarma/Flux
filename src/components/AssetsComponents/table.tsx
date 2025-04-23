@@ -1,16 +1,6 @@
-import * as React from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  ColumnFiltersState,
-  SortingState,
-  RowSelectionState,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { ChevronDown, Filter } from "lucide-react";
+"use client";
+
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,110 +20,49 @@ import {
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-import { AddAssetDrawer } from "./AddAssetDrawer";
-import { columns } from "./columns";
+import { AddAssetDrawer } from "@/components/AssetsComponents/AddAssetDrawer";
+import { columns } from "@/components/AssetsComponents/columns";
 import TableLoader from "@/Animation/TableLoader";
 import {
   BulkDeleteDialog,
   BulkDeleteTrigger,
-} from "../sharedComponent/BulkDeleteDialog";
-import { UploadFile } from "../sharedComponent/UploadFile";
+} from "@/components/sharedComponent/BulkDeleteDialog";
+import { UploadFile } from "@/components/sharedComponent/UploadFile";
 import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
-import { FirestoreData } from "@/components/AssetsComponents/types";
-import { db } from "@/firebase/firebase";
-import {
-  collection,
-  onSnapshot,
-  query,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useAuth } from "@/hooks/use-auth";
+import { useDataTable } from "@/hooks/tableHooks/table-hook";
+import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
+import React from "react";
+import type { FirestoreData } from "@/components/AssetsComponents/types";
 
 export function DataTable() {
-  // State management
-  const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "dateAdded", desc: false },
-  ]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [firebaseData, setFirebaseData] = React.useState<FirestoreData[]>([]);
-  const [userEmail, setUserEmail] = React.useState<string | null>(null);
-  const [pagination, setPagination] = React.useState({
-    pageSize: 8,
-    pageIndex: 0,
+  // auth hook for user data
+  const { userId, userEmail, loading: authLoading } = useAuth();
+
+  // firestore data hook
+  const {
+    data: assets,
+    loading: dataLoading,
+    refreshData: refreshAssets,
+  } = useFirestoreData<FirestoreData>({
+    collectionName: "it-assets",
+    userId,
+    orderByField: "dateAdded",
+    orderDirection: "desc",
   });
-  const [loading, setLoading] = React.useState(true);
 
-  // fetch assets from Firebase
-  const fetchAssets = React.useCallback((userId: string) => {
-    setLoading(true);
-    const q = query(
-      collection(db, "it-assets"),
-      where("userId", "==", userId),
-      orderBy("dateAdded", "desc")
-    );
+  // memoize to prevent re-renders
+  const memoizedAssets = React.useMemo(() => assets, [assets]);
 
-    return onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as FirestoreData[];
-      setFirebaseData(data);
-      setLoading(false);
-    });
-  }, []);
-
-  // authentication effect
-  React.useEffect(() => {
-    const auth = getAuth();
-
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-        const unsubscribeFirestore = fetchAssets(user.uid);
-        return () => unsubscribeFirestore && unsubscribeFirestore();
-      } else {
-        setUserEmail(null);
-        setFirebaseData([]);
-      }
-    });
-
-    return () => unsubscribeAuth();
-  }, [fetchAssets]);
-
-  // initialize table
-  const table = useReactTable({
-    data: firebaseData,
+  // table hook for state management
+  const { table, selectedRowIds, setRowSelection } = useDataTable({
+    data: memoizedAssets,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-      pagination,
-    },
+    initialSorting: [{ id: "dateAdded", desc: true }],
+    initialPageSize: 8,
   });
 
-  // Get selected row IDs from the table
-  const selectedRowIds = table
-    .getFilteredSelectedRowModel()
-    .rows.map((row) => row.original.id);
-
-  // Use the bulk delete hook directly
+  // bulk delete functionality
   const {
     isOpen,
     isDeleting,
@@ -146,16 +75,7 @@ export function DataTable() {
     onDeleteSuccess: () => setRowSelection({}),
   });
 
-  // component to trigger refresh of assets
-  const refreshAssets = () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      fetchAssets(user.uid);
-    }
-  };
-
-  // Configuration for the UploadFile component
+  // upload configuration
   const uploadConfig = {
     title: "Upload IT Assets",
     collectionName: "it-assets",
@@ -173,6 +93,23 @@ export function DataTable() {
     ],
     uniqueField: "serialNo",
   };
+
+  const loading = authLoading || dataLoading;
+
+  // stable refresh callback
+  const handleRefresh = React.useCallback(() => {
+    refreshAssets();
+  }, [refreshAssets]);
+
+  // handle bulk delete
+  const memoizedSelectedRowIds = React.useMemo(
+    () => selectedRowIds,
+    [selectedRowIds]
+  );
+  const handleOpenDelete = React.useCallback(() => {
+    openDeleteDialog(memoizedSelectedRowIds);
+  }, [openDeleteDialog, memoizedSelectedRowIds]);
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -188,7 +125,7 @@ export function DataTable() {
           className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[11em]"
         />
 
-        <div className="flex items-center space-x-1 max-sm:space-x-1">
+        <div className="flex items-center space-x-2 max-sm:space-x-1">
           {/* columns dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -220,26 +157,26 @@ export function DataTable() {
           </DropdownMenu>
 
           {/* asset management buttons */}
-          <AddAssetDrawer onAssetAdded={refreshAssets} userEmail={userEmail} />
+          <AddAssetDrawer onAssetAdded={handleRefresh} userEmail={userEmail} />
           <UploadFile
-            onDataAdded={refreshAssets}
+            onDataAdded={handleRefresh}
             config={uploadConfig}
             buttonLabel="Import"
           />
 
           {/* bulk delete button and dialog */}
-          {selectedRowIds.length > 0 && (
+          {memoizedSelectedRowIds.length > 0 && (
             <>
               <BulkDeleteTrigger
-                selectedCount={selectedRowIds.length}
-                onClick={() => openDeleteDialog(selectedRowIds)}
+                selectedCount={memoizedSelectedRowIds.length}
+                onClick={handleOpenDelete}
               />
               <BulkDeleteDialog
                 isOpen={isOpen}
                 onOpenChange={closeDeleteDialog}
                 onDelete={handleBulkDelete}
                 isDeleting={isDeleting}
-                selectedCount={selectedRowIds.length}
+                selectedCount={memoizedSelectedRowIds.length}
                 itemType={itemTypeLabel}
               />
             </>
@@ -278,9 +215,12 @@ export function DataTable() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ) : firebaseData.length > 0 ? (
+              ) : memoizedAssets.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() ? "selected" : undefined}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {typeof cell.column.columnDef.cell === "function"
@@ -309,28 +249,18 @@ export function DataTable() {
         <div className="flex items-center justify-between px-2 py-2">
           <Button
             variant="outline"
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: Math.max(prev.pageIndex - 1, 0),
-              }))
-            }
+            onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <span>
-            Page <strong>{pagination.pageIndex + 1}</strong> of{" "}
-            <strong>{table.getPageCount()}</strong>
+            Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of{" "}
+            <strong>{table.getPageCount() || 1}</strong>
           </span>
           <Button
             variant="outline"
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: prev.pageIndex + 1,
-              }))
-            }
+            onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             Next
