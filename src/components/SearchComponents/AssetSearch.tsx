@@ -85,7 +85,7 @@ export function AssetSearch() {
 
   return (
     <div className="relative" ref={searchRef}>
-      <div className="flex items-center space-x-1 bg-secondary rounded-full px-2 sm:px-3 py-1.5 border border-slate-700/50 backdrop-blur-sm">
+      <div className="flex items-center space-x-1 bg-secondary rounded-full px-2 sm:px-3 py-1.5 border border-slate-700/50 backdrop-blur-sm shadow-md shadow-popover-foreground">
         <Search className="h-4 w-4 text-slate-500" />
         <input
           type="text"

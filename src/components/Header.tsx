@@ -17,7 +17,7 @@ export default function Header() {
     <header className="flex items-center justify-between py-4 border-b border-slate-700/50 mb-6">
       <div className="flex items-center space-x-2 ">
         <Waypoints className="h-8 w-8 text-teal-300" />
-        <span className="text-xl font-bold bg-gradient-to-r from-teal-200 to-teal-600 bg-clip-text text-transparent ">
+        <span className="text-xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent ">
           Flux
         </span>
       </div>

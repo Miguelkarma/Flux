@@ -9,6 +9,8 @@ import SystemTime from "@/components/DashboardComponents/SystemTime";
 import AssetSummary from "@/components/DashboardComponents/AssetSummary";
 import { toast, Toaster } from "sonner";
 import CurrencyConverter from "@/components/DashboardComponents/currency-converter";
+import MarketPriceTracker from "@/components/DashboardComponents/MarketPrice";
+import Loader from "@/Animation/SmallLoader";
 
 export default function Dashboard() {
   const { theme } = useTheme();
@@ -49,22 +51,7 @@ export default function Dashboard() {
       <DashboardParticles />
 
       {/* Loading overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="flex flex-col items-center">
-            <div className="relative w-24 h-24">
-              <div className="absolute inset-0 border-4 border-cyan-500/30 rounded-full animate-ping"></div>
-              <div className="absolute inset-2 border-4 border-t-cyan-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-              <div className="absolute inset-4 border-4 border-r-purple-500 border-t-transparent border-b-transparent border-l-transparent rounded-full animate-spin-slow"></div>
-              <div className="absolute inset-6 border-4 border-b-blue-500 border-t-transparent border-r-transparent border-l-transparent rounded-full animate-spin-slower"></div>
-              <div className="absolute inset-8 border-4 border-l-green-500 border-t-transparent border-r-transparent border-b-transparent rounded-full animate-spin"></div>
-            </div>
-            <div className="mt-4 text-cyan-500 font-mono text-sm tracking-wider">
-              SYSTEM INITIALIZING
-            </div>
-          </div>
-        </div>
-      )}
+      {isLoading && <Loader />}
 
       <div className="container mx-auto p-4 relative z-10">
         {/* Header */}
@@ -79,8 +66,14 @@ export default function Dashboard() {
 
           {/* Main Dashboard */}
           <div className="md:col-span-6">
+<<<<<<< HEAD
             <div className="grid gap-2">
               <AssetSummary />
+=======
+            <div className="grid gap-6">
+              <AssetSummary />
+              <MarketPriceTracker />
+>>>>>>> dashboard-integrations-API-ui-fixes
             </div>
           </div>
 
