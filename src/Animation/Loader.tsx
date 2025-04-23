@@ -37,11 +37,12 @@ const StyledWrapper = styled.div`
     background: rgb(25, 145, 124);
     background: linear-gradient(
       90deg,
-      rgba(25, 145, 124, 1) 0%,
-      rgba(68, 226, 200, 1) 48%,
-      rgba(142, 245, 189, 1) 70%,
-      rgba(192, 217, 200, 1) 100%
+      rgba(178, 255, 252, 1) 0%,
+      rgba(0, 216, 216, 1) 30%,
+      rgba(129, 236, 236, 1) 50%,
+      rgba(0, 188, 212, 1) 100%
     );
+
     animation-name: dot2_;
   }
 
@@ -52,7 +53,7 @@ const StyledWrapper = styled.div`
     margin-top: 50px;
     margin-left: -20px;
     border-radius: 0 0 5px 5px;
-    background: #6bb2cd;
+    background: #94a3b8;
     animation-name: dot3_;
   }
 

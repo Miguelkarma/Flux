@@ -1,74 +1,124 @@
+import React from "react";
+import featureimg from "@/assets/feature.png";
+import phoneimg from "@/assets/featurePhone.png";
 import { motion } from "framer-motion";
-import { Server, Database, ShieldCheck, Activity } from "lucide-react";
+import {
+  fadeIn,
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  staggerContainer,
+  lazyLoad,
+} from "@/Animation/motionVariants";
+import { featureData } from "./constants/constants";
 
-const features = [
-  {
-    name: "Centralized Asset Tracking",
-    description:
-      "Manage and monitor all IT assets from a single, unified dashboard for complete visibility.",
-    icon: Server,
-  },
-  {
-    name: "Automated Inventory Management",
-    description:
-      "Reduce manual effort with automated asset discovery, tracking, and reporting.",
-    icon: Database,
-  },
-  {
-    name: "Robust Security & Compliance",
-    description:
-      "Ensure your IT assets meet security standards with built-in compliance monitoring.",
-    icon: ShieldCheck,
-  },
-  {
-    name: "Real-Time Performance Monitoring",
-    description:
-      "Get instant insights into asset health, utilization, and lifecycle to optimize operations.",
-    icon: Activity,
-  },
-];
+const Features: React.FC = () => {
+  // Array of animation variants to cycle through for each card
+  const animationVariants = [fadeInLeft, fadeInUp, fadeInRight];
 
-export default function Features() {
   return (
-    <section className="container space-y-16 py-24 md:py-32">
-      {/* Animated Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-[58rem] text-center"
-      >
-        <h2 className="font-DM Sans, sans-serif; font-bold text-3xl leading-[1.1] sm:text-3xl md:text-5xl bg-gradient-to-b from-gray-200 via-gray-400 to-gray-800 bg-clip-text text-transparent ">
-          Smarter IT Asset Management
-        </h2>
-        <p className="mt-4 text-landing-foreground sm:text-lg">
-          Optimize asset utilization, enhance security, and gain real-time
-          insights with our advanced IT asset management solutions.
-        </p>
-      </motion.div>
+    <div
+      id="features"
+      className="max-w-full px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto mt-16 relative"
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Feature Cards Container with Stagger Effect */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {/* Map through the first 3 features */}
+          {featureData.features.slice(0, 3).map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              className="flex flex-col p-6 bg-slate-800/80 rounded-lg backdrop-blur-3xl before:absolute before:left-1/2 before:translate-x-[-50%] before:bottom-[-1px] before:w-[66%] before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-sky-300 before:to-transparent before:rounded-full"
+              variants={animationVariants[index % animationVariants.length]}
+              initial="start"
+              whileInView="end"
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center mb-4">
+                {React.cloneElement(feature.icon, {
+                  className: "w-6 h-6 text-sky-600",
+                })}
+                <h3 className="ml-3 font-semibold text-lg text-gray-50">
+                  {feature.title}
+                </h3>
+              </div>
+              <p className="text-gray-400">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
 
-      {/* Feature Grid with Scroll Animation */}
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
-        {features.map((feature, index) => (
+        {/* Feature Content */}
+        {/* Devices Display Section */}
+        <div className="relative flex justify-center items-center mt-16 pb-28">
+          {/* Browser Mockup */}
           <motion.div
-            key={feature.name}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="relative overflow-hidden rounded-lg border border-gray-300 bg-transparent p-8 text-gray-200"
+            className="relative w-auto max-w-full shadow-lg rounded-lg overflow-hidden"
+            variants={fadeIn}
+            initial="start"
+            whileInView="end"
+            viewport={{ once: true, amount: 0.3 }}
           >
-            <div className="flex items-center gap-4">
-              <feature.icon className="h-8 w-8" />
-              <h3 className="font-bold">{feature.name}</h3>
+            {/* Browser Header */}
+            <div className="relative flex items-center bg-gray-800 border-b border-gray-800 rounded-t-xl py-2 px-4">
+              <div className="flex gap-x-1 absolute top-1/2 left-4 -translate-y-1/2">
+                <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+                <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+                <span className="w-3 h-3 bg-gray-400 rounded-full"></span>
+              </div>
+              <div className="mx-auto text-sm text-gray-300">www.flux.com</div>
             </div>
-            <p className="mt-2 text-landing-foreground">
-              {feature.description}
-            </p>
+
+            {/* Browser Content */}
+            <div className="bg-white">
+              <img
+                src={featureimg}
+                alt="Dashboard Interface"
+                className="w-full h-auto"
+              />
+            </div>
           </motion.div>
-        ))}
+
+          {/* Realistic Phone Mockup */}
+          <motion.div
+            className="absolute bottom-0 left-0 z-20 w-64 hidden lg:block"
+            variants={lazyLoad}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <div className="relative top-2">
+              {/* Phone frame */}
+              <div className="relative w-full bg-gray-800 rounded-[3rem] p-2 shadow-xl">
+                {/* Notch area */}
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-gray-800 rounded-b-xl z-20"></div>
+
+                {/* Speaker */}
+                <div className="absolute top-1.5 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-gray-400 rounded-full z-30"></div>
+
+                {/* Front camera */}
+                <div className="absolute top-1.5 right-1/3 w-1.5 h-1.5 bg-gray-500 rounded-full z-30"></div>
+
+                {/* Screen with content */}
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-gray-900 aspect-[9/19.5] w-full">
+                  <img
+                    src={phoneimg}
+                    alt="Mobile Interface"
+                    className="absolute top-0 left-0 w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
+
+export default Features;
