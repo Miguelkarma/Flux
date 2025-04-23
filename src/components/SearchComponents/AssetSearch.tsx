@@ -88,16 +88,20 @@ export function AssetSearch() {
       <div className="flex items-center space-x-1 bg-secondary rounded-full px-2 sm:px-3 py-[0.2rem] border border-slate-700/50 backdrop-blur-sm shadow shadow-popover-foreground">
         <Search className="h-4 w-4 text-slate-500" />
         <input
-          type="text"
+          type="search"
+          name="searchAssets"
           placeholder="Search assets..."
           className="bg-transparent border-none focus:outline-none text-xs sm:text-sm w-24 max-sm:w-[5em] sm:w-[12em] md:w-40 placeholder:text-slate-500 text-foreground"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onFocus={() => {
+          onFocus={(e) => {
+            e.currentTarget.removeAttribute("readOnly");
             if (filteredProducts.length > 0) {
               setShowResults(true);
             }
           }}
+          autoComplete="nope"
+          readOnly
         />
       </div>
 

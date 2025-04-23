@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "./Animation/Loader";
 import Header from "@/Landing/Header";
 import Hero from "@/Landing/Hero";
-import Brand from "./Landing/Stats";
+import Stats from "./Landing/Stats";
 import { ReactLenis } from "lenis/react";
 import "./App.css";
 import Features from "./Landing/Features";
@@ -40,7 +40,7 @@ export default function Home() {
         {/* Main Content */}
         <main>
           <Hero />
-          <Brand />
+          <Stats />
           <div className=" relative">
             <GridBackground />
             <div className="container">

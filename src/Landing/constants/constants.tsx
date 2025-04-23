@@ -24,13 +24,13 @@ import {
   Sparkles,
 } from "lucide-react";
 
-// constants.tsx
+//stats
 
 export const brandTagline =
   "Powering data insights for today's startup and tomorrow's leader.";
 
 export const statsSection = {
-  title: "Our Stats",
+  title: "What the Numbers Say",
   description: "We help you to unleash the power within your business",
   stats: [
     {

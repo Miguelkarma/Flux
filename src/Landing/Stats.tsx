@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import * as variants from "@/Animation/motionVariants";
 import { brandTagline, statsSection } from "./constants/constants";
 
-const Brand = () => {
+const Stats = () => {
   return (
     <section className="section text-gray-100">
       <div className="landing-container max-w-screen-lg">
@@ -21,7 +21,7 @@ const Brand = () => {
         <section className="py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div
-              className="rounded-2xl py-10 px-10 xl:py-16 xl:px-20 bg-slate-800/80 flex items-center justify-between flex-col gap-16 lg:flex-row"
+              className="rounded-2xl py-10 px-10 xl:py-16 xl:px-20 bg-slate-900/90 flex items-center justify-between flex-col gap-16 lg:flex-row"
               variants={variants.fadeInUp}
               initial="start"
               whileInView="end"
@@ -68,4 +68,4 @@ const Brand = () => {
   );
 };
 
-export default memo(Brand);
+export default memo(Stats);

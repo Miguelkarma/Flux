@@ -5,9 +5,9 @@
 @layer base {
   :root {
     --background: linear-gradient(
-      to bottom right,
-      hsla(0, 0%, 99%, 0.863),
-      hsl(180, 44%, 41%)
+      to top right,
+      hsl(0, 0%, 100%),
+      hsla(180, 76%, 81%, 0.781)
     );
     --foreground: 222.2 84% 10%;
 
@@ -48,14 +48,14 @@
     --sidebar-ring: 180 60% 47%;
 
     --logo: 200 100% 28%;
-    --brand-100: 200, 80%, 80%;
-    --brand-300: 210, 80%, 50%;
-    --brand-900: 180, 80%, 0%;
+    --brand-100: 197, 100%, 68%; /* was 95% */
+    --brand-300: 197, 71%, 60%; /* was 74% */
+    --brand-900: 191, 100%, 12%;
   }
 
   .dark {
     --background: linear-gradient(
-      to top left,
+      to top right,
       hsl(191, 91%, 5%),
       hsla(204, 48%, 30%, 0.9)
     );
