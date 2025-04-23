@@ -52,7 +52,10 @@ export default function CurrencyInput({
               variant="outline"
               className="w-full h-10 px-3 flex items-center justify-center"
             >
-              <span className="truncate text-sm">
+              <span
+                className="truncate text-sm"
+                data-testid="selected-currency-display"
+              >
                 {selectedCurrency
                   ? `${selectedCurrency.code.toUpperCase()} - ${
                       selectedCurrency.name

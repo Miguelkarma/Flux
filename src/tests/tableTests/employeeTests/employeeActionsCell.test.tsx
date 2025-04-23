@@ -7,7 +7,7 @@ jest.mock("@/components/EmployeeComponents/EditEmployeeDrawer", () => ({
   EditEmployeeDrawer: jest.fn(() => <div>Edit Employee</div>),
 }));
 
-jest.mock("@/components/EmployeeComponents/DeleteEmployeeDialog", () => ({
+jest.mock("@/components/sharedComponent/DeleteDialog", () => ({
   __esModule: true,
   default: ({ onDelete }: { onDelete: () => Promise<void> }) => (
     <div data-testid="delete-dialog">
@@ -32,7 +32,7 @@ const mockEmployee = {
   department: "IT",
   position: "Software Engineer",
   status: "Active",
-  hireDate: "2022-01-01",
+  dateAdded: "2022-01-01",
   location: "Remote",
 };
 

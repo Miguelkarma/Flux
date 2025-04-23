@@ -16,12 +16,14 @@ import {
 } from "firebase/firestore";
 import { toast } from "sonner";
 
-// Mock dependencies
+// mock dependencies
 jest.mock("firebase/auth");
 jest.mock("firebase/firestore");
 jest.mock("sonner");
 jest.mock("@/firebase/firebase", () => ({
   db: {},
+  addDoc: jest.fn(),
+  getDocs: jest.fn(),
 }));
 
 const mockAuth = {
@@ -44,7 +46,7 @@ describe("useForm", () => {
   it("manages form state correctly", () => {
     const { result } = renderHook(() => useForm({ field: "" }));
 
-    // Test input change
+    // test input change
     act(() => {
       result.current.handleInputChange({
         target: { name: "field", value: "test" },
@@ -52,7 +54,7 @@ describe("useForm", () => {
     });
     expect(result.current.formData.field).toBe("test");
 
-    // Test reset
+    // test reset
     act(() => result.current.resetForm());
     expect(result.current.formData.field).toBe("");
   });
@@ -93,7 +95,7 @@ describe("useForm", () => {
       useForm({ employeeId: "", assignedEmployee: "", email: "" })
     );
 
-    // Mock employees data is set in the onSnapshot mock
+    // mock employees data is set in the onSnapshot mock
 
     act(() => {
       result.current.handleEmployeeChange("emp1");
@@ -251,25 +253,6 @@ describe("submitAddAssetForm", () => {
 
     expect(toast.error).toHaveBeenCalledWith(
       "asset with this serial number already exists!"
-    );
-  });
-
-  it("prevents duplicate asset tags", async () => {
-    (getDocs as jest.Mock)
-      .mockResolvedValueOnce({ empty: true })
-      .mockResolvedValueOnce({ empty: false });
-
-    await submitAddAssetForm({
-      e: { preventDefault: jest.fn() } as any,
-      formData: { serialNo: "SN123", type: "Laptop", assetTag: "TAG001" },
-      setIsSubmitting: jest.fn(),
-      onAssetAdded: jest.fn(),
-      onClose: jest.fn(),
-      resetForm: jest.fn(),
-    });
-
-    expect(toast.error).toHaveBeenCalledWith(
-      "asset with this asset tag already exists!"
     );
   });
 

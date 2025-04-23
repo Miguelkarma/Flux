@@ -12,7 +12,7 @@ describe("employee table columns", () => {
     department: "IT",
     position: "Developer",
     status: "Active",
-    hireDate: "2022-01-15",
+    dateAdded: "2022-01-15",
     location: "New York",
   };
 
@@ -78,18 +78,18 @@ describe("employee table columns", () => {
     }
   });
 
-  test("hireDate column renders correctly", () => {
-    const hireDateColumn = columns.find(
-      (col) => "accessorKey" in col && col.accessorKey === "hireDate"
+  test("dateAdded column renders correctly", () => {
+    const dateAddedColumn = columns.find(
+      (col) => "accessorKey" in col && col.accessorKey === "dateAdded"
     );
-    expect(hireDateColumn).toBeDefined();
+    expect(dateAddedColumn).toBeDefined();
 
-    if (hireDateColumn?.cell) {
-      if (typeof hireDateColumn.cell === "function") {
-        const cell = hireDateColumn.cell({
+    if (dateAddedColumn?.cell) {
+      if (typeof dateAddedColumn.cell === "function") {
+        const cell = dateAddedColumn.cell({
           row: {
             original: mockEmployee,
-            getValue: () => mockEmployee.hireDate,
+            getValue: () => mockEmployee.dateAdded,
           },
         } as any);
         expect(cell).toBeDefined();
@@ -97,12 +97,12 @@ describe("employee table columns", () => {
     }
   });
 
-  test("hireDate column has sorting function", () => {
-    const hireDateColumn = columns.find(
-      (col) => "accessorKey" in col && col.accessorKey === "hireDate"
+  test("dateAdded column has sorting function", () => {
+    const dateAddedColumn = columns.find(
+      (col) => "accessorKey" in col && col.accessorKey === "dateAdded"
     );
-    expect(hireDateColumn).toBeDefined();
-    expect(hireDateColumn?.sortingFn).toBeDefined();
+    expect(dateAddedColumn).toBeDefined();
+    expect(dateAddedColumn?.sortingFn).toBeDefined();
   });
 
   test("actions column exists", () => {

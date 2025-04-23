@@ -1,53 +1,134 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LoginForm } from "@/components/login-form";
-import { MemoryRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+// mock react-router-dom
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
+}));
+
+// mock ui components
+jest.mock("@/components/ui/button", () => ({
+  Button: ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: any;
+  }) => <button {...props}>{children}</button>,
+}));
+
+jest.mock("@/components/ui/input", () => ({
+  Input: ({
+    icon: Icon,
+    ...props
+  }: {
+    icon?: React.ElementType;
+    [key: string]: any;
+  }) => (
+    <div>
+      {Icon && <span data-testid="input-icon"></span>}
+      <input {...props} />
+    </div>
+  ),
+}));
+
+// mock icons
+jest.mock("lucide-react", () => ({
+  Eye: () => <div data-testid="eye-icon">Eye</div>,
+  EyeOff: () => <div data-testid="eye-off-icon">EyeOff</div>,
+  KeyRound: () => <div data-testid="key-icon">KeyRound</div>,
+  Mail: () => <div data-testid="mail-icon">Mail</div>,
+}));
+
+// mock loader
+jest.mock("@/Animation/SmallLoader", () => ({
+  __esModule: true,
+  default: () => <div data-testid="small-loader">Loading...</div>,
+}));
 
 describe("LoginForm", () => {
   const mockOnLogin = jest.fn();
-
-  const setup = () => {
-    render(
-      <MemoryRouter>
-        <LoginForm onLogin={mockOnLogin} />
-      </MemoryRouter>
-    );
-  };
+  const mockNavigate = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    setup();
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
   });
 
-  test("renders the login form correctly", () => {
+  it("renders form correctly", () => {
+    render(<LoginForm onLogin={mockOnLogin} />);
+
+    expect(screen.getByText("START FOR FREE")).toBeInTheDocument();
     expect(screen.getByText(/login to your account/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
 
-  test("updates email and password inputs correctly", async () => {
-    const user = userEvent.setup();
+  it("updates fields on input", async () => {
+    render(<LoginForm onLogin={mockOnLogin} />);
+
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
 
-    await user.type(emailInput, "test@example.com");
-    await user.type(passwordInput, "password123");
+    await userEvent.type(emailInput, "test@example.com");
+    await userEvent.type(passwordInput, "password123");
 
     expect(emailInput).toHaveValue("test@example.com");
     expect(passwordInput).toHaveValue("password123");
   });
 
-  test("calls onLogin with email and password when form is submitted", async () => {
-    const user = userEvent.setup();
-    const email = "test@example.com";
-    const password = "password123";
+  it("calls onLogin on submit", async () => {
+    mockOnLogin.mockResolvedValueOnce(undefined);
 
-    await user.type(screen.getByLabelText(/email/i), email);
-    await user.type(screen.getByLabelText(/password/i), password);
-    await user.click(screen.getByRole("button", { name: /login/i }));
+    render(<LoginForm onLogin={mockOnLogin} />);
 
-    expect(mockOnLogin).toHaveBeenCalledWith(email, password);
-    expect(mockOnLogin).toHaveBeenCalledTimes(1);
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const submitButton = screen.getByRole("button", { name: /login/i });
+
+    await userEvent.type(emailInput, "test@example.com");
+    await userEvent.type(passwordInput, "password123");
+    await userEvent.click(submitButton);
+
+    expect(mockOnLogin).toHaveBeenCalledWith("test@example.com", "password123");
+  });
+
+  it("shows loader during submission", async () => {
+    let resolveLogin: () => void;
+    const loginPromise = new Promise<void>((resolve) => {
+      resolveLogin = resolve;
+    });
+
+    mockOnLogin.mockReturnValueOnce(loginPromise);
+
+    render(<LoginForm onLogin={mockOnLogin} />);
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const submitButton = screen.getByRole("button", { name: /login/i });
+
+    await userEvent.type(emailInput, "test@example.com");
+    await userEvent.type(passwordInput, "password123");
+    await userEvent.click(submitButton);
+
+    expect(screen.getByTestId("small-loader")).toBeInTheDocument();
+
+    resolveLogin!();
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("small-loader")).not.toBeInTheDocument();
+    });
+  });
+
+  it("navigates to registration on signup link click", async () => {
+    render(<LoginForm onLogin={mockOnLogin} />);
+
+    const signUpLink = screen.getByText(/sign up/i);
+    await userEvent.click(signUpLink);
+
+    expect(mockNavigate).toHaveBeenCalledWith("/Registration");
   });
 });
