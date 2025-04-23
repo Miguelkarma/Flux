@@ -35,7 +35,7 @@ export function AssetDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full bg-card text-popover-foreground overflow-y-auto max-h-[calc(100vh-100px)]">
+      <DialogContent className="w-full bg-card text-foreground overflow-y-auto max-h-[calc(100vh-100px)]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             Asset Details
@@ -43,7 +43,7 @@ export function AssetDetailsDialog({
               variant="outline"
               className={`ml-2 ${getStatusBadgeClass(
                 asset.status
-              )} shadow-md text-popover-foreground`}
+              )} shadow-md text-foreground`}
             >
               {asset.status}
             </Badge>
@@ -120,7 +120,7 @@ export function AssetDetailsDialog({
                   variant="outline"
                   className={`ml-2 ${getStatusBadgeClass(
                     asset.status
-                  )} shadow-md text-popover-foreground`}
+                  )} shadow-md text-foreground`}
                 >
                   {asset.type}
                 </Badge>

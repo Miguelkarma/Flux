@@ -37,15 +37,15 @@ function MetricCard({
       case "cyan":
         return "from-cyan-500 to-blue-500 border-cyan-500/30";
       case "green":
-        return "from-green-500 to-emerald-500 border-green-500/30 shadow shadow-popover-foreground  ";
+        return "from-green-500 to-emerald-500 border-green-500/30 shadow-md shadow-green-300  ";
       case "blue":
-        return "from-blue-500 to-indigo-500 border-blue-500/30 shadow shadow-popover-foreground  ";
+        return "from-blue-500 to-indigo-500 border-blue-500/30 shadow-md shadow-blue-300   ";
       case "purple":
-        return "from-purple-500 to-pink-500 border-purple-500/30 shadow shadow-popover-foreground  ";
+        return "from-purple-500 to-pink-500 border-purple-500/30 shadow-md shadow-purple-300   ";
       case "amber":
-        return "from-amber-500 to-amber-500 border-amber-500/30 shadow shadow-popover-foreground ";
+        return "from-amber-500 to-amber-500 border-amber-500/30 shadow-md shadow-amber-300  ";
       case "teal":
-        return "from-teal-600 to-teal-800 border-teal-500/30 shadow shadow-popover-foreground  ";
+        return "from-teal-600 to-teal-800 border-teal-500/30 shadow-md shadow-cyan-300   ";
       default:
         return "from-cyan-500 to-blue-500 border-cyan-500/30";
     }
@@ -69,10 +69,10 @@ function MetricCard({
       className={`bg-[hsl(var(--secondary))] rounded-lg border ${getColor()} p-4 relative overflow-hidden `}
     >
       <div className="flex items-center justify-between mb-2 ">
-        <div className="text-sm text-popover-foreground">{title}</div>
+        <div className="text-sm text-foreground">{title}</div>
         <Icon className={`h-5 w-5 text-${color}-500`} />
       </div>
-      <div className="text-2xl font-bold mb-1 bg-gradient-to-r bg-clip-text text-popover-foreground from-slate-100 to-slate-300 ">
+      <div className="text-2xl font-bold mb-1 bg-gradient-to-r bg-clip-text text-foreground from-slate-100 to-slate-300 ">
         {value}
         {isPercentage ? "%" : ""}
       </div>

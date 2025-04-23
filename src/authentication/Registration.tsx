@@ -62,8 +62,8 @@ function Registration() {
         expand={true}
         visibleToasts={3}
       />
-      <div className="flex items-center justify-center min-h-screen bg-teal-950/50">
-        <div className="bg-gradient-to-r from-gray-800 via-teal-900 to-teal-700 rounded-lg shadow-lg shadow-teal-900 overflow-hidden w-full max-w-7xl h-[40em] grid grid-cols-1 lg:grid-cols-2">
+      <div className="flex bg-custom-background items-center justify-center min-h-screen bg-teal-950/50">
+        <div className="bg-gradient-to-r from-gray-800 via-cyan-900 to-cyan-700 rounded-lg shadow-md shadow-sky-300 overflow-hidden w-full max-w-7xl h-[50em] grid grid-cols-1 lg:grid-cols-2 max-sm:h-[41.7em] max-sm">
           {/* Left Side - Registration Form */}
           <div className="p-10 flex flex-col justify-center relative">
             <a
@@ -78,8 +78,8 @@ function Registration() {
             </a>
             {/* Logo & Title */}
             <div className="flex items-center gap-2 mb-6 ">
-              <Waypoints className="h-8 w-8 text-teal-300" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent">
+              <Waypoints className="h-8 w-8 text-cyan-500" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-600 bg-clip-text text-transparent">
                 Flux
               </span>
             </div>
@@ -98,8 +98,8 @@ function Registration() {
           {/* Right Side - Image */}
           <div className="hidden lg:block relative bg-mask opacity-100">
             <img
-              src={back || "/placeholder.svg"}
-              alt="Registration Illustration"
+              src={back}
+              alt="Register Illustration"
               className="absolute w-full h-full object-cover"
               style={{ backgroundPosition: "left bottom" }}
             />

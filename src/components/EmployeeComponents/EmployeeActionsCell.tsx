@@ -47,14 +47,14 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-50">
+        <DropdownMenuContent align="end" className="w-50 text-foreground">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuSeparator className="h-[1px] bg-teal-300/60" />
+          <DropdownMenuSeparator className="h-[1px]" />
 
           {/* Open Edit Drawer */}
           <DropdownMenuItem
             onClick={() => setIsEditDrawerOpen(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-foreground"
           >
             <Edit className="h-4 w-4" />
             <span>Edit</span>
@@ -74,7 +74,7 @@ const EmployeeActionsCell: React.FC<EmployeeActionsCellProps> = ({
           {/* Copy Email */}
           <DropdownMenuItem
             onClick={handleCopyId}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-foreground"
           >
             <Copy className="h-4 w-4" />
             <span>Copy Employee ID</span>

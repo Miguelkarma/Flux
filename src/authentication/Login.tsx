@@ -56,8 +56,8 @@ function Login() {
         expand={true}
         visibleToasts={3}
       />
-      <div className="flex items-center justify-center min-h-screen bg-teal-950/50">
-        <div className="bg-gradient-to-r from-gray-800 via-teal-900 to-teal-700 rounded-lg shadow-lg shadow-teal-900 overflow-hidden w-full max-w-7xl h-[40em] grid grid-cols-1 lg:grid-cols-2">
+      <div className=" bg-gradient-to-r from-gray-900 via-cyan-950 to-cyan-900 flex items-center justify-center min-h-screen bg-teal-950/50">
+        <div className="bg-gradient-to-r from-gray-800 via-cyan-900 to-cyan-700 rounded-lg shadow-md shadow-sky-300 overflow-hidden w-full max-w-7xl h-[50em] grid grid-cols-1 lg:grid-cols-2 max-sm:h-[40em] ">
           {/* Left Side - Login Form */}
           <div className="p-10 flex flex-col justify-center relative">
             <a
@@ -72,8 +72,8 @@ function Login() {
             </a>
             {/* Logo & Title */}
             <div className="flex items-center gap-2 mb-6 ">
-              <Waypoints className="h-8 w-8 text-teal-300" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-teal-300 to-teal-400 bg-clip-text text-transparent">
+              <Waypoints className="h-8 w-8 text-sky-300" />
+              <span className="text-2xl font-bold bg-gradient-to-t from-sky-100 via-sky-300 to-cyan-900 bg-clip-text text-transparent">
                 Flux
               </span>
             </div>

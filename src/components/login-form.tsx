@@ -43,11 +43,11 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
       )}
 
       <div className="mb-8 ">
-        <div className="text-xs uppercase tracking-wider text-teal-400">
+        <div className="text-xs uppercase tracking-wider  text-cyan-400">
           START FOR FREE
         </div>
-        <h1 className="text-3xl font-bold mt-2">
-          Login to your account<span className="text-teal-400">.</span>
+        <h1 className="text-3xl text-gray-50 font-bold mt-2">
+          Login to your account<span className="text-cyan-400">.</span>
         </h1>
       </div>
 
@@ -100,24 +100,25 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             </div>
           </div>
 
-          <div className="flex justify-between mt-2">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-2 gap-2">
             <div className="flex items-center">
               <input
                 type="checkbox"
                 id="remember"
-                className="rounded bg-gray-800 border-gray-700 text-teal-700 focus:ring-teal-400/20 mr-2"
+                className="rounded bg-gray-800 border-gray-700 text-cyan-700 focus:ring-teal-400/20 mr-2"
               />
               <label htmlFor="remember" className="text-sm text-gray-300">
                 Remember me
               </label>
             </div>
-            <div className="ml-auto flex gap-1">
-              <span className="text-white pointer-events-none">
-                Dont have an account?
-              </span>{" "}
+
+            <div className="flex flex-wrap gap-1 text-sm text-white">
+              <span className="text-gray-50 pointer-events-none">
+                Don’t have an account?
+              </span>
               <a
                 href="#"
-                className="text-teal-400"
+                className="text-sky-300 font-bold"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate("/Registration");
@@ -132,7 +133,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="flex-2 bg-teal-500 hover:bg-teal-600 text-white border-none"
+              className="flex-2 bg-custom-background shadow-md shadow-gray-900 hover:bg-cyan-300/20 text-white border-none"
             >
               Login
             </Button>

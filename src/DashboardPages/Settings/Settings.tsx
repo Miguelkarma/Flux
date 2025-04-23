@@ -33,7 +33,7 @@ export default function Settings() {
         style={{ zIndex: 100000 }}
       />
       <div
-        className={`${theme} min-h-screen bg-gradient-to-b from-teal-700/40 via-teal-900/20 text-slate-100 relative overflow-hidden`}
+        className={`${theme} min-h-screen bg-deep-sea text-slate-100 relative overflow-hidden`}
       >
         <DashboardParticles />
         {/* Loading overlay */}

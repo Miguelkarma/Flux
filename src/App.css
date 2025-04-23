@@ -4,14 +4,18 @@
 
 @layer base {
   :root {
-    --background: 0 0% 80%;
-    --foreground: 222.2 84% 90%;
+    --background: linear-gradient(
+      to bottom right,
+      hsla(188, 67%, 83%, 0.5),
+      hsl(180, 29%, 47%)
+    );
+    --foreground: 222.2 84% 10%;
 
     --card: 0 0% 90%;
     --card-foreground: 222.2 84% 4.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 180 60% 2%;
+    --popover-foreground: 185 100% 30%;
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 0, 0%, 86%;
@@ -19,7 +23,7 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 180 60% 20%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 210 0% 80%;
     --muted-foreground: 215.4 16.3% 40%;
 
     --accent: 222.2 10% 70%;
@@ -34,36 +38,35 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0, 0%, 90%;
-    --sidebar-foreground: 180 30% 31%;
-    --sidebar-primary: 180 60% 38%;
-    --sidebar-primary-foreground: 180 90% 100%;
-    --sidebar-accent: 180 15% 85%;
-    --sidebar-accent-foreground: 60 40% 20%;
-    --sidebar-border: 180 20% 50%;
-    --sidebar-ring: 180 60% 47%;
-
-    --landing-background: 200 70% 14%;
-    --landing-foreground: 198 85% 10%;
+    --landing-background: 220 40% 10%;
+    --landing-foreground: 210 12% 70%;
+    --logo: 200 100% 28%;
+    --brand-100: 200, 80%, 80%;
+    --brand-300: 210, 80%, 50%;
+    --brand-900: 180, 80%, 0%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: linear-gradient(
+      to top left,
+      hsl(191, 91%, 5%),
+      hsla(204, 48%, 30%, 0.9)
+    );
     --foreground: 210 40% 98%;
 
     --card: 198 85% 10%;
     --card-foreground: 180 40% 100%;
 
     --popover: 222.2 84% 4.9%;
-    --popover-foreground: 180 60% 80%;
+    --popover-foreground: 195 100% 75%;
 
     --primary: 210 40% 85%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 198 75% 8%;
-    --secondary-foreground: 180 60% 90%;
+    --secondary-foreground: 200 80% 80%;
 
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 217.2 32.6% 24%;
     --muted-foreground: 215 10% 75%;
 
     --accent: 217.2 20% 30%;
@@ -75,15 +78,10 @@
     --border: 217.2 32.6% 17.5%;
     --input: 174 60% 70%;
     --ring: 212.7 26.8% 83.9%;
-
-    --sidebar-background: 198 85% 10%;
-    --sidebar-foreground: 180 40% 95%;
-    --sidebar-primary: 180 60% 25%;
-    --sidebar-primary-foreground: 180 90% 98%;
-    --sidebar-accent: 180 20% 12%;
-    --sidebar-accent-foreground: 180 60% 85%;
-    --sidebar-border: 180 20% 22%;
-    --sidebar-ring: 180 60% 42%;
+    --logo: 200 100% 75%;
+    --brand-100: 197, 100%, 95%;
+    --brand-300: 197, 71%, 74%;
+    --brand-900: 191, 100%, 18%;
   }
 }
 @layer utilities {
@@ -137,56 +135,22 @@
   }
 }
 
-.bg-mask {
-  height: 60rem;
-
-  mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 1) 90%,
-    rgba(0, 0, 0, 0) 100%
-  );
+@layer components {
+  .icon-logo {
+    color: hsl(var(--logo));
+  }
+  .logo-gradient {
+    background: linear-gradient(
+      10deg,
+      hsl(var(--brand-100)) 0%,
+      hsl(var(--brand-300)) 50%,
+      hsl(var(--brand-900)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
-.section {
-  @apply py-8
-
-  md:py-16;
-}
-
-.section-head {
-  @apply pb-8
-  text-center
-  md:pb-16
-  
-  lg:max-w-screen-sm
-  lg:mx-auto;
-}
-
-.section-subtitle {
-  @apply text-cyan-400
-  text-sm
-  font-medium
-  uppercase;
-}
-.section-title {
-  @apply text-white
-  text-3xl
-  font-semibold
-  leading-snug
-  py-3
-  
-  md:text-[40px];
-}
-.section-text {
-  @apply text-slate-400
-
-  md:text-xl;
-}
-
-.img-cover {
-  @apply w-full h-full object-cover;
-}
-.feature-card {
-  will-change: transform, opacity;
-  transform: translateZ(0);
+.bg-deep-sea {
+  background: var(--background);
 }

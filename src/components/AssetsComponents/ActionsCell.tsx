@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Edit, Trash, Copy, Info } from "lucide-react";
@@ -29,7 +31,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
   const handleCopySerialNo = async () => {
     try {
       await navigator.clipboard.writeText(asset.serialNo || "N/A");
-      toast.success("Asset No. copied to clipboard");
+      toast.success("Serial No. copied to clipboard");
     } catch (error) {
       toast.error("Failed to copy Asset No.");
     }
@@ -41,20 +43,20 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 text-foreground"
             aria-label="Open actions menu"
           >
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuContent align="end" className="w-40 text-foreground">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
           {/* View Details */}
           <DropdownMenuItem
             onClick={() => setIsDetailsDialogOpen(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-foreground"
           >
             <Info className="h-4 w-4" />
             <span> Details</span>
@@ -63,7 +65,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
           {/* Open Edit Drawer */}
           <DropdownMenuItem
             onClick={() => setIsEditDrawerOpen(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-foreground"
           >
             <Edit className="h-4 w-4" />
             <span>Edit</span>
@@ -83,7 +85,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({ asset, onAssetUpdated }) => {
           {/* Copy Asset */}
           <DropdownMenuItem
             onClick={handleCopySerialNo}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-foreground"
           >
             <Copy className="h-4 w-4" />
             <span>Copy Serial No.</span>

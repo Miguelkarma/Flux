@@ -43,13 +43,13 @@ function StatusItem({ label, value, color }: StatusItemProps) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
-        <div className="text-xs text-secondary-foreground">{label}</div>
+      <div className=" flex items-center justify-between mb-1">
+        <div className="text-xs text-foreground">{label}</div>
         <div className="text-xs text-secondary-foreground font-bold">
           {value}
         </div>
       </div>
-      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+      <div className="h-1.5 bg-accent rounded-full overflow-hidden">
         <div
           className={`h-full bg-gradient-to-r ${getColor()} rounded-full`}
           style={{ width: `${value}%` }}
@@ -231,10 +231,9 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`${theme} bg-sidebar-background border-sidebar-border 
-      backdrop-blur-sm h-full rounded-lg border p-4 shadow shadow-popover-foreground`}
+      className={`${theme} bg-secondary h-full rounded-lg border p-4 shadow shadow-popover-foreground`}
     >
-      <nav className="space-y-2 bg-sidebar-background">
+      <nav className="space-y-2 ">
         {/* Dashboard and Assets links */}
         {items.slice(0, 2).map((item) => (
           <NavLink
@@ -280,7 +279,7 @@ export default function Sidebar() {
             className="overflow-hidden transition-all duration-300 ease-in-out"
             style={{ maxHeight: `${contentHeight}px` }}
           >
-            <div className="ml-6 space-y-1 mt-1 border-l border-sidebar-border pl-2">
+            <div className="ml-6 space-y-1 mt-1 border-l border-teal-700 pl-2">
               {qrSubItems.map((subItem) => (
                 <NavLink
                   key={subItem.title}
@@ -323,7 +322,7 @@ export default function Sidebar() {
       {/* ASSET STATUS SECTION */}
       {user ? (
         <>
-          <div className="mt-2 pt-3 border-t border-sidebar-border ">
+          <div className="mt-2 pt-3  border-sidebar-border ">
             <div className="text-xs text-accent-foreground mb-1 mt-2 font-semibold">
               OVERVIEW
             </div>
