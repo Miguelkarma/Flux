@@ -29,7 +29,17 @@ export async function fetchElectronicsProducts(): Promise<Product[]> {
         ].some((keyword) => product.category.toLowerCase().includes(keyword))
     );
 
-    return electronicsProducts;
+    // converting "mobile-accessories" to "peripherals"
+    const mappedProducts = electronicsProducts.map(
+      (product: { category: string }) => {
+        if (product.category === "mobile-accessories") {
+          return { ...product, category: "peripherals" };
+        }
+        return product;
+      }
+    );
+
+    return mappedProducts;
   } catch (error) {
     console.error("Failed to fetch electronics products:", error);
     return [];
