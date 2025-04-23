@@ -14,16 +14,25 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import Switch from "@/components/ui/switch";
 import { AssetSearch } from "@/components/SearchComponents/AssetSearch";
+import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user, handleLogout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="flex flex-col md:flex-row items-center justify-between py-4 border-slate-500 mb-6 rounded-lg">
-      <div className="flex items-center space-x-2 mb-4 md:mb-0">
-        <Waypoints className="h-8 w-8 icon-logo" />
-        <span className="text-xl font-bold logo-gradient ">Flux</span>
-      </div>
+      <Button
+        className=" text-3xl font-bold bg-clip-text text-transparent rounded-lg transition-all duration-300 hover:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] hover:-translate-x-1 hover:-translate-y-1 hover:shadow-teal-200  shadow-none
+          logo-gradient"
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        {" "}
+        Flux
+      </Button>
 
       <div className="flex flex-col md:flex-row items-center space-y-4 md:space-x-6 md:space-y-0 ml-2">
         <div className="flex-shrink w-full md:w-auto">

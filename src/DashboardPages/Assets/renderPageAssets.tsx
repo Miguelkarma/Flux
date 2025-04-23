@@ -35,7 +35,7 @@ export default function Dashboard() {
       />
 
       <div
-        className={`min-h-screen bg-gradient-to-bl from-cyan-600/50 via-cyan-900/20 text-slate-100 relative overflow-hidden ${
+        className={`min-h-screen bg-deep-sea text-slate-100 relative overflow-hidden ${
           theme === "dark" ? "dark" : ""
         }`}
       >

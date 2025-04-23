@@ -4,7 +4,11 @@
 
 @layer base {
   :root {
-    --background: 200 20% 90%;
+    --background: linear-gradient(
+      to bottom right,
+      hsla(188, 67%, 83%, 0.5),
+      hsl(180, 29%, 47%)
+    );
     --foreground: 222.2 84% 10%;
 
     --card: 0 0% 90%;
@@ -50,7 +54,11 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: linear-gradient(
+      to top left,
+      hsl(191, 91%, 5%),
+      hsla(204, 48%, 30%, 0.9)
+    );
     --foreground: 210 40% 98%;
 
     --card: 198 85% 10%;
@@ -201,4 +209,8 @@
       -webkit-text-fill-color: transparent;
     }
   }
+}
+
+.bg-deep-sea {
+  background: var(--background);
 }
