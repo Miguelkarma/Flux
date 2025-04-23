@@ -20,9 +20,9 @@
     --secondary-foreground: 180 60% 20%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 215.4 16.3% 40%;
 
-    --accent: 180 70% 90%;
+    --accent: 222.2 10% 70%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -52,7 +52,7 @@
     --foreground: 210 40% 98%;
 
     --card: 198 85% 10%;
-    --card-foreground: 180 40% 95%;
+    --card-foreground: 180 40% 100%;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 180 60% 80%;
@@ -64,9 +64,9 @@
     --secondary-foreground: 180 60% 90%;
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 215 10% 75%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 217.2 20% 30%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -97,60 +97,30 @@
 }
 
 @layer components {
-  .active-state-alt {
-    @apply transition rounded-full text-teal-900 z-[32] dark:text-teal-400;
-    /* Dark Mode */
-    @apply p-2 rounded-full border border-transparent 
-    dark:bg-gradient-to-r from-[#27ffc9] via-[#ffffffe3] to-transparent 
-    dark:bg-clip-border;
-
-    /* root or light mode */
-    background-image: linear-gradient(to right, #cccccc, #ffffffa1),
-      linear-gradient(90deg, #12c29693, #fff, transparent);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-
-    box-shadow: 2em 0 2em 0em inset rgba(116, 126, 125, 0.411);
+  .bg-mask {
+    mask-image: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 1) 30%,
+      rgba(0, 0, 0, -1) 100%
+    );
   }
 
-  .active-state-alt::before {
-    content: "";
-    @apply absolute inset-0 z-[-1] dark:bg-gradient-to-r from-card to-card rounded-full;
+  ::-webkit-scrollbar {
+    width: 0.5em;
   }
 
-  .hover-active-state-alt:hover {
-    @apply active-state-alt transition-all duration-300;
-    @apply p-2;
+  ::-webkit-scrollbar-track {
+    background: rgba(88, 77, 77, 0.555);
+    border-radius: 10px;
   }
 
-  .inactive-state {
-    @apply text-slate-500 hover:text-teal-950 dark:text-slate-500 dark:hover:text-white;
+  ::-webkit-scrollbar-thumb {
+    background: rgb(3, 22, 34);
+    border-radius: 10px;
+    border: 3px solid rgb(3, 22, 34);
   }
-}
 
-.bg-mask {
-  mask-image: linear-gradient(
-    to left,
-    rgba(0, 0, 0, 1) 30%,
-    rgba(0, 0, 0, -1) 100%
-  );
-}
-
-::-webkit-scrollbar {
-  width: 0.5em;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(88, 77, 77, 0.555);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgb(3, 22, 34);
-  border-radius: 10px;
-  border: 3px solid rgb(3, 22, 34);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(3, 22, 34, 0.61);
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(3, 22, 34, 0.61);
+  }
 }

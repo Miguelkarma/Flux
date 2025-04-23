@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
 import type { EmployeeData } from "@/components/EmployeeComponents/columns";
+import type { ScanRecord } from "@/components/QRComponents/ScanHistory";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "@/firebase/firebase";
@@ -26,6 +27,10 @@ export type ItemType =
   | {
       type: "employee";
       data: EmployeeData;
+    }
+  | {
+      type: "scan-history";
+      data: ScanRecord;
     };
 
 interface DeleteDialogProps {
@@ -34,6 +39,7 @@ interface DeleteDialogProps {
   setIsOpen: (open: boolean) => void;
   onAssetUpdated?: () => void;
   onEmployeeUpdated?: () => void;
+  onHistoryUpdated?: () => void;
   isDeleting?: boolean;
 }
 
@@ -43,6 +49,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
   setIsOpen,
   onAssetUpdated,
   onEmployeeUpdated,
+  onHistoryUpdated,
   isDeleting: externalIsDeleting,
 }) => {
   // internal state to manage delete status
@@ -56,7 +63,9 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
   const title =
     item.type === "asset"
       ? `Delete ${item.data.assetTag}?`
-      : `Delete ${item.data.firstName} ${item.data.lastName}?`;
+      : item.type === "employee"
+      ? `Delete ${item.data.firstName} ${item.data.lastName}?`
+      : `Delete scan record for ${item.data.serialNum}?`;
 
   const handleDelete = async () => {
     const auth = getAuth();
@@ -109,6 +118,29 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
         console.error("Delete error:", error);
         toast.error(
           "Failed to delete employee. Check Firestore rules and authentication."
+        );
+      } finally {
+        setInternalIsDeleting(false);
+      }
+    } else if (item.type === "scan-history") {
+      if (!item.data.id) {
+        toast.error("Error: Scan history ID is missing");
+        return;
+      }
+
+      try {
+        setInternalIsDeleting(true);
+        const historyRef = doc(db, "scan-history", item.data.id);
+        await deleteDoc(historyRef);
+        toast.success(
+          `Scan record for ${item.data.serialNum} deleted successfully.`
+        );
+        setIsOpen(false);
+        if (onHistoryUpdated) onHistoryUpdated(); // refresh after delete
+      } catch (error) {
+        console.error("Delete error:", error);
+        toast.error(
+          "Failed to delete scan history. Check Firestore rules and authentication."
         );
       } finally {
         setInternalIsDeleting(false);

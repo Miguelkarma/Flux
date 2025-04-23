@@ -7,7 +7,10 @@ import "@/App.css";
 import Dashboard from "@/DashboardPages/Dashboard/renderDashboard";
 import Assets from "@/DashboardPages/Assets/renderPageAssets";
 import Employee from "@/DashboardPages/Employee/RenderEmployee";
-import Settings from "@/DashboardPages/Settings";
+import Settings from "@/DashboardPages/Settings/Settings";
+import Generate from "@/DashboardPages/QR/RenderGenerate";
+import Scanner from "@/DashboardPages/QR/RenderScanner";
+import Logs from "@/DashboardPages/QR/RenderLogs";
 
 const AppRouter = () => {
   return (
@@ -20,6 +23,9 @@ const AppRouter = () => {
         <Route path="/assets" element={<Assets />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/qrcode/generate-qr" element={<Generate />} />
+        <Route path="/qrcode/scanner-qr" element={<Scanner />} />
+        <Route path="/qrcode/qr-logs" element={<Logs />} />
       </Routes>
     </BrowserRouter>
   );
