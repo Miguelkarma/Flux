@@ -67,6 +67,7 @@ export default function Dashboard() {
           {/* Main Dashboard */}
           <div className="md:col-span-6">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <div className="grid gap-2">
               <AssetSummary />
 =======
@@ -74,6 +75,11 @@ export default function Dashboard() {
               <AssetSummary />
               <MarketPriceTracker />
 >>>>>>> dashboard-integrations-API-ui-fixes
+=======
+            <div className="grid gap-6">
+              <AssetSummary />
+              <MarketPriceTracker />
+>>>>>>> account-settings
             </div>
           </div>
 

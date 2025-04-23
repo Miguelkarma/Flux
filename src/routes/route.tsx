@@ -7,6 +7,7 @@ import "@/App.css";
 import Dashboard from "@/DashboardPages/Dashboard/renderDashboard";
 import Assets from "@/DashboardPages/Assets/renderPageAssets";
 import Employee from "@/DashboardPages/Employee/RenderEmployee";
+import Settings from "@/DashboardPages/Settings/Settings";
 
 const AppRouter = () => {
   return (
@@ -18,6 +19,7 @@ const AppRouter = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/assets" element={<Assets />} />
         <Route path="/employee" element={<Employee />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </BrowserRouter>
   );
