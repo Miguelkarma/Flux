@@ -186,5 +186,8 @@ export function useQRScanner({ onScanSuccess }: UseQRScannerOptions) {
     manualCaptureAndScan,
     resetScan,
     manualScan,
+    setUploadedImage,
+    setIsScanning,
+    streamRef,
   };
 }

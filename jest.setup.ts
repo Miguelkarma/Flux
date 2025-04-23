@@ -3,10 +3,12 @@ import "jest-styled-components";
 
 import { TextEncoder, TextDecoder as NodeTextDecoder } from "util";
 
+// Set up TextEncoder and TextDecoder globals
 globalThis.TextEncoder = TextEncoder as typeof globalThis.TextEncoder;
 globalThis.TextDecoder =
   NodeTextDecoder as unknown as typeof globalThis.TextDecoder;
 
+// Mock matchMedia
 globalThis.matchMedia =
   globalThis.matchMedia ||
   (() => ({
@@ -19,6 +21,8 @@ globalThis.matchMedia =
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   }));
+
+// Mock ResizeObserver
 class MockResizeObserver {
   observe() {}
   unobserve() {}
@@ -31,19 +35,88 @@ Object.defineProperty(globalThis, "ResizeObserver", {
   value: MockResizeObserver,
 });
 
+// Mock FileReader with proper functionality for QR scanner tests
 class MockFileReader {
-  onload: ((this: FileReader, ev: unknown) => unknown) | null = null;
+  onload: ((this: FileReader, ev: ProgressEvent<FileReader>) => void) | null =
+    null;
+  onerror: ((this: FileReader, ev: ProgressEvent<FileReader>) => void) | null =
+    null;
+  readyState = 0;
+  result: string | ArrayBuffer | null = null;
 
-  readAsText(): void {}
+  readAsDataURL(blob: Blob): void {
+    // Simulate asynchronous file reading
+    setTimeout(() => {
+      this.readyState = MockFileReader.DONE;
+      this.result = "data:image/png;base64,mockdata";
 
-  abort() {}
-  addEventListener() {}
-  removeEventListener() {}
+      if (this.onload) {
+        const event = {
+          target: this,
+          lengthComputable: true,
+          loaded: blob.size,
+          total: blob.size,
+        } as unknown as ProgressEvent<FileReader>;
+
+        this.onload.call(this, event);
+      }
+    }, 0);
+  }
+
+  readAsText(blob: Blob, encoding?: string): void {
+    setTimeout(() => {
+      this.readyState = MockFileReader.DONE;
+      this.result = "mock text content";
+
+      if (this.onload) {
+        const event = {
+          target: this,
+          lengthComputable: true,
+          loaded: blob.size,
+          total: blob.size,
+        } as unknown as ProgressEvent<FileReader>;
+
+        this.onload.call(this, event);
+      }
+    }, 0);
+  }
+
+  readAsArrayBuffer(blob: Blob): void {
+    setTimeout(() => {
+      this.readyState = MockFileReader.DONE;
+      // Create a mock ArrayBuffer
+      this.result = new ArrayBuffer(blob.size);
+
+      if (this.onload) {
+        const event = {
+          target: this,
+          lengthComputable: true,
+          loaded: blob.size,
+          total: blob.size,
+        } as unknown as ProgressEvent<FileReader>;
+
+        this.onload.call(this, event);
+      }
+    }, 0);
+  }
+
+  abort() {
+    this.readyState = MockFileReader.DONE;
+  }
+
+  addEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject
+  ) {}
+  removeEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject
+  ) {}
   dispatchEvent() {
     return true;
   }
 
-  // Include static getters
+  // Static properties
   static get EMPTY() {
     return 0;
   }
@@ -62,6 +135,74 @@ Object.defineProperty(globalThis, "FileReader", {
   value: MockFileReader,
 });
 
+// Mock MediaStream for camera tests
+class MockMediaStream {
+  private tracks: MediaStreamTrack[] = [
+    { stop: jest.fn() } as unknown as MediaStreamTrack,
+  ];
+
+  getTracks() {
+    return this.tracks;
+  }
+
+  getVideoTracks() {
+    return this.tracks;
+  }
+
+  getAudioTracks() {
+    return [];
+  }
+}
+
+// Mock navigator.mediaDevices
+Object.defineProperty(global.navigator, "mediaDevices", {
+  value: {
+    getUserMedia: jest.fn().mockImplementation(() => {
+      return Promise.resolve(new MockMediaStream());
+    }),
+  },
+  configurable: true,
+});
+
+// Mock other commonly used libraries/components
 jest.mock("lucide-react", () => ({
   Check: () => "MockedCheckIcon",
+  Camera: () => "MockedCameraIcon",
+  Upload: () => "MockedUploadIcon",
+  X: () => "MockedXIcon",
+  // Add other icons as needed
 }));
+
+// Mock for HTMLVideoElement
+class MockHTMLVideoElement extends HTMLElement {
+  srcObject: MediaStream | null = null;
+  play = jest.fn().mockResolvedValue(undefined);
+  pause = jest.fn();
+
+  // Add any other video properties/methods you need
+}
+
+// Register the custom element
+customElements.define("mock-video", MockHTMLVideoElement);
+
+// Override createElement to return our mock for video elements
+const originalCreateElement = document.createElement.bind(document);
+document.createElement = function (
+  tagName: string,
+  options?: ElementCreationOptions
+): HTMLElement {
+  if (tagName.toLowerCase() === "video") {
+    return new MockHTMLVideoElement();
+  }
+  return originalCreateElement(tagName, options);
+};
+
+// Mock fetch
+global.fetch = jest.fn().mockImplementation(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(""),
+    blob: () => Promise.resolve(new Blob()),
+  })
+);

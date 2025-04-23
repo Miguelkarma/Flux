@@ -13,7 +13,6 @@ import { Toaster } from "sonner";
 export default function Scanner() {
   const { theme } = useTheme();
   const { user } = useAuth();
-  // Change from id to uid for Firebase User
   const userId = user?.uid;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -26,10 +25,9 @@ export default function Scanner() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle scan completion
+  // handle scan completion
   const handleScanComplete = (serialNumber: string) => {
     console.log("Scan completed:", serialNumber);
-    // Add any additional logic you want to execute after scan
   };
 
   return (

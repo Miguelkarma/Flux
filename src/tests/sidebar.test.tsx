@@ -1,132 +1,200 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Sidebar from "@/components/Sidebar";
 import { BrowserRouter } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { ThemeProvider } from "@/hooks/ThemeProvider";
 
-// mock Firebase
-jest.mock("firebase/auth");
-jest.mock("firebase/firestore");
-
-// mock Lucide
-jest.mock("lucide-react", () => ({
-  Command: () => <div data-testid="command-icon" />,
-  Laptop: () => <div data-testid="laptop-icon" />,
-  Users: () => <div data-testid="users-icon" />,
-  Banknote: () => <div data-testid="banknote-icon" />,
-  ExternalLink: () => <div data-testid="external-link-icon" />,
+// mock usetheme
+jest.mock("@/hooks/ThemeProvider", () => ({
+  useTheme: () => ({ theme: "light" }),
 }));
 
+// mock firebase auth
+jest.mock("firebase/auth", () => ({
+  getAuth: jest.fn(),
+  onAuthStateChanged: jest.fn(),
+}));
+
+// mock firestore
+jest.mock("firebase/firestore", () => ({
+  ...jest.requireActual("firebase/firestore"),
+  collection: jest.fn(),
+  query: jest.fn(),
+  where: jest.fn(),
+  getDocs: jest.fn(),
+}));
+
+jest.mock("@/firebase/firebase", () => ({
+  db: {},
+}));
+
+jest.mock("lucide-react", () => ({
+  Command: jest.fn(() => <div>Command Icon</div>),
+  Laptop: jest.fn(() => <div>Laptop Icon</div>),
+  Settings: jest.fn(() => <div>Settings Icon</div>),
+  Users: jest.fn(() => <div>Users Icon</div>),
+  ChevronDown: jest.fn(() => <div>ChevronDown Icon</div>),
+  QrCode: jest.fn(() => <div>QrCode Icon</div>),
+  ScanQrCode: jest.fn(() => <div>ScanQrCode Icon</div>),
+  History: jest.fn(() => <div>History Icon</div>),
+}));
+
+// use capitalized status values to match component expectations
+const mockAssetData = [
+  { id: "1", status: "Active", userId: "testUser" },
+  { id: "2", status: "Active", userId: "testUser" },
+  { id: "3", status: "Maintenance", userId: "testUser" },
+];
+
+const mockEmployeeData = [
+  { id: "e1", name: "Employee 1", userId: "testUser" },
+  { id: "e2", name: "Employee 2", userId: "testUser" },
+];
+
 describe("Sidebar Component", () => {
-  const mockUser = { uid: "test-uid", email: "test@example.com" };
+  const mockUser = { uid: "testUser" };
+  let unsubscribeMock: jest.Mock;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
-    (getAuth as jest.Mock).mockReturnValue({});
+    unsubscribeMock = jest.fn();
     (onAuthStateChanged as jest.Mock).mockImplementation((_auth, callback) => {
       callback(mockUser);
-      return jest.fn();
+      return unsubscribeMock;
     });
+    (getAuth as jest.Mock).mockReturnValue({});
   });
 
-  const renderSidebar = () => {
-    return render(
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("renders sidebar links", () => {
+    render(
       <BrowserRouter>
-        <ThemeProvider>
-          <Sidebar />
-        </ThemeProvider>
+        <Sidebar />
       </BrowserRouter>
     );
-  };
-
-  test("renders navigation links", () => {
-    renderSidebar();
 
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
     expect(screen.getByText("Assets")).toBeInTheDocument();
     expect(screen.getByText("Employee")).toBeInTheDocument();
-    expect(screen.getByText("Exchange")).toBeInTheDocument();
-    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
+    expect(screen.getByText("Settings")).toBeInTheDocument();
+    expect(screen.getByText("QR Assets")).toBeInTheDocument();
   });
 
-  test("displays asset and employee status when authenticated", async () => {
-    // mock Firestore responses
-    const mockEmployees = [
-      { id: "emp1", data: () => ({ userId: "test-uid" }) },
-      { id: "emp2", data: () => ({ userId: "test-uid" }) },
-    ];
+  test("expands QR submenu when clicked", async () => {
+    render(
+      <BrowserRouter>
+        <Sidebar />
+      </BrowserRouter>
+    );
 
-    const mockAssets = [
-      { id: "asset1", data: () => ({ status: "Active", userId: "test-uid" }) },
-      {
-        id: "asset2",
-        data: () => ({ status: "Maintenance", userId: "test-uid" }),
-      },
-      { id: "asset3", data: () => ({ status: "Retired", userId: "test-uid" }) },
-      {
-        id: "asset4",
-        data: () => ({ status: "Available", userId: "test-uid" }),
-      },
-      { id: "asset5", data: () => ({ status: "Lost", userId: "test-uid" }) },
-    ];
+    const qrToggle = screen.getByText("QR Assets");
+    fireEvent.click(qrToggle);
 
-    // mock query and getDocs
-    (collection as jest.Mock).mockImplementation((_db, collectionName) => {
-      return collectionName;
-    });
-
-    (where as jest.Mock).mockReturnValue({});
-
-    (query as jest.Mock).mockReturnValue({});
-
-    (getDocs as jest.Mock)
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          forEach: (callback: any) => mockEmployees.forEach(callback),
-          size: mockEmployees.length,
-        })
-      )
-      .mockImplementationOnce(() =>
-        Promise.resolve({
-          forEach: (callback: any) => mockAssets.forEach(callback),
-          size: mockAssets.length,
-        })
-      );
-
-    renderSidebar();
-
-    // test for overview section
     await waitFor(() => {
-      expect(screen.getByText("OVERVIEW")).toBeInTheDocument();
-      expect(screen.getByText("Total Employees")).toBeInTheDocument();
-      expect(screen.getByText("Total Assets")).toBeInTheDocument();
-    });
-
-    // Test for asset status section
-    await waitFor(() => {
-      expect(screen.getByText("ASSET STATUS")).toBeInTheDocument();
-      expect(screen.getByText("Active")).toBeInTheDocument();
-      expect(screen.getByText("Maintenance")).toBeInTheDocument();
-      expect(screen.getByText("Retired")).toBeInTheDocument();
-      expect(screen.getByText("Available")).toBeInTheDocument();
-      expect(screen.getByText("Lost")).toBeInTheDocument();
+      expect(screen.getByText("Generate QR")).toBeInTheDocument();
+      expect(screen.getByText("Scan QR")).toBeInTheDocument();
+      expect(screen.getByText("QR Logs")).toBeInTheDocument();
     });
   });
 
-  test("displays login prompt when not authenticated", async () => {
+  test("displays login message when no user is authenticated", () => {
+    // mock firebase's onauthstatechanged to return null (no user)
     (onAuthStateChanged as jest.Mock).mockImplementation((_auth, callback) => {
-      callback(null);
-      return jest.fn();
+      callback(null); // simulate no user authenticated
+      return unsubscribeMock;
     });
 
-    renderSidebar();
+    render(
+      <BrowserRouter>
+        <Sidebar />
+      </BrowserRouter>
+    );
 
+    // assert the login message is displayed
+    expect(
+      screen.getByText("Please log in to view asset status.")
+    ).toBeInTheDocument();
+  });
+
+  test("fetches and displays user data when authenticated", async () => {
+    // mock firestore functions
+    (collection as jest.Mock).mockImplementation((_, collectionName) => {
+      if (collectionName === "it-assets") return "assets-collection";
+      if (collectionName === "employees") return "employees-collection";
+      return null;
+    });
+    (query as jest.Mock).mockImplementation(
+      (collectionRef, ...queryConstraints) => ({
+        collectionRef,
+        queryConstraints,
+      })
+    );
+    (where as jest.Mock).mockImplementation(() => ({}));
+
+    // first call is for assets
+    (getDocs as jest.Mock)
+      .mockImplementationOnce((q) => {
+        if (q.collectionRef === "assets-collection") {
+          return Promise.resolve({
+            empty: false,
+            size: mockAssetData.length,
+            forEach: (callback: any) =>
+              mockAssetData.forEach((doc) =>
+                callback({
+                  id: doc.id,
+                  data: () => doc,
+                })
+              ),
+          });
+        }
+        return Promise.reject(new Error("Unexpected collection"));
+      })
+
+      // second call is for employees
+      .mockImplementationOnce((q) => {
+        if (q.collectionRef === "employees-collection") {
+          return Promise.resolve({
+            empty: false,
+            size: mockEmployeeData.length,
+            forEach: (callback: any) =>
+              mockEmployeeData.forEach((doc) =>
+                callback({
+                  id: doc.id,
+                  data: () => doc,
+                })
+              ),
+          });
+        }
+        return Promise.reject(new Error("Unexpected collection"));
+      });
+
+    render(
+      <BrowserRouter>
+        <Sidebar />
+      </BrowserRouter>
+    );
+
+    // wait for data to load and verify asset counts
     await waitFor(() => {
+      // verify total assets
       expect(
-        screen.getByText("Please log in to view asset status.")
-      ).toBeInTheDocument();
+        screen.getByText("Total Assets").nextElementSibling
+      ).toHaveTextContent(mockAssetData.length.toString());
+
+      // verify total employees
+      expect(
+        screen.getByText("Total Employees").nextElementSibling
+      ).toHaveTextContent(mockEmployeeData.length.toString());
+
+      // verify asset statuses
+      expect(screen.getByText("Active").nextElementSibling).toHaveTextContent(
+        "2"
+      );
+      expect(
+        screen.getByText("Maintenance").nextElementSibling
+      ).toHaveTextContent("1");
     });
   });
 });
