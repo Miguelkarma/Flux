@@ -80,20 +80,20 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
 
   return (
     <>
-      <div className="flex items-center mt-6 my-auto text-card-foreground ">
-        <Card className="w-full max-w-6xl h-full mx-auto shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold flex items-center gap-2">
-              <Camera className="w-5 h-5" />
+      <div className="flex items-center mt-4 lg:mt-8 my-auto text-card-foreground w-full px-2 sm:px-4">
+        <Card className="w-full max-w-6xl h-full mx-auto shadow shadow-popover-foreground bg-[hsl(var(--secondary))]">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-lg sm:text-xl font-bold flex items-center gap-2">
+              <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
               Scan IT Asset QR Code
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-8">
-              <div className="flex gap-2">
+          <CardContent className="px-4 sm:px-6">
+            <div className="space-y-6 sm:space-y-8">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground"
+                  className="w-full sm:w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground text-sm"
                   disabled={isLoading}
                   variant="outline"
                 >
@@ -111,7 +111,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
                 <Button
                   variant="outline"
                   onClick={handleOpenCameraDialog}
-                  className="w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground"
+                  className="w-full sm:w-1/2 flex gap-2 shadow shadow-popover-foreground bg-transparent text-card-foreground text-sm mt-2 sm:mt-0"
                   disabled={isLoading}
                 >
                   <Camera className="w-4 h-4" />
@@ -121,19 +121,17 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
 
               {uploadedImage ? (
                 <div className="flex flex-col items-center space-y-2">
-                  <div className="w-[300px] h-[300px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
+                  <div className="w-full max-w-[300px] aspect-square shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
                     <img
                       src={uploadedImage}
-                      width="300"
-                      height="300"
                       alt="QR code"
-                      className="rounded-md"
+                      className="rounded-md max-w-full max-h-full object-contain"
                     />
                   </div>
                 </div>
               ) : (
                 <div className="flex flex-col items-center space-y-2">
-                  <div className="w-[300px] h-[300px] shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
+                  <div className="w-full max-w-[300px] aspect-square shadow shadow-popover-foreground rounded flex items-center justify-center mx-auto bg-secondary">
                     {/* placeholder content */}
                     <span className="text-gray-400">Qr Code</span>
                   </div>
@@ -141,27 +139,27 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
               )}
 
               {isLoading && (
-                <div className="flex justify-center p-4">
-                  <Loader2 className="w-6 h-6 animate-spin" />
+                <div className="flex justify-center p-2 sm:p-4">
+                  <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
                 </div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {scanResult && (
-                  <div className="p-2 rounded-md bg-secondary text-center ">
-                    <p>{scanResult}</p>
+                  <div className="p-2 rounded-md bg-secondary text-center text-sm sm:text-base">
+                    <p className="break-words">{scanResult}</p>
                   </div>
                 )}
                 <Button
                   variant="outline"
                   onClick={resetScan}
-                  className="w-full shadow shadow-popover-foreground bg-transparent text-card-foreground"
+                  className="w-full shadow shadow-popover-foreground bg-transparent text-card-foreground text-sm"
                 >
                   Reset Scan
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full shadow shadow-popover-foreground bg-transparent text-card-foreground"
+                  className="w-full shadow shadow-popover-foreground bg-transparent text-card-foreground text-sm"
                   onClick={manualScan}
                   disabled={isLoading || (!uploadedImage && !isScanning)}
                 >
@@ -177,7 +175,7 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
           open={isCameraDialogOpen}
           onOpenChange={handleCloseCameraDialog}
         >
-          <DialogContent className="w-full max-w-4xl ">
+          <DialogContent className="w-full max-w-full sm:max-w-4xl bg-secondary m-0 p-4 sm:p-6 h-full sm:h-auto rounded-none sm:rounded-lg">
             <DialogHeader>
               <DialogTitle>Scan QR Code</DialogTitle>
             </DialogHeader>
@@ -191,11 +189,11 @@ export function QRScanner({ userId, onScanComplete }: QRScannerProps) {
                 />
               </div>
             </div>
-            <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
               <Button
                 variant="outline"
                 onClick={handleCloseCameraDialog}
-                className="sm:w-auto flex-1"
+                className="w-full sm:w-auto"
               >
                 Close
               </Button>

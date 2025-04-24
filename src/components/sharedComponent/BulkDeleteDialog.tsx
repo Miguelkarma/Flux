@@ -26,16 +26,18 @@ export function BulkDeleteDialog({
   onDelete,
   isDeleting,
   selectedCount,
-  itemType
+  itemType,
 }: BulkDeleteDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="bg-secondary">
         <DialogHeader>
-          <DialogTitle>Delete {selectedCount} {itemType}(s)?</DialogTitle>
+          <DialogTitle>
+            Delete {selectedCount} {itemType}(s)?
+          </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete these {itemType}s? This action cannot
-            be undone.
+            Are you sure you want to delete these {itemType}s? This action
+            cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -62,14 +64,14 @@ export function BulkDeleteDialog({
 export function BulkDeleteTrigger({
   selectedCount,
   onClick,
-  className
+  className,
 }: {
   selectedCount: number;
   onClick: () => void;
   className?: string;
 }) {
   if (selectedCount === 0) return null;
-  
+
   return (
     <DeleteButton
       onClick={onClick}

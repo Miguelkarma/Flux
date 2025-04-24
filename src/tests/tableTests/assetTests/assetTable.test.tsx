@@ -353,7 +353,9 @@ describe("AssetTable", () => {
     });
 
     render(<DataTable />);
-    expect(screen.getByText("No results.")).toBeInTheDocument();
+    expect(
+      screen.getByText("No assets have been recorded.")
+    ).toBeInTheDocument();
   });
 
   test("handles column visibility toggle", () => {

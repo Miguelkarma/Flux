@@ -270,7 +270,7 @@ export function EmployeeTable() {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      No employee have been recorded.
                     </TableCell>
                   </TableRow>
                 )}
@@ -332,7 +332,7 @@ export function EmployeeTable() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        No results.
+                        No employee have been recorded.
                       </TableCell>
                     </TableRow>
                   )}

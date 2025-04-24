@@ -150,7 +150,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
+      <DialogContent className="bg-secondary">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>

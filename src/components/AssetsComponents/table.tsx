@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -140,6 +140,7 @@ export function DataTable() {
     <>
       <div className="flex items-center justify-between">
         <Input
+          icon={Filter}
           placeholder="Filter Serial No."
           value={
             (table.getColumn("serialNo")?.getFilterValue() as string) ?? ""
@@ -268,7 +269,7 @@ export function DataTable() {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      No assets have been recorded.
                     </TableCell>
                   </TableRow>
                 )}
@@ -352,7 +353,7 @@ export function DataTable() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        No results.
+                        No assets have been recorded.
                       </TableCell>
                     </TableRow>
                   )}

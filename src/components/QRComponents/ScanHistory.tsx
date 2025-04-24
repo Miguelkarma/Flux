@@ -21,7 +21,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 import { AssetDetailsDialog } from "@/components/SearchComponents/AssetsDetailsDialog";
-import DeleteDialog from "@/components/sharedComponent/DeleteDialog"; // Import the DeleteDialog
+import DeleteDialog from "@/components/sharedComponent/DeleteDialog";
 import type { FirestoreData } from "@/components/AssetsComponents/columns";
 import { toast } from "sonner";
 
@@ -156,32 +156,36 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
   }, [userId]);
 
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow shadow-popover-foreground bg-[hsl(var(--secondary))] ">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl font-bold flex items-center gap-2 mt-2">
-          <History className="w-5 h-5" />
+    <Card className="w-full max-w-4xl mx-auto shadow shadow-popover-foreground bg-[hsl(var(--secondary))] px-2 sm:px-4">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-2 sm:px-4">
+        <CardTitle className="text-lg sm:text-xl font-bold flex items-center gap-2">
+          <History className="w-4 h-4 sm:w-5 sm:h-5" />
           Recent Scans
         </CardTitle>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={fetchHistory}
             disabled={isLoading}
+            className="p-1 sm:p-2"
           >
             <RefreshCw className="w-4 h-4" />
+            <span className="sr-only">Refresh</span>
           </Button>
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={clearAllHistory}
             disabled={isLoading || history.length === 0}
+            className="text-xs sm:text-sm p-1 sm:p-2 flex-1 sm:flex-none"
           >
-            <ListRestart className="w-4 h-4" /> Clear History
+            <ListRestart className="w-4 h-4 mr-1" />
+            <span className="block">Clear History</span>
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-2 sm:px-4 pb-4">
         {isLoading ? (
           <div className="flex justify-center p-4">
             <Loader2 className="w-6 h-6 animate-spin" />
@@ -191,26 +195,30 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
             No scan history found
           </div>
         ) : (
-          <div className="space-y-2 ">
+          <div className="space-y-2">
             {history.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-3 rounded-md border bg-background hover:bg-muted/50 transition-colors shadow shadow-popover-foreground"
+                className="flex items-center justify-between p-2 sm:p-3 rounded-md border bg-background hover:bg-muted/50 transition-colors shadow shadow-popover-foreground"
               >
-                <div className="flex-1">
-                  <div className="font-medium">{item.serialNum}</div>
-                  <div className="text-sm text-muted-foreground">
+                <div className="flex-1 min-w-0 pr-2">
+                  <div className="font-medium text-sm sm:text-base truncate">
+                    {item.serialNum}
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">
                     {formatDate(item.timestamp)}
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2 flex-shrink-0">
                   {item.found && (
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => viewAssetDetails(item.serialNum)}
+                      className="h-8 w-8 p-0"
                     >
                       <Search className="w-4 h-4" />
+                      <span className="sr-only">View Details</span>
                     </Button>
                   )}
 
@@ -218,8 +226,10 @@ export function ScanHistory({ userId }: ScanHistoryProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDeleteDialogOpen(item)}
+                    className="h-8 w-8 p-0"
                   >
                     <Trash2 className="w-4 h-4" />
+                    <span className="sr-only">Delete</span>
                   </Button>
                 </div>
               </div>

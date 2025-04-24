@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Menu, LogOut, User as UserIcon } from "lucide-react";
+import { Menu, LogOut, User as UserIcon, LayoutDashboard } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import { navMenu } from "./constants/constants";
 import {
@@ -218,7 +218,7 @@ const Header = () => {
               </PopoverTrigger>
               <PopoverContent className="w-60 bg-background/70 backdrop-blur-md border-foreground/5 border rounded-lg shadow-lg p-4">
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-3 pb-3 border-b border-gray-300">
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-500">
                     <Avatar className="h-10 w-10">
                       <AvatarImage
                         src={user?.photoURL || ""}
@@ -235,6 +235,15 @@ const Header = () => {
                       <span className="text-sm text-gray-400">{userEmail}</span>
                     </div>
                   </div>
+
+                  <Button
+                    variant="ghost"
+                    className="flex justify-start gap-2 text-gray-300 hover:text-white"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    <LayoutDashboard size={16} />
+                    <span>Dashboard</span>
+                  </Button>
 
                   <Button
                     variant="ghost"
