@@ -62,7 +62,7 @@ A modern, lightweight system for tracking IT equipment and employee assignments�
 
 ### Testing
 
-- **Jest** – JavaScript testing framework for unit tests.
+- **Jest** – Testing framework for unit tests.
 
 ### APIs & Integrations
 
