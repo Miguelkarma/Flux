@@ -1,7 +1,20 @@
 import { columns } from "@/components/EmployeeComponents/columns";
 import { EmployeeData } from "@/components/EmployeeComponents/columns";
 import { ColumnDef } from "@tanstack/react-table";
-
+jest.mock("@/firebase/firebase", () => ({
+  getFirebaseConfig: jest.fn().mockReturnValue({
+    apiKey: "test-api-key",
+    authDomain: "test-auth-domain",
+    projectId: "test-project-id",
+    storageBucket: "test-storage-bucket",
+    messagingSenderId: "test-messaging-id",
+    appId: "test-app-id",
+    measurementId: "test-measurement-id",
+  }),
+  app: {},
+  auth: {},
+  db: {},
+}));
 describe("employee table columns", () => {
   const mockEmployee: EmployeeData = {
     id: "1",

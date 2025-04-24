@@ -3,6 +3,20 @@ import { useForm } from "@/hooks/tableHooks/add-form-hook";
 
 jest.mock("firebase/auth");
 jest.mock("firebase/firestore");
+jest.mock("@/firebase/firebase", () => ({
+  getFirebaseConfig: jest.fn().mockReturnValue({
+    apiKey: "test-api-key",
+    authDomain: "test-auth-domain",
+    projectId: "test-project-id",
+    storageBucket: "test-storage-bucket",
+    messagingSenderId: "test-messaging-id",
+    appId: "test-app-id",
+    measurementId: "test-measurement-id",
+  }),
+  app: {},
+  auth: {},
+  db: {},
+}));
 
 describe("useForm hook", () => {
   const initialEmployee = {

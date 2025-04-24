@@ -17,6 +17,6 @@
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "types": ["jest", "node", "@testing-library/jest-dom"]
+    "types": ["jest", "node", "@testing-library/jest-dom", "vite/client"]
   }
 }

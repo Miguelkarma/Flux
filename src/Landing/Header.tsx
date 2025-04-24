@@ -156,20 +156,13 @@ const Header = () => {
                         }}
                       >
                         {icon && (
-                          <motion.a
-                            href={href || "#"}
-                            onClick={(e) => handleNavigation(e, href || "#")}
+                          <span
                             className={`transition-colors duration-300 ${iconColor} text-indigo-300`}
                           >
                             {icon}
-                          </motion.a>
+                          </span>
                         )}
-                        <a
-                          href={href || "#"}
-                          onClick={(e) => handleNavigation(e, href || "#")}
-                        >
-                          {label}
-                        </a>
+                        <span>{label}</span>
                       </motion.a>
 
                       {/* Back face */}
@@ -187,7 +180,7 @@ const Header = () => {
                       >
                         {icon && (
                           <span
-                            className={`transition-colors duration-300 text-sky-300 `}
+                            className={`transition-colors duration-300 text-sky-300`}
                           >
                             {icon}
                           </span>

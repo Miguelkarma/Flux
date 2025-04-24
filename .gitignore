@@ -3,6 +3,7 @@
 .env.development
 .env.staging
 .env.production
+.env.testing
 
 # Ignore node_modules directory
 node_modules/

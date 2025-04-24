@@ -1,5 +1,19 @@
 import { renderHook, act } from "@testing-library/react";
 import { useFormState } from "@/hooks/tableHooks/edit-form-hook";
+jest.mock("@/firebase/firebase", () => ({
+  getFirebaseConfig: jest.fn().mockReturnValue({
+    apiKey: "test-api-key",
+    authDomain: "test-auth-domain",
+    projectId: "test-project-id",
+    storageBucket: "test-storage-bucket",
+    messagingSenderId: "test-messaging-id",
+    appId: "test-app-id",
+    measurementId: "test-measurement-id",
+  }),
+  app: {},
+  auth: {},
+  db: {},
+}));
 
 // mock the employee data
 const mockEmployee = {

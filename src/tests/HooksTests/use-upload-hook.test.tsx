@@ -18,6 +18,21 @@ const createMockFile = (content: string, name: string) => {
   return file;
 };
 
+jest.mock("@/firebase/firebase", () => ({
+  getFirebaseConfig: jest.fn().mockReturnValue({
+    apiKey: "test-api-key",
+    authDomain: "test-auth-domain",
+    projectId: "test-project-id",
+    storageBucket: "test-storage-bucket",
+    messagingSenderId: "test-messaging-id",
+    appId: "test-app-id",
+    measurementId: "test-measurement-id",
+  }),
+  app: {},
+  auth: {},
+  db: {},
+}));
+
 // mock file reader
 global.FileReader = class {
   onload: any;

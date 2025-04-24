@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useFirestoreData } from "@/hooks/tableHooks/firestore-data-hook";
 import { useDataTable } from "@/hooks/tableHooks/table-hook";
 import { useBulkDelete } from "@/hooks/tableHooks/use-bulk-delete-hook";
+import "@testing-library/jest-dom";
 
 // mock hooks
 jest.mock("@/hooks/use-auth", () => ({
@@ -20,6 +21,20 @@ jest.mock("@/hooks/tableHooks/table-hook", () => ({
 
 jest.mock("@/hooks/tableHooks/use-bulk-delete-hook", () => ({
   useBulkDelete: jest.fn(),
+}));
+jest.mock("@/firebase/firebase", () => ({
+  getFirebaseConfig: jest.fn().mockReturnValue({
+    apiKey: "test-api-key",
+    authDomain: "test-auth-domain",
+    projectId: "test-project-id",
+    storageBucket: "test-storage-bucket",
+    messagingSenderId: "test-messaging-id",
+    appId: "test-app-id",
+    measurementId: "test-measurement-id",
+  }),
+  app: {},
+  auth: {},
+  db: {},
 }));
 
 // mock ui components

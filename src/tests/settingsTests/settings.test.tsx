@@ -5,11 +5,26 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import SettingsPage from "@/components/SettingsComponent/SettingsPage";
 import { useUserSettings } from "@/hooks/use-settings";
 
 // Mock the useUserSettings hook
 jest.mock("@/hooks/use-settings");
+jest.mock("@/firebase/firebase", () => ({
+  getFirebaseConfig: jest.fn().mockReturnValue({
+    apiKey: "test-api-key",
+    authDomain: "test-auth-domain",
+    projectId: "test-project-id",
+    storageBucket: "test-storage-bucket",
+    messagingSenderId: "test-messaging-id",
+    appId: "test-app-id",
+    measurementId: "test-measurement-id",
+  }),
+  app: {},
+  auth: {},
+  db: {},
+}));
 
 jest.mock("@/components/ui/tabs", () => ({
   Tabs: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
