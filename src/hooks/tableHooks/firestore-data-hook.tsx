@@ -26,6 +26,7 @@ export function useFirestoreData<T>({
 }: UseFirestoreDataProps) {
   const [data, setData] = React.useState<T[]>([]);
   const [loading, setLoading] = React.useState(!!userId); // Initialize loading based on userId
+  const [refreshTrigger, setRefreshTrigger] = React.useState(0);
 
   // ref to avoid stale closures
   const dataRef = React.useRef<T[]>([]);
@@ -70,13 +71,13 @@ export function useFirestoreData<T>({
     orderDirection,
     // stable dependency for constraints
     JSON.stringify(additionalConstraints),
+    refreshTrigger,
   ]);
 
-  // manual refresh function
   const refreshData = React.useCallback(() => {
     if (userId) {
       setLoading(true);
-      // snapshot listener will handle refresh
+      setRefreshTrigger((prev) => prev + 1); 
     }
   }, [userId]);
 
