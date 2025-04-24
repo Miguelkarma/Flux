@@ -35,7 +35,7 @@ function StatusItem({ label, value, color }: StatusItemProps) {
       case "red":
         return "from-rose-700 via-rose-500 to-rose-400";
       case "employees":
-        return "from-cyan-teal via-teal-600 to-teal-400";
+        return "from-cyan-700 via-teal-600 to-teal-400";
       default:
         return "from-cyan-600 via-cyan-500 to-teal-400";
     }

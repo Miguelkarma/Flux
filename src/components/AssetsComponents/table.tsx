@@ -147,7 +147,7 @@ export function DataTable() {
           onChange={(event) =>
             table.getColumn("serialNo")?.setFilterValue(event.target.value)
           }
-          className="border-border shadow-popover-foreground bg-primary-foreground w-auto max-sm:w-[13em] text-foreground"
+          className="border-border shadow-popover-foreground bg-secondary w-auto max-sm:w-[13em] text-foreground"
         />
 
         <div className="flex items-center space-x-2 ">
