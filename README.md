@@ -1,94 +1,126 @@
-# IT Equipment Asset Management
+# IT Equipment Asset Management System
 
-## Project Overview
-### A lightweight IT equipment asset management system for tracking devices, assignments, and statuses. 
+A modern, lightweight system for tracking IT equipment and employee assignments—complete with QR code integration, real-time dashboards, product search, market value tools, and a polished UI.
 
+---
 
-# Core Features
+## Core Features
 
-## 1. Asset Management
+### Asset Management
 
-Add, update, and delete IT equipment (laptops, phones, etc.).
+- Add, edit, or delete IT assets.
+- Track fields like: serial tag, asset tag, model, location, and status (Available, Assigned, Under Maintenance).
 
-Store asset details (name, serial number, status).
+### Employee Directory
 
-## 2. Assignment Tracking
+- Add, edit, or delete employee records.
+- Manage employee ID, name, department, position, hire date, and status (Active, On Leave).
 
-Assign equipment to employees.
+### QR Code System
 
- View which employee has which device.
+- Generate QR codes for assets.
+- Scan assets using your device's camera.
+- View a searchable history of recent scans.
 
-## 3. Status Monitoring
+### Dashboard & Reporting
 
- Track asset status: Available, Assigned, Under Repair.
+- Real-time reports for:
+  - Total Assets
+  - Active Assets
+  - Assets in Maintenance
+  - Active Employees
+  - Employees on Leave
 
-## 4. Basic Reporting
+### Product Search via API
 
- Show total assets, assigned assets, and available assets.
+- Search for IT equipment using an external product API.
+- Click on a result to view detailed information:
+  - Description
+  - Model
+  - Status
 
-# Tech Stack
+### Market Price & Currency Tools
 
-## Frontend
+- Integrated Market Price API to fetch current asset valuations.
+- Currency Converter for global price comparison and tracking.
 
- React + Vite (for fast and efficient development)
+---
 
- Tailwind CSS (for modern styling)
+## Tech Stack
 
- TypeScript (for maintainability and type safety)
+### Frontend
 
-## Backend
+- **React + Vite** – Fast and responsive UI.
+- **Tailwind CSS** – Utility-first CSS for design.
+- **TypeScript** – Type-safe and scalable frontend.
+- **shadcn/ui** – Beautifully styled UI components.
 
- Node.js & Express (or Firebase/Supabase as an alternative backend)
+### Backend & Database
 
- Firestore or Supabase DB (for cloud storage)
+- **Firebase Firestore** – Real-time NoSQL cloud database.
+- **Firebase Authentication** – Required for user management.
 
-# APIs for Additional Features
+### APIs & Integrations
 
- Market Price API (fetch asset value)
+- **Market Price API** – Fetch current hardware market values.
+- **Currency API** – Convert purchase prices into different currencies.
+- **Product Search API** – Lookup devices and fetch live product info.
 
- Currency API (convert purchase prices)
+---
 
-# Installation & Setup
+## Deployment
 
-## 1. Clone the Repository
+- Deployed via **Vercel** for optimal performance and ease of use.
 
-`git clone https://bitbucket.org/your-repo/it-asset-management.git
-cd it-asset-management`
+---
 
-## 2. Install Dependencies
+## Installation & Setup
 
-`npm install`
+1. **Clone the Repository**
 
-## 3. Run the Development Server
+   ```bash
+   git clone https://bitbucket.org/your-repo/it-asset-management.git
+   cd it-asset-management
+   ```
 
-`npm run dev`
+2. **Install Dependencies**
 
-### API Endpoints (If using Node.js & Express)
+   ```bash
+   npm install
+   ```
 
+3. **Run the Development Server**
 
-| Method | Endpoint          | Description               |
-|--------|-------------------|---------------------------|
-| GET    | `/api/assets`     | Get all assets            |
-| POST   | `/api/assets`     | Add a new asset           |
-| PUT    | `/api/assets/:id` | Update asset information  |
-| DELETE | `/api/assets/:id` | Remove an asset           |
+   ```bash
+   npm run dev
+   ```
 
+4. **Environment Variables**
+   Create a `.env` file in the root and add:
+   ```
+   VITE_FIREBASE_API_KEY=your_firebase_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   VITE_MARKET_API_KEY=your_market_api_key
+   VITE_CURRENCY_API_KEY=your_currency_api_key
+   ```
 
-Contributing
+## Contributing
 
-Fork the repository
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/YourFeature`
+3. Commit your changes: `git commit -m "Add: YourFeature"`
+4. Push to the branch: `git push origin feature/YourFeature`
+5. Open a Pull Request
 
-Create a new branch (`git checkout -b feature-branch`)
-
-Commit your changes (`git commit -m "Added new feature"`)
-
-Push to the branch (`git push origin feature-branch`)
-
-Open a Pull Request
-
-License
+## License
 
 This project is licensed under the MIT License.
 
-Developed by `Paul Miguel Santos` | Contact: toro.paulmiguel.santos@gmail.com
+## Developed by
 
+Paul Miguel Santos  
+toro.paulmiguel.santos@gmail.com
