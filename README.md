@@ -60,11 +60,15 @@ A modern, lightweight system for tracking IT equipment and employee assignments�
 - **Firebase Firestore** – Real-time NoSQL cloud database.
 - **Firebase Authentication** – Required for user management.
 
+### Testing
+
+- **Jest** – JavaScript testing framework for unit tests.
+
 ### APIs & Integrations
 
-- **Market Price API** – Fetch current hardware market values.
+- **DummyJSON API** – Fetch dummy json.
 - **Currency API** – Convert purchase prices into different currencies.
-- **Product Search API** – Lookup devices and fetch live product info.
+- **Generate QR API** - Generate QR using string.
 
 ---
 
