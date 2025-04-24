@@ -80,8 +80,9 @@ A modern, lightweight system for tracking IT equipment and employee assignmentsâ
 
    ```bash
    git clone https://bitbucket.org/your-repo/it-asset-management.git
-   cd it-asset-management
    ```
+
+   cd it-asset-management
 
 2. **Install Dependencies**
 
