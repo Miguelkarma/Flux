@@ -80,9 +80,8 @@ A modern, lightweight system for tracking IT equipment and employee assignmentsâ
 
    ```bash
    git clone https://bitbucket.org/your-repo/it-asset-management.git
-   ```
-
    cd it-asset-management
+   ```
 
 2. **Install Dependencies**
 
@@ -124,4 +123,4 @@ This project is licensed under the MIT License.
 ## Developed by
 
 Paul Miguel Santos  
-toro.paulmiguel.santos@gmail.com
+santos.p.miguel46@gmail.com
