@@ -148,16 +148,19 @@ export function EditAssetDrawer({
     handleDateChange("dateAdded")(date);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    submitAssetForm({
-      e,
-      formData,
-      asset,
-      setIsSubmitting,
-      onAssetUpdated,
-      onClose,
-    });
-  };
+  const handleSubmit = React.useCallback(
+    (e: React.FormEvent) => {
+      submitAssetForm({
+        e,
+        formData,
+        asset,
+        setIsSubmitting,
+        onAssetUpdated,
+        onClose,
+      });
+    },
+    [formData, asset, setIsSubmitting, onAssetUpdated, onClose]
+  );
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>

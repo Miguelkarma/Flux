@@ -7,12 +7,11 @@ import { Toaster, toast } from "sonner";
 import { ArrowLeftCircle, Waypoints } from "lucide-react";
 
 import back from "@/assets/log.jpg";
-import { useAuth } from "@/hooks/use-auth"; 
+import { useAuth } from "@/hooks/use-auth";
 
 function Login() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-
 
   useEffect(() => {
     if (!loading && user) {
@@ -58,7 +57,7 @@ function Login() {
       />
       <div className="bg-gradient-to-r from-gray-900 via-cyan-950 to-cyan-900 flex items-center justify-center min-h-screen">
         <div className="bg-gradient-to-r from-gray-800 via-cyan-900 to-cyan-700 rounded-lg shadow-md shadow-sky-300 overflow-hidden w-full max-w-7xl h-[50em] grid grid-cols-1 lg:grid-cols-2 max-sm:h-[40em]">
-          <div className="p-10 flex flex-col justify-center relative">
+          <div className="p-10 flex flex-col items-center justify-center relative text-start">
             <a
               className="absolute top-4 left-4 text-gray-300 hover:text-gray-700"
               href="#"
@@ -69,6 +68,7 @@ function Login() {
             >
               <ArrowLeftCircle className="w-6 h-6" />
             </a>
+
             <div className="flex items-center gap-2 mb-6">
               <Waypoints className="h-8 w-8 text-sky-300" />
               <span className="text-2xl font-bold bg-gradient-to-t from-sky-100 via-sky-300 to-cyan-900 bg-clip-text text-transparent">

@@ -1,9 +1,9 @@
 // src/firebase/firebase.ts
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 
-// Function to get config so it can be mocked in tests
+import { getFirestore } from "firebase/firestore";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+
 export const getFirebaseConfig = () => {
   // Use test values for Jest environment
   if (typeof process !== "undefined" && process.env.NODE_ENV === "test") {
@@ -34,5 +34,6 @@ export const firebaseConfig = getFirebaseConfig();
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-export { app, auth, db };
+export { app, auth, db, provider };
