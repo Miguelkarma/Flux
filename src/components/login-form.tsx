@@ -165,7 +165,7 @@ export function LoginForm({ onLogin, className, ...props }: LoginFormProps) {
 
       <div className="flex ">
         <Button
-          className="flex w-full items-center bg-transparent border border-gray-400 text-white hover:bg-gray-50 h-9 sm:h-10 md:h-9 text-sm sm:text-base rounded-md px-4"
+          className="flex w-full items-center bg-cyan-950 border border-gray-400 text-white hover:bg-gray-50 h-9 sm:h-10 md:h-9 text-sm sm:text-base rounded-md px-4"
           type="button"
           onClick={signInWithGoogle}
         >
