@@ -126,5 +126,5 @@ This project is licensed under the MIT License.
 
 ## Developed by
 
-Paul Miguel Santos  
+Miguelkarma  
 santos.p.miguel46@gmail.com
