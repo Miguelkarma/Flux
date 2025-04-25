@@ -27,27 +27,27 @@ import {
 //stats
 
 export const brandTagline =
-  "Powering data insights for today's startup and tomorrow's leader.";
+  "Streamlining IT asset tracking for efficiency and compliance.";
 
 export const statsSection = {
-  title: "What the Numbers Say",
-  description: "We help you to unleash the power within your business",
+  title: "Asset Monitor",
+  description: "Complete visibility and control over your IT infrastructure",
   stats: [
     {
-      value: "260+",
-      label: "Expert Consultants",
+      value: "98%",
+      label: "Audit Compliance Rate",
     },
     {
-      value: "975+",
-      label: "Active Clients",
+      value: "65%",
+      label: "Reduction in Lost Assets",
     },
     {
-      value: "724+",
-      label: "Projects Delivered",
+      value: "3.5x",
+      label: "Faster Asset Deployment",
     },
     {
-      value: "89+",
-      label: "Orders in Queue",
+      value: "42%",
+      label: "Lower Maintenance Costs",
     },
   ],
 };

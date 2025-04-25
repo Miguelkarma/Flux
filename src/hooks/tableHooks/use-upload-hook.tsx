@@ -83,10 +83,6 @@ export const useUploadFile = (config: UploadConfig) => {
       return { valid: false, message: "No data found in the file" };
     }
 
-    // Predefined required fields in the expected order
-    const expectedFields = config.requiredFields;
-
-    // Normalize data by trimming strings
     const normalizedData = data.map((item) => {
       const normalized: any = {};
       for (const key in item) {
@@ -99,18 +95,17 @@ export const useUploadFile = (config: UploadConfig) => {
     const firstItem = normalizedData[0];
     const actualFields = Object.keys(firstItem);
 
-    // Check for extra or missing fields
-    const missingFields = expectedFields.filter(
+    const missingFields = config.requiredFields.filter(
       (field) => !actualFields.includes(field)
     );
 
-    const extraFields = actualFields.filter(
-      (field) => !expectedFields.includes(field)
-    );
+    if (missingFields.length > 0) {
+      let errorMessage = `CSV format is incorrect. Missing required fields: ${missingFields.join(
+        ", "
+      )}`;
 
-    // Generate a detailed error message
-    if (missingFields.length > 0 || extraFields.length > 0) {
-      let errorMessage = "CSV format is incorrect";
+      // Add debugging info to help identify case issues
+      errorMessage += `\nFound fields: ${actualFields.join(", ")}`;
 
       return {
         valid: false,
