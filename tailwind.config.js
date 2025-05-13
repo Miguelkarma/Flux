@@ -25,9 +25,13 @@ module.exports = {
       padding: "2rem",
       screens: {
         "2xl": "1800px",
+        "3xl": "2100px",
       },
     },
     extend: {
+      screens: {
+        "3xl": "2500px",
+      },
       colors: {
         "custom-background": "hsl(222.2, 84%, 4.9%)",
         "landing-background": "hsl(var(--landing-background))",

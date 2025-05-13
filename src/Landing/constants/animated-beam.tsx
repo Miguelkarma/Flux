@@ -61,18 +61,24 @@ export default function AnimatedBeamDemo() {
           </Circle>
         </div>
 
-        <div className="flex flex-row items-center justify-between max-sm:justify-center px-1">
-          <Circle ref={div2Ref}>
-            <Laptop className="h-full w-full max-sm:relative max-sm:w-[2em]" />
+        <div className="flex flex-row items-center justify-between max-sm:justify-center px-1 ">
+          <Circle
+            ref={div2Ref}
+            className="max-sm:size-15 max-sm:ml-6 max-sm:relative "
+          >
+            <Laptop className="h-full w-full max-sm:relative max-sm:w-[1em]" />
           </Circle>
           <Circle
             ref={div4Ref}
             className="size-20 mx-16 max-sm:relative max-sm:size-15"
           >
-            <Waypoints className="h-full w-full max-sm:relative max-sm:w-[2em]" />
+            <Waypoints className="h-full w-full max-sm:relative max-sm:w-[1.8em]" />
           </Circle>
-          <Circle ref={div6Ref}>
-            <Computer className="h-full w-full max-sm:relative max-sm:w-[2em]" />
+          <Circle
+            ref={div6Ref}
+            className="max-sm:size-15 max-sm:mr-6 max-sm:relative "
+          >
+            <Computer className="h-full w-full max-sm:relative max-sm:w-[1em]" />
           </Circle>
         </div>
 
