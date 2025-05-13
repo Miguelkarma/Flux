@@ -51,7 +51,7 @@ export default function AnimatedBeamDemo() {
       ref={containerRef}
     >
       <div className="flex size-full max-h-[300px] max-w-3xl flex-col items-stretch justify-between gap-24">
-        {/* circles */}
+        
         <div className="flex flex-row items-center justify-between px-1 ">
           <Circle ref={div1Ref}>
             <Server className="h-full w-full" />
